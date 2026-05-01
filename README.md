@@ -104,6 +104,35 @@ V1 should work entirely from the project directory with no required cloud infras
 - [tasks/DECISIONS.md](tasks/DECISIONS.md): decision log
 - [tasks/ISSUES.md](tasks/ISSUES.md): issue tracker
 
+## Current Implementation Status
+
+Phase 1 backend foundation is now implemented under `backend/`.
+
+Included in the current codebase:
+
+- FastAPI backend scaffold
+- Typed runtime settings
+- sqlite bootstrap and repository helpers
+- Managed local storage bootstrap under `data/`
+- baseline `GET /api/health`
+- backend `pytest` coverage for phase-1 bootstrap and readiness flows
+
+## Backend Quickstart
+
+From the repository root:
+
+```bash
+cd backend
+uv sync --extra dev
+uv run uvicorn app.main:app --reload
+```
+
+Health check:
+
+```text
+GET /api/health
+```
+
 ## Planned Repository Shape
 
 ```text
@@ -122,7 +151,7 @@ ChainWatch/
 └── tasks/
 ```
 
-The `frontend/`, `backend/`, and `data/` directories are planned implementation targets and are described now so the docs can guide code organization later.
+The `frontend/` directory remains a planned implementation target. The `backend/` project now exists, and the `data/` directory is created as a managed runtime location by the backend bootstrap flow.
 
 ## Implementation Order
 

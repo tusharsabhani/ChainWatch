@@ -1,0 +1,1 @@
+"""ChainWatch backend application package."""

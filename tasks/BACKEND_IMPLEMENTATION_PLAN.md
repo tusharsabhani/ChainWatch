@@ -24,13 +24,13 @@ Use this file to:
 
 | Area | Status | Notes |
 | --- | --- | --- |
-| Backend codebase | Not started | No `backend/` implementation directory exists yet |
-| Database schema | Not started | Defined in `DATA_MODEL.md` only |
-| File storage layout | Not started | Defined in docs only |
+| Backend codebase | Implemented | FastAPI backend foundation now exists under `backend/` |
+| Database schema | Implemented | sqlite bootstrap and repositories are live in phase 1 |
+| File storage layout | Implemented | Managed runtime paths are created under `data/` at startup |
 | Import pipeline | Not started | No CSV ingestion code yet |
 | Agents | Not started | Agent behavior is documented in `AGENTS.md` only |
-| REST API | Not started | Endpoints are documented in `API_SPEC.md` only |
-| Tests | Not started | No backend test suite exists yet |
+| REST API | Started | `GET /api/health` is implemented; feature APIs remain pending |
+| Tests | Implemented for phase 1 | `pytest` covers bootstrap, storage, schema, health, and repository smoke paths |
 
 ## Working Rules
 
@@ -47,29 +47,29 @@ This phase sets up the local runtime, persistence layer, and filesystem structur
 
 | Field | Value |
 | --- | --- |
-| Status | Not started |
+| Status | Done |
 | Priority | High |
 | Depends on | None |
 | Goal | Create the FastAPI project skeleton and runtime configuration model |
 
 Implementation checkpoints:
 
-- [ ] Create `backend/` project root
-- [ ] Create FastAPI app entrypoint
-- [ ] Create application package structure under `backend/app/`
-- [ ] Add configuration and settings model
-- [ ] Add local path configuration for database, cache, imports, reports, and logs
-- [ ] Add provider configuration flags for LLM and search adapters
-- [ ] Define provider adapter interfaces
-- [ ] Implement baseline `GET /api/health`
-- [ ] Document local backend startup flow
+- [x] Create `backend/` project root
+- [x] Create FastAPI app entrypoint
+- [x] Create application package structure under `backend/app/`
+- [x] Add configuration and settings model
+- [x] Add local path configuration for database, cache, imports, reports, and logs
+- [x] Add provider configuration flags for LLM and search adapters
+- [x] Define provider adapter interfaces
+- [x] Implement baseline `GET /api/health`
+- [x] Document local backend startup flow
 
 Definition of done:
 
-- [ ] Backend boots locally
-- [ ] Config values are available through a typed settings model
-- [ ] Health endpoint returns runtime readiness and provider flags
-- [ ] Adapter boundaries exist without provider-specific logic leaking into services
+- [x] Backend boots locally
+- [x] Config values are available through a typed settings model
+- [x] Health endpoint returns runtime readiness and provider flags
+- [x] Adapter boundaries exist without provider-specific logic leaking into services
 
 Notes:
 
@@ -78,50 +78,53 @@ Notes:
 
 Evidence:
 
-- None yet
+- `backend/pyproject.toml` defines the isolated backend project and dependencies
+- `backend/app/main.py` boots the FastAPI app and runtime bootstrap flow
+- `backend/app/config.py` provides the typed settings model and provider flags
+- `backend/README.md` documents setup, run, and test commands
 
 ### BE-02 sqlite Schema And Data Access
 
 | Field | Value |
 | --- | --- |
-| Status | Not started |
+| Status | Done |
 | Priority | High |
 | Depends on | `BE-01` |
 | Goal | Create the sqlite schema and data-access layer described in `DATA_MODEL.md` |
 
 Implementation checkpoints:
 
-- [ ] Create sqlite bootstrap flow
-- [ ] Create schema file or equivalent bootstrap definitions
-- [ ] Create all documented tables
-- [ ] Add indexes required for common read paths
-- [ ] Add connection helper and transaction handling
-- [ ] Add repository or data-access layer for shared queries
-- [ ] Avoid duplicated raw SQL across modules
-- [ ] Ensure schema creation is safe to run on a new local setup
+- [x] Create sqlite bootstrap flow
+- [x] Create schema file or equivalent bootstrap definitions
+- [x] Create all documented tables
+- [x] Add indexes required for common read paths
+- [x] Add connection helper and transaction handling
+- [x] Add repository or data-access layer for shared queries
+- [x] Avoid duplicated raw SQL across modules
+- [x] Ensure schema creation is safe to run on a new local setup
 
 Core tables to implement:
 
-- [ ] `products`
-- [ ] `suppliers`
-- [ ] `product_suppliers`
-- [ ] `sales_history`
-- [ ] `inventory_snapshots`
-- [ ] `fulfillment_snapshots`
-- [ ] `risk_events`
-- [ ] `country_risk_scores`
-- [ ] `reports`
-- [ ] `chat_sessions`
-- [ ] `chat_messages`
-- [ ] `imports`
-- [ ] `agent_runs`
+- [x] `products`
+- [x] `suppliers`
+- [x] `product_suppliers`
+- [x] `sales_history`
+- [x] `inventory_snapshots`
+- [x] `fulfillment_snapshots`
+- [x] `risk_events`
+- [x] `country_risk_scores`
+- [x] `reports`
+- [x] `chat_sessions`
+- [x] `chat_messages`
+- [x] `imports`
+- [x] `agent_runs`
 
 Definition of done:
 
-- [ ] Local database can be created from scratch
-- [ ] All documented tables are queryable
-- [ ] Shared repository helpers exist for read and write flows
-- [ ] Backend modules can use the data layer without scattering schema knowledge everywhere
+- [x] Local database can be created from scratch
+- [x] All documented tables are queryable
+- [x] Shared repository helpers exist for read and write flows
+- [x] Backend modules can use the data layer without scattering schema knowledge everywhere
 
 Notes:
 
@@ -130,45 +133,48 @@ Notes:
 
 Evidence:
 
-- None yet
+- `backend/app/db/schema.sql` contains the full phase-1 schema and indexes
+- `backend/app/db/bootstrap.py` applies the schema idempotently at startup
+- `backend/app/db/connection.py` enables sqlite row access, transactions, and foreign keys
+- `backend/app/db/repositories/` provides shared repository helpers plus system and catalog smoke-path repositories
 
 ### BE-03 Local File Storage Layout
 
 | Field | Value |
 | --- | --- |
-| Status | Not started |
+| Status | Done |
 | Priority | High |
 | Depends on | `BE-01` |
 | Goal | Create the project-managed filesystem structure for imports, reports, cache, and logs |
 
 Implementation checkpoints:
 
-- [ ] Create directory bootstrap logic
-- [ ] Create path helpers for all managed storage locations
-- [ ] Create JSON artifact writer
-- [ ] Create Markdown artifact writer
-- [ ] Create cache read and write helpers
-- [ ] Create log path helpers
-- [ ] Define stable file naming strategy for reports and cache entries
-- [ ] Prevent writes outside project-managed runtime directories
+- [x] Create directory bootstrap logic
+- [x] Create path helpers for all managed storage locations
+- [x] Create JSON artifact writer
+- [x] Create Markdown artifact writer
+- [x] Create cache read and write helpers
+- [x] Create log path helpers
+- [x] Define stable file naming strategy for reports and cache entries
+- [x] Prevent writes outside project-managed runtime directories
 
 Managed paths to support:
 
-- [ ] `data/app.db`
-- [ ] `data/imports/raw/`
-- [ ] `data/imports/processed/`
-- [ ] `data/reports/json/`
-- [ ] `data/reports/markdown/`
-- [ ] `data/cache/external_risk/`
-- [ ] `data/logs/app/`
-- [ ] `data/logs/agent_runs/`
+- [x] `data/app.db`
+- [x] `data/imports/raw/`
+- [x] `data/imports/processed/`
+- [x] `data/reports/json/`
+- [x] `data/reports/markdown/`
+- [x] `data/cache/external_risk/`
+- [x] `data/logs/app/`
+- [x] `data/logs/agent_runs/`
 
 Definition of done:
 
-- [ ] All required runtime directories can be created locally
-- [ ] Report writers resolve only project-managed paths
-- [ ] Cache and log helpers are reusable by agents and services
-- [ ] No runtime-generated artifacts are written into source directories
+- [x] All required runtime directories can be created locally
+- [x] Report writers resolve only project-managed paths
+- [x] Cache and log helpers are reusable by agents and services
+- [x] No runtime-generated artifacts are written into source directories
 
 Notes:
 
@@ -176,7 +182,9 @@ Notes:
 
 Evidence:
 
-- None yet
+- `backend/app/services/storage.py` manages safe runtime path resolution and artifact writers
+- Runtime bootstrap provisions the managed `data/` layout automatically before serving requests
+- `backend/tests/test_storage.py` verifies safe path resolution and cache helpers
 
 ## Phase 2: Data Readiness
 
@@ -516,11 +524,8 @@ Evidence:
 
 ## Suggested First Execution Sequence
 
-1. Start `BE-01`
-2. Start `BE-02`
-3. Start `BE-03`
-4. Continue to `BE-04`
-5. Build `BE-06` and `BE-07` first for the earliest useful product slice
-6. Add `BE-05` and `BE-08`
-7. Add `BE-11` product and dashboard APIs
-8. Finish reporting, chat, and reliability work
+1. Start `BE-04`
+2. Build `BE-06` and `BE-07` first for the earliest useful product slice
+3. Add `BE-05` and `BE-08`
+4. Add `BE-11` product and dashboard APIs
+5. Finish reporting, chat, and reliability work

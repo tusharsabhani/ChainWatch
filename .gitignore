@@ -1,1 +1,11 @@
+__pycache__/
+*.py[cod]
 .codex
+.vscode/
+backend/.venv/
+backend/.pytest_cache/
+backend/.ruff_cache/
+backend/__pycache__/
+backend/**/*.pyc
+data/
+.coverage
