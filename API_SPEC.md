@@ -20,6 +20,19 @@ This document defines the backend REST contract for ChainWatch. All frontend pag
 ```
 
 - Successful responses may include `lastUpdatedAt` when the payload depends on cached or computed data.
+- Cached or computed responses may also include a `freshness` object:
+
+```json
+{
+  "freshness": {
+    "dataSource": "fresh",
+    "lastUpdatedAt": "2026-04-23T12:00:00Z",
+    "cacheUpdatedAt": "2026-04-23T12:00:00Z",
+    "isStale": false,
+    "refreshScheduled": false
+  }
+}
+```
 
 ## Health And Runtime
 
@@ -126,7 +139,14 @@ Response shape:
     "slaRisk": [],
     "externalEventCount": []
   },
-  "lastUpdatedAt": "2026-04-23T12:00:00Z"
+  "lastUpdatedAt": "2026-04-23T12:00:00Z",
+  "freshness": {
+    "dataSource": "fresh",
+    "lastUpdatedAt": "2026-04-23T12:00:00Z",
+    "cacheUpdatedAt": "2026-04-23T12:00:00Z",
+    "isStale": false,
+    "refreshScheduled": false
+  }
 }
 ```
 
@@ -167,7 +187,14 @@ Response shape:
     }
   ],
   "total": 1,
-  "lastUpdatedAt": "2026-04-23T12:00:00Z"
+  "lastUpdatedAt": "2026-04-23T12:00:00Z",
+  "freshness": {
+    "dataSource": "cached",
+    "lastUpdatedAt": "2026-04-23T12:00:00Z",
+    "cacheUpdatedAt": "2026-04-23T11:45:00Z",
+    "isStale": false,
+    "refreshScheduled": false
+  }
 }
 ```
 
@@ -362,7 +389,14 @@ Response shape:
       "activeEventCount": 3
     }
   ],
-  "lastUpdatedAt": "2026-04-23T12:00:00Z"
+  "lastUpdatedAt": "2026-04-23T12:00:00Z",
+  "freshness": {
+    "dataSource": "fresh",
+    "lastUpdatedAt": "2026-04-23T12:00:00Z",
+    "cacheUpdatedAt": "2026-04-23T12:00:00Z",
+    "isStale": false,
+    "refreshScheduled": false
+  }
 }
 ```
 
@@ -409,7 +443,15 @@ Response shape:
       "sku": "SKU-101",
       "name": "Example Product"
     }
-  ]
+  ],
+  "lastUpdatedAt": "2026-04-23T12:00:00Z",
+  "freshness": {
+    "dataSource": "cached",
+    "lastUpdatedAt": "2026-04-23T12:00:00Z",
+    "cacheUpdatedAt": "2026-04-23T11:40:00Z",
+    "isStale": true,
+    "refreshScheduled": true
+  }
 }
 ```
 
@@ -502,7 +544,15 @@ Response shape:
     "onTimeRate": 0.87
   },
   "suppliers": [],
-  "linkedRiskEvents": []
+  "linkedRiskEvents": [],
+  "lastUpdatedAt": "2026-04-23T12:00:00Z",
+  "freshness": {
+    "dataSource": "fresh",
+    "lastUpdatedAt": "2026-04-23T12:00:00Z",
+    "cacheUpdatedAt": "2026-04-23T12:00:00Z",
+    "isStale": false,
+    "refreshScheduled": false
+  }
 }
 ```
 
@@ -570,7 +620,14 @@ Response shape:
   "markdownPath": "data/reports/markdown/rep_001.md",
   "markdownPreview": "# Weekly dashboard risk summary\n...",
   "createdAt": "2026-04-23T09:00:00Z",
-  "completedAt": "2026-04-23T09:00:03Z"
+  "completedAt": "2026-04-23T09:00:03Z",
+  "freshness": {
+    "dataSource": "generated",
+    "lastUpdatedAt": "2026-04-23T09:00:03Z",
+    "cacheUpdatedAt": null,
+    "isStale": false,
+    "refreshScheduled": false
+  }
 }
 ```
 

@@ -3,9 +3,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
 
+from fastapi import BackgroundTasks
+
 from app.adapters.search import NullSearchAdapter, SearchAdapter
 from app.agents.demand import DemandAgent
-from app.agents.external_risk import ExternalRiskAgent
 from app.agents.fulfillment import FulfillmentAgent
 from app.agents.inventory import InventoryAgent
 from app.config import Settings
@@ -31,6 +32,7 @@ from app.schemas.products import (
     ProductListResponse,
     ProductSupplierItem,
 )
+from app.services.external_risk import ExternalRiskService
 from app.services.storage import StorageManager
 
 
@@ -83,7 +85,7 @@ class ProductService:
             storage=storage,
             database=database,
         )
-        self.external_risk_agent = ExternalRiskAgent(
+        self.external_risk_service = ExternalRiskService(
             settings=settings,
             storage=storage,
             database=database,
@@ -141,14 +143,16 @@ class ProductService:
                 for country_code in self.catalog_repository.list_supplier_country_codes_for_product_ids([product.id])
             }
         )
-        external_output = self.external_risk_agent.run(
+        external_envelope = self.external_risk_service.load(
             ExternalRiskAgentInput(
                 country_codes=all_country_codes,
                 freshness_policy_hours=self.settings.external_risk_cache_ttl_hours,
                 trigger_type=AgentTriggerType.DASHBOARD,
                 trigger_ref="products-list",
-            )
+            ),
+            prefer_cached=True,
         )
+        external_output = external_envelope.output
         country_score_map = {
             score.country_code: score.overall_score
             for score in external_output.country_scores
@@ -172,6 +176,7 @@ class ProductService:
         date_range: str = "90d",
         region: str | None = None,
         channel: str | None = None,
+        background_tasks: BackgroundTasks | None = None,
     ) -> ProductDetailResponse:
         product = self.catalog_repository.get_product_by_id(product_id)
         if product is None:
@@ -214,14 +219,17 @@ class ProductService:
                 trigger_ref=str(product_id),
             )
         )
-        external_output = self.external_risk_agent.run(
+        external_envelope = self.external_risk_service.load(
             ExternalRiskAgentInput(
                 country_codes=supplier_country_codes,
                 freshness_policy_hours=self.settings.external_risk_cache_ttl_hours,
                 trigger_type=AgentTriggerType.PRODUCT,
                 trigger_ref=str(product_id),
-            )
+            ),
+            background_tasks=background_tasks,
+            prefer_cached=True,
         )
+        external_output = external_envelope.output
         fulfillment_output = self.fulfillment_agent.run(
             FulfillmentAgentInput(
                 product_ids=[product_id],
@@ -282,6 +290,8 @@ class ProductService:
                 )
                 for event in external_output.risk_events
             ],
+            last_updated_at=external_envelope.freshness.last_updated_at,
+            freshness=external_envelope.freshness,
         )
 
     def _build_risk_snapshot(

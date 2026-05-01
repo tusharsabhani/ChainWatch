@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
+from fastapi import BackgroundTasks
+
 from app.adapters.search import NullSearchAdapter, SearchAdapter
 from app.agents.demand import DemandAgent
-from app.agents.external_risk import ExternalRiskAgent
 from app.agents.fulfillment import FulfillmentAgent
 from app.config import Settings
 from app.db.connection import SQLiteConnectionFactory
@@ -22,6 +23,7 @@ from app.schemas.dashboard import (
     DashboardTrendPoint,
     DashboardTrendSet,
 )
+from app.services.external_risk import ExternalRiskService
 from app.services.products import ProductService
 from app.services.storage import StorageManager
 
@@ -44,7 +46,7 @@ class DashboardService:
         self.database = database
         self.catalog_repository = CatalogRepository(database)
         self.search_adapter = search_adapter or NullSearchAdapter()
-        self.external_risk_agent = ExternalRiskAgent(
+        self.external_risk_service = ExternalRiskService(
             settings=settings,
             storage=storage,
             database=database,
@@ -74,6 +76,7 @@ class DashboardService:
         severity_min: int = 3,
         category: str | None = None,
         region: str | None = None,
+        background_tasks: BackgroundTasks | None = None,
     ) -> DashboardSummaryResponse:
         products = self.catalog_repository.search_products(
             category=category,
@@ -91,14 +94,17 @@ class DashboardService:
                 for country_code in self.catalog_repository.list_supplier_country_codes_for_product_ids([product.id])
             }
         )
-        external_output = self.external_risk_agent.run(
+        external_envelope = self.external_risk_service.load(
             ExternalRiskAgentInput(
                 country_codes=country_codes,
                 freshness_policy_hours=self.settings.external_risk_cache_ttl_hours,
                 trigger_type=AgentTriggerType.DASHBOARD,
                 trigger_ref="dashboard-summary",
-            )
+            ),
+            background_tasks=background_tasks,
+            prefer_cached=True,
         )
+        external_output = external_envelope.output
         filtered_country_scores = [
             score
             for score in external_output.country_scores
@@ -132,11 +138,7 @@ class DashboardService:
             )
         ) if products else None
 
-        last_updated_candidates = [
-            event.detected_at
-            for event in external_output.risk_events
-        ]
-        last_updated_at = max(last_updated_candidates) if last_updated_candidates else _utc_now_iso()
+        last_updated_at = external_envelope.freshness.last_updated_at or _utc_now_iso()
 
         return DashboardSummaryResponse(
             filters=DashboardFilters(
@@ -220,6 +222,7 @@ class DashboardService:
                 ],
             ),
             last_updated_at=last_updated_at,
+            freshness=external_envelope.freshness,
         )
 
     def get_alerts(
@@ -228,23 +231,27 @@ class DashboardService:
         severity_min: int = 1,
         status: str | None = None,
         limit: int = 25,
+        background_tasks: BackgroundTasks | None = None,
     ) -> DashboardAlertsResponse:
         country_codes = self.catalog_repository.list_all_supplier_country_codes()
-        external_output = self.external_risk_agent.run(
+        external_envelope = self.external_risk_service.load(
             ExternalRiskAgentInput(
                 country_codes=country_codes,
                 freshness_policy_hours=self.settings.external_risk_cache_ttl_hours,
                 trigger_type=AgentTriggerType.DASHBOARD,
                 trigger_ref="dashboard-alerts",
-            )
+            ),
+            background_tasks=background_tasks,
+            prefer_cached=True,
         )
+        external_output = external_envelope.output
         events = [
             event
             for event in external_output.risk_events
             if event.severity >= severity_min and (status is None or event.status == status)
         ]
         events = sorted(events, key=lambda event: (-event.severity, event.detected_at))[:limit]
-        last_updated_at = max((event.detected_at for event in events), default=_utc_now_iso())
+        last_updated_at = external_envelope.freshness.last_updated_at or _utc_now_iso()
 
         return DashboardAlertsResponse(
             items=[
@@ -263,4 +270,5 @@ class DashboardService:
             ],
             total=len(events),
             last_updated_at=last_updated_at,
+            freshness=external_envelope.freshness,
         )

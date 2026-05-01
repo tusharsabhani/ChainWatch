@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from app.schemas.common import CamelModel
+from app.schemas.common import CamelModel, FreshnessInfo
 
 
 class DashboardFilters(CamelModel):
@@ -58,6 +58,7 @@ class DashboardSummaryResponse(CamelModel):
     country_exposure: list[DashboardCountryExposure]
     trends: DashboardTrendSet
     last_updated_at: str
+    freshness: FreshnessInfo | None = None
 
 
 class DashboardAlertItem(CamelModel):
@@ -76,3 +77,4 @@ class DashboardAlertsResponse(CamelModel):
     items: list[DashboardAlertItem]
     total: int
     last_updated_at: str
+    freshness: FreshnessInfo | None = None

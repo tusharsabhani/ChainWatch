@@ -1,13 +1,16 @@
 from __future__ import annotations
 
 import csv
+import os
 from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
 
 from app.adapters.search import SearchAdapter
+from app.agents.external_risk import ExternalRiskAgent
 from app.main import create_app
+from app.schemas.agents import AgentTriggerType, ExternalRiskAgentInput
 from app.services.imports.seed import DemoSeedService
 from app.services.runtime import bootstrap_runtime
 
@@ -84,12 +87,14 @@ def test_dashboard_endpoints_return_summary_and_alerts(seeded_api_app) -> None:
     assert summary_payload["topRiskProducts"]
     assert summary_payload["countryExposure"]
     assert summary_payload["lastUpdatedAt"]
+    assert summary_payload["freshness"]["dataSource"] in {"fresh", "cached"}
 
     assert alerts_response.status_code == 200
     alerts_payload = alerts_response.json()
     assert alerts_payload["items"]
     assert alerts_payload["total"] >= 1
     assert alerts_payload["items"][0]["severity"] >= 4
+    assert alerts_payload["freshness"]["dataSource"] in {"fresh", "cached"}
 
 
 def test_map_endpoints_return_country_summary_and_detail(seeded_api_app) -> None:
@@ -106,6 +111,7 @@ def test_map_endpoints_return_country_summary_and_detail(seeded_api_app) -> None
     detail_payload = detail_response.json()
     assert detail_payload["country"]["countryCode"] == "IN"
     assert detail_payload["issues"]
+    assert detail_payload["freshness"]["dataSource"] in {"fresh", "cached"}
 
     assert missing_response.status_code == 404
     assert missing_response.json()["error"]["code"] == "country_not_found"
@@ -127,6 +133,7 @@ def test_product_endpoints_return_search_and_detail_payloads(seeded_api_app) -> 
     assert detail_payload["product"]["id"] == 1
     assert detail_payload["suppliers"]
     assert detail_payload["linkedRiskEvents"]
+    assert detail_payload["freshness"]["dataSource"] in {"fresh", "cached"}
 
     assert missing_response.status_code == 404
     assert missing_response.json()["error"]["code"] == "product_not_found"
@@ -176,7 +183,9 @@ def test_report_endpoints_generate_list_and_detail(seeded_api_app) -> None:
             },
         )
         assert generate_response.status_code == 200
-        report_id = generate_response.json()["id"]
+        generate_payload = generate_response.json()
+        report_id = generate_payload["id"]
+        assert generate_payload["status"] == "queued"
 
         list_response = client.get("/api/reports")
         detail_response = client.get(f"/api/reports/{report_id}")
@@ -189,6 +198,7 @@ def test_report_endpoints_generate_list_and_detail(seeded_api_app) -> None:
     assert detail_payload["id"] == report_id
     assert detail_payload["jsonPath"]
     assert detail_payload["markdownPreview"]
+    assert detail_payload["freshness"]["dataSource"] == "generated"
 
 
 def test_import_endpoints_list_runs_and_accept_local_file_reference(seeded_api_app, tmp_path: Path) -> None:
@@ -232,3 +242,44 @@ def test_import_endpoints_list_runs_and_accept_local_file_reference(seeded_api_a
 
     assert invalid_response.status_code == 400
     assert invalid_response.json()["error"]["code"] == "invalid_import_file"
+
+
+def test_stale_external_risk_cache_surfaces_freshness_and_schedules_refresh(settings) -> None:
+    runtime = bootstrap_runtime(settings)
+    DemoSeedService(
+        settings=runtime.settings,
+        storage=runtime.storage,
+        database=runtime.database,
+    ).seed_demo_data()
+    app = create_app(settings=settings, search_adapter=_fake_search_adapter())
+
+    with TestClient(app) as client:
+        first_response = client.get("/api/map/countries")
+        assert first_response.status_code == 200
+
+        agent = ExternalRiskAgent(
+            settings=runtime.settings,
+            storage=runtime.storage,
+            database=runtime.database,
+            search_adapter=_fake_search_adapter(),
+        )
+        cache_key = agent._build_cache_key(
+            ExternalRiskAgentInput(
+                country_codes=["IN", "MX", "US", "VN"],
+                trigger_type=AgentTriggerType.MAP,
+                trigger_ref="map-countries",
+                freshness_policy_hours=runtime.settings.external_risk_cache_ttl_hours,
+            ),
+            ["IN", "MX", "US", "VN"],
+        )
+        cache_path = runtime.storage.external_risk_cache_path(cache_key)
+        stale_timestamp = cache_path.stat().st_mtime - (runtime.settings.external_risk_cache_ttl_hours * 7200)
+        os.utime(cache_path, (stale_timestamp, stale_timestamp))
+
+        second_response = client.get("/api/map/countries")
+
+    assert second_response.status_code == 200
+    second_payload = second_response.json()
+    assert second_payload["freshness"]["dataSource"] == "cached"
+    assert second_payload["freshness"]["isStale"] is True
+    assert second_payload["freshness"]["refreshScheduled"] is True

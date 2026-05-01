@@ -562,6 +562,7 @@ class ReportService:
         database: SQLiteConnectionFactory,
         search_adapter: SearchAdapter | None = None,
     ) -> None:
+        self.settings = settings
         self.catalog_repository = CatalogRepository(database)
         self.report_repository = ReportRepository(database)
         self.agent = ReportingAgent(
@@ -572,27 +573,36 @@ class ReportService:
         )
 
     def generate_report(self, request: ReportRequest) -> ReportGenerationResult:
+        report = self.queue_report(request)
+        return self.generate_existing_report(report.id)
+
+    def queue_report(self, request: ReportRequest) -> ReportRecord:
         report_id = f"rep_{uuid.uuid4().hex[:12]}"
         title = request.title or self._default_title(request)
-        report = self.report_repository.create_report(
+        return self.report_repository.create_report(
             report_id=report_id,
             request=request,
             title=title,
         )
+
+    def generate_existing_report(self, report_id: str) -> ReportGenerationResult:
+        report = self.report_repository.get_report(report_id)
+        if report is None:
+            raise RuntimeError(f"Report {report_id} was not found before generation.")
         output = self.agent.run(
             ReportingAgentInput(
-                report_id=report_id,
-                report_type=request.report_type,
-                scope_type=request.scope_type,
-                scope_id=request.scope_id,
-                title=title,
-                requested_by=request.requested_by,
-                freshness_policy_hours=request.freshness_policy_hours,
+                report_id=report.id,
+                report_type=report.report_type,
+                scope_type=report.scope_type,
+                scope_id=report.scope_id,
+                title=report.title,
+                requested_by=report.requested_by,
+                freshness_policy_hours=self.settings.external_risk_cache_ttl_hours,
             )
         )
-        persisted = self.report_repository.get_report(report_id)
+        persisted = self.report_repository.get_report(report.id)
         if persisted is None:
-            raise RuntimeError(f"Report {report_id} was not found after generation.")
+            raise RuntimeError(f"Report {report.id} was not found after generation.")
         return ReportGenerationResult(report=persisted, output=output)
 
     def get_report(self, report_id: str) -> ReportRecord | None:

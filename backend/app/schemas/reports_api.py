@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from app.schemas.common import CamelModel
+from app.schemas.common import CamelModel, FreshnessInfo
 
 
 class ReportListItem(CamelModel):
@@ -28,6 +28,7 @@ class ReportDetailResponse(CamelModel):
     markdown_preview: str | None = None
     created_at: str
     completed_at: str | None = None
+    freshness: FreshnessInfo | None = None
 
 
 class ReportGenerateRequest(CamelModel):

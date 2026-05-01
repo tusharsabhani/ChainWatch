@@ -56,6 +56,12 @@ Available endpoint groups:
 - `POST /api/imports/inventory`
 - `POST /api/imports/suppliers`
 
+Reliability additions from phase 6:
+
+- dashboard, map, product detail, and report detail responses include freshness metadata
+- stale cached external-risk data can be served while a background refresh is scheduled
+- report generation is queued first and then completed in a background task
+
 ## Import CSV Data
 
 From the `backend/` directory:
@@ -135,3 +141,5 @@ From the `backend/` directory:
 ```bash
 uv run pytest
 ```
+
+The cross-surface regression pass is documented in `tasks/REGRESSION_CHECKLIST.md`.

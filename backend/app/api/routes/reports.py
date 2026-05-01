@@ -2,10 +2,11 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from fastapi import APIRouter, Query, Request
+from fastapi import APIRouter, BackgroundTasks, Query, Request
 
 from app.api.dependencies import get_report_service, get_runtime
 from app.api.errors import error_response
+from app.schemas.common import FreshnessInfo
 from app.schemas.reports import ReportRequest, ReportScopeType, ReportStatus, ReportType
 from app.schemas.reports_api import (
     ReportDetailResponse,
@@ -80,12 +81,20 @@ def get_report_detail(request: Request, report_id: str) -> ReportDetailResponse:
         markdown_preview=markdown_preview,
         created_at=report.created_at,
         completed_at=report.completed_at,
+        freshness=FreshnessInfo(
+            data_source="generated",
+            last_updated_at=report.completed_at or report.created_at,
+            cache_updated_at=None,
+            is_stale=report.status in {ReportStatus.QUEUED, ReportStatus.RUNNING},
+            refresh_scheduled=False,
+        ),
     )
 
 
 @router.post("/generate", response_model=ReportGenerateResponse)
 def generate_report(
     request: Request,
+    background_tasks: BackgroundTasks,
     payload: ReportGenerateRequest,
 ) -> ReportGenerateResponse:
     try:
@@ -100,13 +109,15 @@ def generate_report(
 
     try:
         service = get_report_service(request)
-        result = service.generate_report(report_request)
+        queued_report = service.queue_report(report_request)
+        if get_runtime(request).settings.reports_enabled:
+            background_tasks.add_task(service.generate_existing_report, queued_report.id)
         return ReportGenerateResponse(
-            id=result.report.id,
-            status=result.report.status.value,
-            scope_type=result.report.scope_type.value,
-            scope_id=result.report.scope_id,
-            created_at=result.report.created_at,
+            id=queued_report.id,
+            status=queued_report.status.value,
+            scope_type=queued_report.scope_type.value,
+            scope_id=queued_report.scope_id,
+            created_at=queued_report.created_at,
         )
     except Exception as exc:
         return error_response(500, "report_generation_failed", str(exc))

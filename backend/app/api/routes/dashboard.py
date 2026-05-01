@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Literal
 
-from fastapi import APIRouter, Query, Request
+from fastapi import APIRouter, BackgroundTasks, Query, Request
 
 from app.api.dependencies import get_dashboard_service
 from app.api.errors import error_response
@@ -14,6 +14,7 @@ router = APIRouter(prefix="/dashboard")
 @router.get("/summary", response_model=DashboardSummaryResponse)
 def get_dashboard_summary(
     request: Request,
+    background_tasks: BackgroundTasks,
     date_range: Literal["7d", "30d", "90d"] = Query(default="30d"),
     severity_min: int = Query(default=3, ge=1, le=5),
     category: str | None = None,
@@ -26,6 +27,7 @@ def get_dashboard_summary(
             severity_min=severity_min,
             category=category,
             region=region,
+            background_tasks=background_tasks,
         )
     except ValueError as exc:
         return error_response(400, "invalid_filter", str(exc))
@@ -36,6 +38,7 @@ def get_dashboard_summary(
 @router.get("/alerts", response_model=DashboardAlertsResponse)
 def get_dashboard_alerts(
     request: Request,
+    background_tasks: BackgroundTasks,
     severity_min: int = Query(default=1, ge=1, le=5),
     status: Literal["open", "monitoring", "resolved"] | None = None,
     limit: int = Query(default=25, ge=1, le=100),
@@ -46,6 +49,7 @@ def get_dashboard_alerts(
             severity_min=severity_min,
             status=status,
             limit=limit,
+            background_tasks=background_tasks,
         )
     except Exception as exc:
         return error_response(500, "dashboard_alerts_unavailable", str(exc))

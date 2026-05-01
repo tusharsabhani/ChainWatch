@@ -24,3 +24,10 @@ class ErrorDetail(CamelModel):
 class ErrorResponse(CamelModel):
     error: ErrorDetail
 
+
+class FreshnessInfo(CamelModel):
+    data_source: str
+    last_updated_at: str | None = None
+    cache_updated_at: str | None = None
+    is_stale: bool = False
+    refresh_scheduled: bool = False

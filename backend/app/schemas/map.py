@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from app.schemas.common import CamelModel
+from app.schemas.common import CamelModel, FreshnessInfo
 
 
 class MapCountrySummaryItem(CamelModel):
@@ -14,6 +14,7 @@ class MapCountrySummaryItem(CamelModel):
 class MapCountriesResponse(CamelModel):
     items: list[MapCountrySummaryItem]
     last_updated_at: str
+    freshness: FreshnessInfo | None = None
 
 
 class CountryDetailSummary(CamelModel):
@@ -47,3 +48,5 @@ class CountryDetailResponse(CamelModel):
     issues: list[CountryIssueItem]
     affected_suppliers: list[CountrySupplierRef]
     affected_products: list[CountryProductRef]
+    last_updated_at: str | None = None
+    freshness: FreshnessInfo | None = None

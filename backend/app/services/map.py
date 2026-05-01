@@ -2,8 +2,9 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
+from fastapi import BackgroundTasks
+
 from app.adapters.search import NullSearchAdapter, SearchAdapter
-from app.agents.external_risk import ExternalRiskAgent
 from app.config import Settings
 from app.db.connection import SQLiteConnectionFactory
 from app.db.repositories.catalog_repository import CatalogRepository
@@ -18,6 +19,7 @@ from app.schemas.map import (
     MapCountrySummaryItem,
 )
 from app.services.countries import country_name
+from app.services.external_risk import ExternalRiskService
 from app.services.storage import StorageManager
 
 
@@ -38,7 +40,7 @@ class MapService:
         self.storage = storage
         self.database = database
         self.catalog_repository = CatalogRepository(database)
-        self.external_risk_agent = ExternalRiskAgent(
+        self.external_risk_service = ExternalRiskService(
             settings=settings,
             storage=storage,
             database=database,
@@ -50,16 +52,20 @@ class MapService:
         *,
         risk_type: str | None = None,
         severity_min: int = 1,
+        background_tasks: BackgroundTasks | None = None,
     ) -> MapCountriesResponse:
         country_codes = self.catalog_repository.list_all_supplier_country_codes()
-        output = self.external_risk_agent.run(
+        envelope = self.external_risk_service.load(
             ExternalRiskAgentInput(
                 country_codes=country_codes,
                 freshness_policy_hours=self.settings.external_risk_cache_ttl_hours,
                 trigger_type=AgentTriggerType.MAP,
                 trigger_ref="map-countries",
-            )
+            ),
+            background_tasks=background_tasks,
+            prefer_cached=True,
         )
+        output = envelope.output
 
         items: list[MapCountrySummaryItem] = []
         for score in output.country_scores:
@@ -92,22 +98,31 @@ class MapService:
                 )
             )
 
-        last_updated_at = max((event.detected_at for event in output.risk_events), default=_utc_now_iso())
+        last_updated_at = envelope.freshness.last_updated_at or _utc_now_iso()
         return MapCountriesResponse(
             items=sorted(items, key=lambda item: (-item.overall_score, item.country_code)),
             last_updated_at=last_updated_at,
+            freshness=envelope.freshness,
         )
 
-    def get_country_detail(self, country_code: str) -> CountryDetailResponse:
+    def get_country_detail(
+        self,
+        country_code: str,
+        *,
+        background_tasks: BackgroundTasks | None = None,
+    ) -> CountryDetailResponse:
         normalized_code = country_code.strip().upper()
-        output = self.external_risk_agent.run(
+        envelope = self.external_risk_service.load(
             ExternalRiskAgentInput(
                 country_codes=[normalized_code],
                 freshness_policy_hours=self.settings.external_risk_cache_ttl_hours,
                 trigger_type=AgentTriggerType.MAP,
                 trigger_ref=normalized_code,
-            )
+            ),
+            background_tasks=background_tasks,
+            prefer_cached=True,
         )
+        output = envelope.output
         known_countries = set(self.catalog_repository.list_all_supplier_country_codes())
         if normalized_code not in known_countries and not output.country_scores and not output.risk_events:
             raise LookupError(f"Country {normalized_code} was not found.")
@@ -157,4 +172,6 @@ class MapService:
                 )
                 for product in output.affected_products
             ],
+            last_updated_at=envelope.freshness.last_updated_at,
+            freshness=envelope.freshness,
         )

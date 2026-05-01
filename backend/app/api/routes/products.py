@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Literal
 
-from fastapi import APIRouter, Query, Request
+from fastapi import APIRouter, BackgroundTasks, Query, Request
 
 from app.api.dependencies import get_product_service
 from app.api.errors import error_response
@@ -34,6 +34,7 @@ def get_products(
 @router.get("/{product_id}", response_model=ProductDetailResponse)
 def get_product_detail(
     request: Request,
+    background_tasks: BackgroundTasks,
     product_id: int,
     date_range: Literal["30d", "90d", "365d"] = Query(default="90d"),
     region: str | None = None,
@@ -46,6 +47,7 @@ def get_product_detail(
             date_range=date_range,
             region=region,
             channel=channel,
+            background_tasks=background_tasks,
         )
     except LookupError as exc:
         return error_response(404, "product_not_found", str(exc))

@@ -29,8 +29,8 @@ Use this file to:
 | File storage layout | Implemented | Managed runtime paths are created under `data/` at startup |
 | Import pipeline | Implemented | CSV import services, import-run tracking, and seed tooling are now in place |
 | Agents | Implemented for phase 4 | External risk, demand, inventory, fulfillment, reporting, and chat orchestration are now wired with trace metadata |
-| REST API | Implemented for phase 5 | Dashboard, map, products, chat, reports, imports, and health endpoints are now wired to backend services |
-| Tests | Implemented for phases 1-5 | `pytest` now covers bootstrap, storage, schema, health, imports, seed, agents, reports, chat orchestration, and API endpoints |
+| REST API | Implemented through phase 6 | Dashboard, map, products, chat, reports, imports, and health endpoints now expose freshness metadata and background hooks where relevant |
+| Tests | Implemented for phases 1-6 | `pytest` now covers bootstrap, storage, schema, health, imports, seed, agents, reports, chat orchestration, API endpoints, and cross-surface scenarios |
 
 ## Working Rules
 
@@ -493,56 +493,61 @@ Evidence:
 
 | Field | Value |
 | --- | --- |
-| Status | Not started |
+| Status | Done |
 | Priority | Medium |
 | Depends on | `BE-05`, `BE-09`, `BE-12` |
 | Goal | Implement background refresh and cache behavior for external risk and reports |
 
 Implementation checkpoints:
 
-- [ ] Implement external-risk cache reader and writer
-- [ ] Implement stale-data policy
-- [ ] Add background task hooks for refresh
-- [ ] Add background task hooks for report generation
-- [ ] Expose freshness metadata in relevant APIs
+- [x] Implement external-risk cache reader and writer
+- [x] Implement stale-data policy
+- [x] Add background task hooks for refresh
+- [x] Add background task hooks for report generation
+- [x] Expose freshness metadata in relevant APIs
 
 Definition of done:
 
-- [ ] Cached external-risk data can be served when live search fails
-- [ ] Background refresh preserves page contracts
-- [ ] Freshness timestamps are visible downstream
+- [x] Cached external-risk data can be served when live search fails
+- [x] Background refresh preserves page contracts
+- [x] Freshness timestamps are visible downstream
 
 Evidence:
 
-- None yet
+- `backend/app/services/external_risk.py` adds cache-aware page reads, stale-cache detection, and background refresh hooks for external-risk consumers
+- `backend/app/api/routes/reports.py` queues report generation and starts background processing without changing the route contract
+- Dashboard, map, product detail, and report detail payloads now include freshness metadata through their API schemas and services
+- `backend/tests/test_api_endpoints.py` verifies stale-cache freshness signaling and queued report generation behavior
 
 ### BE-14 Tests And Eval Scenarios
 
 | Field | Value |
 | --- | --- |
-| Status | Not started |
+| Status | Done |
 | Priority | Medium |
 | Depends on | `BE-11`, `BE-12`, `BE-13` |
 | Goal | Add verification coverage for schema, imports, agents, APIs, and end-to-end scenarios |
 
 Implementation checkpoints:
 
-- [ ] Add schema bootstrap tests
-- [ ] Add import pipeline tests
-- [ ] Add agent output tests
-- [ ] Add API contract tests
-- [ ] Add scenario tests for dashboard, map, chat, product detail, and reports
-- [ ] Add regression checklist tied to docs
+- [x] Add schema bootstrap tests
+- [x] Add import pipeline tests
+- [x] Add agent output tests
+- [x] Add API contract tests
+- [x] Add scenario tests for dashboard, map, chat, product detail, and reports
+- [x] Add regression checklist tied to docs
 
 Definition of done:
 
-- [ ] Core product scenarios are testable and covered
-- [ ] Shared entity consistency is verified across surfaces
-- [ ] Regressions can be checked against stable expectations
+- [x] Core product scenarios are testable and covered
+- [x] Shared entity consistency is verified across surfaces
+- [x] Regressions can be checked against stable expectations
 
 Evidence:
 
-- None yet
+- Existing test modules continue to cover schema bootstrap, imports, agents, and API contracts
+- `backend/tests/test_scenarios.py` adds cross-surface scenario coverage for dashboard, map, chat, product detail, and reports
+- `tasks/REGRESSION_CHECKLIST.md` ties the regression pass back to the documented API and surface contracts
 
 ## Suggested First Execution Sequence
 
