@@ -320,6 +320,69 @@ class CatalogRepository(SQLiteRepository):
         )
         return [ProductRecord.model_validate(dict(row)) for row in rows]
 
+    def list_all_products(self, *, active_only: bool = True) -> list[ProductRecord]:
+        where_clause = "WHERE status = 'active'" if active_only else ""
+        rows = self.fetch_all(
+            f"""
+            SELECT
+                id,
+                sku,
+                name,
+                category,
+                brand,
+                status,
+                default_supplier_id,
+                origin_country_code,
+                created_at,
+                updated_at
+            FROM products
+            {where_clause}
+            ORDER BY name ASC
+            """
+        )
+        return [ProductRecord.model_validate(dict(row)) for row in rows]
+
+    def search_products(
+        self,
+        *,
+        query: str | None = None,
+        category: str | None = None,
+        limit: int = 25,
+    ) -> list[ProductRecord]:
+        conditions: list[str] = []
+        params: list[object] = []
+
+        if query:
+            conditions.append("(LOWER(name) LIKE ? OR LOWER(sku) LIKE ?)")
+            query_value = f"%{query.strip().lower()}%"
+            params.extend([query_value, query_value])
+        if category:
+            conditions.append("LOWER(category) = ?")
+            params.append(category.strip().lower())
+
+        where_clause = f"WHERE {' AND '.join(conditions)}" if conditions else ""
+        rows = self.fetch_all(
+            f"""
+            SELECT
+                id,
+                sku,
+                name,
+                category,
+                brand,
+                status,
+                default_supplier_id,
+                origin_country_code,
+                created_at,
+                updated_at
+            FROM products
+            {where_clause}
+            ORDER BY name ASC
+            LIMIT ?
+            """,
+            [*params, limit],
+        )
+        return [ProductRecord.model_validate(dict(row)) for row in rows]
+
     def list_suppliers_by_country_codes(self, country_codes: list[str]) -> list[SupplierRecord]:
         if not country_codes:
             return []
@@ -399,6 +462,30 @@ class CatalogRepository(SQLiteRepository):
         if row is None:
             return None
         return SupplierRecord.model_validate(dict(row))
+
+    def list_product_suppliers(self, product_id: int) -> list[SupplierRecord]:
+        rows = self.fetch_all(
+            """
+            SELECT
+                s.id,
+                s.supplier_code,
+                s.name,
+                s.country_code,
+                s.region,
+                s.lead_time_days,
+                s.reliability_score,
+                s.active,
+                s.created_at,
+                s.updated_at
+            FROM suppliers AS s
+            INNER JOIN product_suppliers AS ps
+                ON ps.supplier_id = s.id
+            WHERE ps.product_id = ?
+            ORDER BY ps.is_primary DESC, s.name ASC
+            """,
+            (product_id,),
+        )
+        return [SupplierRecord.model_validate(dict(row)) for row in rows]
 
     def list_all_product_ids(self, *, active_only: bool = True) -> list[int]:
         where_clause = "WHERE status = 'active'" if active_only else ""

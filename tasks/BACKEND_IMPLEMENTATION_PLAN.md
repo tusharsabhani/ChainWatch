@@ -29,8 +29,8 @@ Use this file to:
 | File storage layout | Implemented | Managed runtime paths are created under `data/` at startup |
 | Import pipeline | Implemented | CSV import services, import-run tracking, and seed tooling are now in place |
 | Agents | Implemented for phase 4 | External risk, demand, inventory, fulfillment, reporting, and chat orchestration are now wired with trace metadata |
-| REST API | Started | `GET /api/health` is implemented; feature APIs remain pending |
-| Tests | Implemented for phases 1-4 | `pytest` now covers bootstrap, storage, schema, health, imports, seed, agents, reports, and chat orchestration |
+| REST API | Implemented for phase 5 | Dashboard, map, products, chat, reports, imports, and health endpoints are now wired to backend services |
+| Tests | Implemented for phases 1-5 | `pytest` now covers bootstrap, storage, schema, health, imports, seed, agents, reports, chat orchestration, and API endpoints |
 
 ## Working Rules
 
@@ -424,64 +424,68 @@ Evidence:
 
 | Field | Value |
 | --- | --- |
-| Status | Not started |
+| Status | Done |
 | Priority | High |
 | Depends on | `BE-05`, `BE-06`, `BE-07`, `BE-08` |
 | Goal | Implement the read APIs for dashboard, map, and product detail flows |
 
 Endpoints:
 
-- [ ] `GET /api/dashboard/summary`
-- [ ] `GET /api/dashboard/alerts`
-- [ ] `GET /api/map/countries`
-- [ ] `GET /api/map/countries/{country_code}`
-- [ ] `GET /api/products`
-- [ ] `GET /api/products/{product_id}`
+- [x] `GET /api/dashboard/summary`
+- [x] `GET /api/dashboard/alerts`
+- [x] `GET /api/map/countries`
+- [x] `GET /api/map/countries/{country_code}`
+- [x] `GET /api/products`
+- [x] `GET /api/products/{product_id}`
 
 Definition of done:
 
-- [ ] Payloads align with `API_SPEC.md`
-- [ ] Frontend can render these surfaces without extra backend calls
-- [ ] Errors use the shared error response pattern
+- [x] Payloads align with `API_SPEC.md`
+- [x] Frontend can render these surfaces without extra backend calls
+- [x] Errors use the shared error response pattern
 
 Evidence:
 
-- None yet
+- `backend/app/api/routes/dashboard.py`, `map.py`, and `products.py` expose the documented phase-5 read endpoints
+- `backend/app/services/dashboard.py`, `map.py`, and `products.py` assemble dashboard, map, and product payloads from the phase-3 agent layer
+- `backend/tests/test_api_endpoints.py` verifies dashboard, map, and product endpoint behavior including not-found handling
 
 ### BE-12 Chat, Reports, And Imports APIs
 
 | Field | Value |
 | --- | --- |
-| Status | Not started |
+| Status | Done |
 | Priority | High |
 | Depends on | `BE-04`, `BE-09`, `BE-10` |
 | Goal | Implement the remaining read and write APIs for health, chat, reports, and imports |
 
 Endpoints:
 
-- [ ] `GET /api/health`
-- [ ] `GET /api/chat/sessions`
-- [ ] `POST /api/chat/sessions`
-- [ ] `GET /api/chat/sessions/{session_id}/messages`
-- [ ] `POST /api/chat/messages`
-- [ ] `GET /api/reports`
-- [ ] `GET /api/reports/{report_id}`
-- [ ] `POST /api/reports/generate`
-- [ ] `GET /api/imports`
-- [ ] `POST /api/imports/products`
-- [ ] `POST /api/imports/sales`
-- [ ] `POST /api/imports/inventory`
-- [ ] `POST /api/imports/suppliers`
+- [x] `GET /api/health`
+- [x] `GET /api/chat/sessions`
+- [x] `POST /api/chat/sessions`
+- [x] `GET /api/chat/sessions/{session_id}/messages`
+- [x] `POST /api/chat/messages`
+- [x] `GET /api/reports`
+- [x] `GET /api/reports/{report_id}`
+- [x] `POST /api/reports/generate`
+- [x] `GET /api/imports`
+- [x] `POST /api/imports/products`
+- [x] `POST /api/imports/sales`
+- [x] `POST /api/imports/inventory`
+- [x] `POST /api/imports/suppliers`
 
 Definition of done:
 
-- [ ] Request and response shapes align with `API_SPEC.md`
-- [ ] Long-running actions expose usable status values
-- [ ] Health endpoint reflects runtime and provider readiness
+- [x] Request and response shapes align with `API_SPEC.md`
+- [x] Long-running actions expose usable status values
+- [x] Health endpoint reflects runtime and provider readiness
 
 Evidence:
 
-- None yet
+- `backend/app/api/routes/chat.py`, `reports.py`, and `imports.py` expose the documented phase-5 write and read endpoints on top of the phase-4 services
+- `backend/app/api/dependencies.py` centralizes runtime, adapter, and service construction for route handlers
+- `backend/tests/test_api_endpoints.py` verifies chat session/message flows, report generation/list/detail flows, and import listing/start flows
 
 ## Phase 6: Reliability
 

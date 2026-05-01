@@ -163,6 +163,7 @@ ChainWatch/
 ```
 
 The `frontend/` directory remains a planned implementation target. The `backend/` project now exists, and the `data/` directory is created as a managed runtime location by the backend bootstrap flow.
+The backend phase-5 API surface is now live for health, dashboard, map, products, chat, reports, and imports.
 
 ## Implementation Order
 

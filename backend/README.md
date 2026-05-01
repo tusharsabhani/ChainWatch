@@ -32,6 +32,30 @@ The API will be available at `http://127.0.0.1:8000`.
 
 This endpoint verifies runtime readiness, sqlite connectivity, managed storage paths, and provider configuration flags.
 
+## Phase 5 APIs
+
+Available endpoint groups:
+
+- `GET /api/health`
+- `GET /api/dashboard/summary`
+- `GET /api/dashboard/alerts`
+- `GET /api/map/countries`
+- `GET /api/map/countries/{country_code}`
+- `GET /api/products`
+- `GET /api/products/{product_id}`
+- `GET /api/chat/sessions`
+- `POST /api/chat/sessions`
+- `GET /api/chat/sessions/{session_id}/messages`
+- `POST /api/chat/messages`
+- `GET /api/reports`
+- `GET /api/reports/{report_id}`
+- `POST /api/reports/generate`
+- `GET /api/imports`
+- `POST /api/imports/products`
+- `POST /api/imports/sales`
+- `POST /api/imports/inventory`
+- `POST /api/imports/suppliers`
+
 ## Import CSV Data
 
 From the `backend/` directory:
@@ -59,6 +83,14 @@ Each import creates:
 - a processed summary artifact in `data/imports/processed/`
 
 Imports are transactional. If a CSV has validation errors, no normalized rows from that file are written.
+
+Phase 5 import APIs accept a local file reference in JSON for v1:
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/imports/suppliers \
+  -H 'Content-Type: application/json' \
+  -d '{"filePath":"/absolute/path/to/suppliers.csv"}'
+```
 
 ## Seed Demo Data
 
