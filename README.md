@@ -114,8 +114,10 @@ Included in the current codebase:
 - Typed runtime settings
 - sqlite bootstrap and repository helpers
 - Managed local storage bootstrap under `data/`
+- CSV import pipeline for suppliers, products, sales, inventory, and fulfillment
+- local demo seed workflow for development data
 - baseline `GET /api/health`
-- backend `pytest` coverage for phase-1 bootstrap and readiness flows
+- backend `pytest` coverage for foundation, imports, and seed flows
 
 ## Backend Quickstart
 
@@ -131,6 +133,13 @@ Health check:
 
 ```text
 GET /api/health
+```
+
+Import demo data:
+
+```bash
+cd backend
+uv run python -m app.seed
 ```
 
 ## Planned Repository Shape

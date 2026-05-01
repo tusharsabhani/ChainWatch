@@ -14,7 +14,7 @@ This file tracks bugs, blockers, and follow-ups discovered during implementation
 | --- | --- | --- | --- | --- | --- | --- |
 | ISS-01 | follow-up | medium | open | unassigned | Final LLM provider has not been selected yet | Choose the provider and implement the `LLMAdapter` |
 | ISS-02 | follow-up | medium | open | unassigned | Final web-search provider has not been selected yet | Choose the provider and implement the `SearchAdapter` |
-| ISS-03 | follow-up | medium | open | unassigned | A representative retail sample dataset still needs to be chosen or generated | Define the seed dataset shape during `BE-04` |
+| ISS-03 | follow-up | medium | resolved | unassigned | A representative retail sample dataset still needs to be chosen or generated | Resolved in `BE-04` with the local demo seed workflow |
 
 ## Notes
 

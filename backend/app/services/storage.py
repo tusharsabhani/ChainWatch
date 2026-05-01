@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import shutil
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -73,6 +74,19 @@ class StorageManager:
             self.settings.cache_external_risk_dir / f"{digest}.json"
         )
 
+    def import_raw_path(self, import_id: str, filename: str) -> Path:
+        safe_import_id = _sanitize_segment(import_id, "import")
+        safe_filename = _sanitize_segment(filename, "upload.csv")
+        return self._ensure_within_data_root(
+            self.settings.imports_raw_dir / f"{safe_import_id}-{safe_filename}"
+        )
+
+    def import_processed_summary_path(self, import_id: str) -> Path:
+        safe_import_id = _sanitize_segment(import_id, "import")
+        return self._ensure_within_data_root(
+            self.settings.imports_processed_dir / f"{safe_import_id}.json"
+        )
+
     def app_log_path(self, log_date: date | None = None) -> Path:
         safe_date = (log_date or date.today()).isoformat()
         return self._ensure_within_data_root(
@@ -84,6 +98,16 @@ class StorageManager:
         return self._ensure_within_data_root(
             self.settings.logs_agent_runs_dir / f"{safe_run_id}.log"
         )
+
+    def persist_raw_import(self, source_path: Path, import_id: str, filename: str | None = None) -> Path:
+        resolved_source = source_path.resolve()
+        if not resolved_source.exists():
+            raise FileNotFoundError(f"Import source does not exist: {resolved_source}")
+
+        destination = self.import_raw_path(import_id, filename or resolved_source.name)
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(resolved_source, destination)
+        return destination
 
     def write_json_artifact(self, destination: Path, payload: Any) -> Path:
         path = self._ensure_within_data_root(destination)
@@ -102,6 +126,9 @@ class StorageManager:
 
     def write_external_risk_cache(self, cache_key: str, payload: Any) -> Path:
         return self.write_json_artifact(self.external_risk_cache_path(cache_key), payload)
+
+    def write_import_processed_summary(self, import_id: str, payload: Any) -> Path:
+        return self.write_json_artifact(self.import_processed_summary_path(import_id), payload)
 
     def read_external_risk_cache(self, cache_key: str) -> Any | None:
         path = self.external_risk_cache_path(cache_key)

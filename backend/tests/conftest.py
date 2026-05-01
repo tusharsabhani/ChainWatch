@@ -6,6 +6,7 @@ import pytest
 
 from app.config import Settings
 from app.main import create_app
+from app.services.runtime import bootstrap_runtime
 
 
 @pytest.fixture()
@@ -17,3 +18,7 @@ def settings(tmp_path: Path) -> Settings:
 def app(settings: Settings):
     return create_app(settings)
 
+
+@pytest.fixture()
+def runtime(settings: Settings):
+    return bootstrap_runtime(settings)

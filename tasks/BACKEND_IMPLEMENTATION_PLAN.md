@@ -27,10 +27,10 @@ Use this file to:
 | Backend codebase | Implemented | FastAPI backend foundation now exists under `backend/` |
 | Database schema | Implemented | sqlite bootstrap and repositories are live in phase 1 |
 | File storage layout | Implemented | Managed runtime paths are created under `data/` at startup |
-| Import pipeline | Not started | No CSV ingestion code yet |
+| Import pipeline | Implemented | CSV import services, import-run tracking, and seed tooling are now in place |
 | Agents | Not started | Agent behavior is documented in `AGENTS.md` only |
 | REST API | Started | `GET /api/health` is implemented; feature APIs remain pending |
-| Tests | Implemented for phase 1 | `pytest` covers bootstrap, storage, schema, health, and repository smoke paths |
+| Tests | Implemented for phases 1-2 | `pytest` covers bootstrap, storage, schema, health, imports, and seed flows |
 
 ## Working Rules
 
@@ -192,31 +192,36 @@ Evidence:
 
 | Field | Value |
 | --- | --- |
-| Status | Not started |
+| Status | Done |
 | Priority | High |
 | Depends on | `BE-02`, `BE-03` |
 | Goal | Implement CSV ingestion and local seed data for products, suppliers, sales, inventory, and fulfillment |
 
 Implementation checkpoints:
 
-- [ ] Define CSV formats for each import type
-- [ ] Persist raw files in `data/imports/raw/`
-- [ ] Track import runs in sqlite
-- [ ] Normalize and validate rows
-- [ ] Write normalized data into sqlite tables
-- [ ] Add seed dataset strategy for local development
-- [ ] Return row counts and error summaries for failures
+- [x] Define CSV formats for each import type
+- [x] Persist raw files in `data/imports/raw/`
+- [x] Track import runs in sqlite
+- [x] Normalize and validate rows
+- [x] Write normalized data into sqlite tables
+- [x] Add seed dataset strategy for local development
+- [x] Return row counts and error summaries for failures
 
 Definition of done:
 
-- [ ] Valid imports create `imports` records
-- [ ] Normalized data is queryable through the backend
-- [ ] Failed imports return useful diagnostics
-- [ ] A local developer can populate the app without external services
+- [x] Valid imports create `imports` records
+- [x] Normalized data is queryable through the backend
+- [x] Failed imports return useful diagnostics
+- [x] A local developer can populate the app without external services
 
 Evidence:
 
-- None yet
+- `backend/app/services/imports/service.py` implements transactional CSV import services for suppliers, products, sales, inventory, and fulfillment
+- `backend/app/db/repositories/import_repository.py` tracks import runs in sqlite
+- `backend/app/services/storage.py` persists raw import files and processed summary artifacts
+- `backend/app/import_csv.py` provides a local CLI for manual CSV imports before the import APIs are added
+- `backend/app/services/imports/seed.py` and `backend/app/seed.py` provide repeatable local demo data seeding
+- `backend/tests/test_imports.py` and `backend/tests/test_seed.py` verify import success, validation failure, and seed population flows
 
 ## Phase 3: Core Analysis Agents
 
@@ -524,8 +529,7 @@ Evidence:
 
 ## Suggested First Execution Sequence
 
-1. Start `BE-04`
-2. Build `BE-06` and `BE-07` first for the earliest useful product slice
-3. Add `BE-05` and `BE-08`
-4. Add `BE-11` product and dashboard APIs
-5. Finish reporting, chat, and reliability work
+1. Build `BE-06` and `BE-07` first for the earliest useful product slice
+2. Add `BE-05` and `BE-08`
+3. Add `BE-11` product and dashboard APIs
+4. Finish reporting, chat, and reliability work

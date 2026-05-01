@@ -12,7 +12,6 @@ This file is the lightweight Jira-style board for ChainWatch. Each task ID must 
 - `FE-06` Product detail page
 - `FE-07` Data import and settings page
 - `FE-08` Shared API client, loading states, and error states
-- `BE-04` Import pipeline and seed data
 - `BE-05` External Risk Agent
 - `BE-06` Demand Agent
 - `BE-07` Inventory Agent
@@ -37,3 +36,4 @@ None.
 - `BE-01` Project structure and config
 - `BE-02` sqlite schema and data access
 - `BE-03` Local file storage layout
+- `BE-04` Import pipeline and seed data
