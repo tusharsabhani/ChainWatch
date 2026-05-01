@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS reports (
     scope_type TEXT NOT NULL,
     scope_id TEXT,
     title TEXT NOT NULL,
-    status TEXT NOT NULL CHECK (status IN ('queued', 'running', 'completed', 'failed')),
+    status TEXT NOT NULL CHECK (status IN ('queued', 'running', 'completed', 'partial', 'failed')),
     requested_by TEXT,
     created_at TEXT NOT NULL,
     completed_at TEXT,
@@ -245,4 +245,3 @@ CREATE INDEX IF NOT EXISTS idx_imports_type_started_at
 
 CREATE INDEX IF NOT EXISTS idx_agent_runs_trigger_started_at
     ON agent_runs (trigger_type, started_at);
-

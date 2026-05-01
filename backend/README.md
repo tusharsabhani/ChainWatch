@@ -81,6 +81,21 @@ Phase 3 backend agents are implemented for:
 
 These agents currently run as Python services and create `agent_runs` trace rows plus local run logs. Their page and chat APIs will be added in later backend phases.
 
+## Reporting And Chat Services
+
+Phase 4 backend services are implemented for:
+
+- report generation
+- chat orchestration
+
+Current capabilities:
+
+- `ReportService` creates `reports` rows, writes JSON and Markdown artifacts, and preserves partial or failed generation states
+- `ChatService` creates chat sessions, persists user and assistant messages, and routes questions through the domain agents with citation preservation
+- `Chat Orchestrator` falls back to deterministic response assembly when the LLM is unavailable
+
+These flows are available as Python services today. Their HTTP routes are still planned for the API phases.
+
 ## Test
 
 From the `backend/` directory:

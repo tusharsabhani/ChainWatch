@@ -169,8 +169,8 @@ The `frontend/` directory remains a planned implementation target. The `backend/
 1. Lock repository conventions and task workflow.
 2. Build backend structure, sqlite schema, and local storage layout.
 3. Add import pipeline and seed data.
-4. Implement risk-analysis agents and orchestration.
-5. Expose REST APIs for dashboard, chat, map, products, reports, and imports.
+4. Implement risk-analysis agents, report generation, and chat orchestration.
+5. Expose the remaining REST APIs for dashboard, chat, map, products, reports, and imports.
 6. Build the frontend pages and shared UI/data layers.
 7. Add verification, eval scenarios, and documentation updates.
 

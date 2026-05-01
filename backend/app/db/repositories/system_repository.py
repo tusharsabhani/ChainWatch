@@ -29,9 +29,12 @@ class SystemRepository(SQLiteRepository):
     ) -> int:
         allowed_tables = {
             "agent_runs",
+            "chat_messages",
+            "chat_sessions",
             "country_risk_scores",
             "risk_events",
             "products",
+            "reports",
             "suppliers",
             "product_suppliers",
             "sales_history",

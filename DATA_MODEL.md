@@ -244,7 +244,7 @@ Purpose: metadata for generated reports and local artifact locations.
 | scope_type | TEXT NOT NULL | `dashboard`, `product`, `country`, `supplier`, `chat` |
 | scope_id | TEXT | Related entity ID |
 | title | TEXT NOT NULL | Report title |
-| status | TEXT NOT NULL | `queued`, `running`, `completed`, `failed` |
+| status | TEXT NOT NULL | `queued`, `running`, `completed`, `partial`, `failed` |
 | requested_by | TEXT | Optional local actor |
 | created_at | TEXT NOT NULL | Creation time |
 | completed_at | TEXT | Completion time |
@@ -356,7 +356,7 @@ Used by:
 
 ### Common status values
 
-- Reports: `queued`, `running`, `completed`, `failed`
+- Reports: `queued`, `running`, `completed`, `partial`, `failed`
 - Imports: `queued`, `processing`, `completed`, `failed`
 - Risk events: `open`, `monitoring`, `resolved`
 - Agent runs: `running`, `completed`, `failed`, `partial`

@@ -12,8 +12,6 @@ This file is the lightweight Jira-style board for ChainWatch. Each task ID must 
 - `FE-06` Product detail page
 - `FE-07` Data import and settings page
 - `FE-08` Shared API client, loading states, and error states
-- `BE-09` Reporting Agent
-- `BE-10` Chat orchestration
 - `BE-11` Dashboard, map, and product APIs
 - `BE-12` Chat, reports, and imports APIs
 - `BE-13` Caching and background refresh
@@ -37,3 +35,5 @@ None.
 - `BE-06` Demand Agent
 - `BE-07` Inventory Agent
 - `BE-08` Fulfillment Agent
+- `BE-09` Reporting Agent
+- `BE-10` Chat orchestration

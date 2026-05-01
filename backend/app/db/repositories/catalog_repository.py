@@ -23,6 +23,34 @@ def _placeholders(items: Sequence[object]) -> str:
 
 
 class CatalogRepository(SQLiteRepository):
+    def get_product_by_id(
+        self,
+        product_id: int,
+        connection: sqlite3.Connection | None = None,
+    ) -> ProductRecord | None:
+        row = self.fetch_one(
+            """
+            SELECT
+                id,
+                sku,
+                name,
+                category,
+                brand,
+                status,
+                default_supplier_id,
+                origin_country_code,
+                created_at,
+                updated_at
+            FROM products
+            WHERE id = ?
+            """,
+            (product_id,),
+            connection=connection,
+        )
+        if row is None:
+            return None
+        return ProductRecord.model_validate(dict(row))
+
     def create_product(
         self,
         product: ProductCreate,
@@ -343,3 +371,73 @@ class CatalogRepository(SQLiteRepository):
             country_codes,
         )
         return [ProductRecord.model_validate(dict(row)) for row in rows]
+
+    def get_supplier_by_id(
+        self,
+        supplier_id: int,
+        connection: sqlite3.Connection | None = None,
+    ) -> SupplierRecord | None:
+        row = self.fetch_one(
+            """
+            SELECT
+                id,
+                supplier_code,
+                name,
+                country_code,
+                region,
+                lead_time_days,
+                reliability_score,
+                active,
+                created_at,
+                updated_at
+            FROM suppliers
+            WHERE id = ?
+            """,
+            (supplier_id,),
+            connection=connection,
+        )
+        if row is None:
+            return None
+        return SupplierRecord.model_validate(dict(row))
+
+    def list_all_product_ids(self, *, active_only: bool = True) -> list[int]:
+        where_clause = "WHERE status = 'active'" if active_only else ""
+        rows = self.fetch_all(
+            f"""
+            SELECT id
+            FROM products
+            {where_clause}
+            ORDER BY id ASC
+            """
+        )
+        return [int(row["id"]) for row in rows]
+
+    def list_all_supplier_country_codes(self) -> list[str]:
+        rows = self.fetch_all(
+            """
+            SELECT DISTINCT country_code
+            FROM suppliers
+            WHERE country_code IS NOT NULL
+              AND country_code != ''
+            ORDER BY country_code ASC
+            """
+        )
+        return [str(row["country_code"]) for row in rows]
+
+    def list_supplier_country_codes_for_product_ids(self, product_ids: list[int]) -> list[str]:
+        if not product_ids:
+            return []
+        rows = self.fetch_all(
+            f"""
+            SELECT DISTINCT s.country_code
+            FROM suppliers AS s
+            INNER JOIN product_suppliers AS ps
+                ON ps.supplier_id = s.id
+            WHERE ps.product_id IN ({_placeholders(product_ids)})
+              AND s.country_code IS NOT NULL
+              AND s.country_code != ''
+            ORDER BY s.country_code ASC
+            """,
+            product_ids,
+        )
+        return [str(row["country_code"]) for row in rows]

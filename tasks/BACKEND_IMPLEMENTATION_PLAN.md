@@ -28,9 +28,9 @@ Use this file to:
 | Database schema | Implemented | sqlite bootstrap and repositories are live in phase 1 |
 | File storage layout | Implemented | Managed runtime paths are created under `data/` at startup |
 | Import pipeline | Implemented | CSV import services, import-run tracking, and seed tooling are now in place |
-| Agents | Implemented for phase 3 | External risk, demand, inventory, and fulfillment agents now run with trace metadata |
+| Agents | Implemented for phase 4 | External risk, demand, inventory, fulfillment, reporting, and chat orchestration are now wired with trace metadata |
 | REST API | Started | `GET /api/health` is implemented; feature APIs remain pending |
-| Tests | Implemented for phases 1-3 | `pytest` covers bootstrap, storage, schema, health, imports, seed, and agent flows |
+| Tests | Implemented for phases 1-4 | `pytest` now covers bootstrap, storage, schema, health, imports, seed, agents, reports, and chat orchestration |
 
 ## Working Rules
 
@@ -357,60 +357,66 @@ Evidence:
 
 | Field | Value |
 | --- | --- |
-| Status | Not started |
+| Status | Done |
 | Priority | Medium |
 | Depends on | `BE-03`, `BE-05`, `BE-06`, `BE-07`, `BE-08` |
 | Goal | Generate local JSON and Markdown report artifacts with persisted metadata |
 
 Implementation checkpoints:
 
-- [ ] Define report input and output models
-- [ ] Create report generation service
-- [ ] Serialize report JSON
-- [ ] Render report Markdown
-- [ ] Persist `reports` metadata
-- [ ] Preserve partial and failed generation states
-- [ ] Include visible limitations when upstream data is incomplete
+- [x] Define report input and output models
+- [x] Create report generation service
+- [x] Serialize report JSON
+- [x] Render report Markdown
+- [x] Persist `reports` metadata
+- [x] Preserve partial and failed generation states
+- [x] Include visible limitations when upstream data is incomplete
 
 Definition of done:
 
-- [ ] Report requests create `reports` rows
-- [ ] Completed reports store JSON and Markdown paths
-- [ ] Partial or failed runs preserve status and error details
+- [x] Report requests create `reports` rows
+- [x] Completed reports store JSON and Markdown paths
+- [x] Partial or failed runs preserve status and error details
 
 Evidence:
 
-- None yet
+- `backend/app/schemas/reports.py` defines report request, artifact, status, and generation-result models
+- `backend/app/db/repositories/report_repository.py` persists queued, running, completed, partial, and failed report metadata
+- `backend/app/agents/reporting.py` generates report sections, JSON artifacts, Markdown artifacts, and visible limitations
+- `backend/tests/test_output_orchestration.py` verifies completed report generation and JSON-preserving partial behavior when Markdown rendering fails
 
 ### BE-10 Chat Orchestration
 
 | Field | Value |
 | --- | --- |
-| Status | Not started |
+| Status | Done |
 | Priority | Medium |
 | Depends on | `BE-02`, `BE-05`, `BE-06`, `BE-07`, `BE-08` |
 | Goal | Route user questions to agents, merge outputs, preserve citations, and return one coherent answer |
 
 Implementation checkpoints:
 
-- [ ] Create chat session service
-- [ ] Persist user and assistant messages
-- [ ] Implement intent-to-agent routing
-- [ ] Merge structured agent outputs
-- [ ] Preserve citations and used-agent metadata
-- [ ] Add graceful partial-failure behavior
-- [ ] Support deterministic fallback when LLM is unavailable
-- [ ] Record orchestrator trace metadata
+- [x] Create chat session service
+- [x] Persist user and assistant messages
+- [x] Implement intent-to-agent routing
+- [x] Merge structured agent outputs
+- [x] Preserve citations and used-agent metadata
+- [x] Add graceful partial-failure behavior
+- [x] Support deterministic fallback when LLM is unavailable
+- [x] Record orchestrator trace metadata
 
 Definition of done:
 
-- [ ] A user message can be persisted and answered
-- [ ] Session history is queryable and reusable
-- [ ] One failing agent does not collapse the whole response
+- [x] A user message can be persisted and answered
+- [x] Session history is queryable and reusable
+- [x] One failing agent does not collapse the whole response
 
 Evidence:
 
-- None yet
+- `backend/app/schemas/chat.py` defines chat session, message, scope, and orchestrator contracts
+- `backend/app/db/repositories/chat_repository.py` persists sessions and ordered chat messages with citations and agent-trace metadata
+- `backend/app/agents/chat_orchestrator.py` routes messages to domain agents, preserves citations, and falls back to deterministic assembly when the LLM is unavailable
+- `backend/tests/test_output_orchestration.py` verifies message persistence, session history reuse, and graceful partial-failure handling
 
 ## Phase 5: API Surface
 
