@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Work+Sans:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "surface-dim": "#dcd9db",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed": "#fcdeb5",
+                        "secondary-container": "#86f2e4",
+                        "on-surface": "#1b1b1d",
+                        "on-tertiary-fixed": "#271901",
+                        "secondary-fixed": "#89f5e7",
+                        "surface-bright": "#fcf8fa",
+                        "surface-variant": "#e4e2e4",
+                        "tertiary": "#000000",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed-dim": "#6bd8cb",
+                        "surface-tint": "#565e74",
+                        "primary-fixed-dim": "#bec6e0",
+                        "surface-container-low": "#f6f3f5",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#eae7e9",
+                        "tertiary-container": "#271901",
+                        "on-error-container": "#93000a",
+                        "background": "#fcf8fa",
+                        "on-tertiary-container": "#98805d",
+                        "secondary": "#006a61",
+                        "on-secondary-container": "#006f66",
+                        "outline": "#76777d",
+                        "primary-fixed": "#dae2fd",
+                        "on-secondary-fixed": "#00201d",
+                        "tertiary-fixed-dim": "#dec29a",
+                        "primary-container": "#131b2e",
+                        "inverse-on-surface": "#f3f0f2",
+                        "on-background": "#1b1b1d",
+                        "on-primary-container": "#7c839b",
+                        "on-primary-fixed": "#131b2e",
+                        "inverse-primary": "#bec6e0",
+                        "on-tertiary-fixed-variant": "#574425",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#005049",
+                        "outline-variant": "#c6c6cd",
+                        "inverse-surface": "#303032",
+                        "primary": "#000000",
+                        "surface-container-highest": "#e4e2e4",
+                        "surface": "#fcf8fa",
+                        "on-surface-variant": "#45464d",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-container": "#f0edef"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "header-height": "64px",
+                        "sidebar-width": "260px",
+                        "container-padding": "24px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "label-caps": ["Work Sans"],
+                        "data-tabular": ["Work Sans"],
+                        "display-lg": ["Inter"],
+                        "body-main": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "data-tabular": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "display-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-main": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-main antialiased pb-24">
+<!-- Mobile Top Bar -->
+<header class="fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-md z-50 px-4 flex items-center justify-between border-b border-surface-container-high">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-primary-container rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary-fixed text-lg" data-icon="shield">shield</span>
+</div>
+<span class="font-headline-md text-headline-md tracking-tight">ChainWatch</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-1.5 px-2.5 py-1 bg-secondary-container/20 rounded-full border border-secondary-container/30">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-label-caps text-label-caps text-secondary">Fresh</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="notifications">notifications</span>
+</div>
+</header>
+<main class="pt-20 px-4 space-y-6">
+<!-- Dashboard Greeting -->
+<section>
+<h1 class="font-display-lg text-display-lg">Dashboard</h1>
+<p class="font-body-main text-on-surface-variant">Risk Intelligence Overview</p>
+</section>
+<!-- KPI Grid (Vertical Stack) -->
+<section class="grid grid-cols-1 gap-4">
+<!-- Risk Score Card -->
+<div class="bg-surface-container-lowest border border-surface-container-high p-5 rounded-lg flex items-center justify-between">
+<div class="flex items-start gap-4">
+<div class="w-1 bg-error h-12 rounded-full"></div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase">Aggregated Risk</p>
+<p class="font-display-lg text-display-lg">3.8</p>
+</div>
+</div>
+<div class="text-right">
+<span class="text-error font-data-tabular text-data-tabular">+12%</span>
+<p class="text-xs text-on-surface-variant">vs last 24h</p>
+</div>
+</div>
+<!-- Inventory Health -->
+<div class="bg-surface-container-lowest border border-surface-container-high p-5 rounded-lg flex items-center justify-between">
+<div class="flex items-start gap-4">
+<div class="w-1 bg-secondary h-12 rounded-full"></div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase">Inventory Stability</p>
+<p class="font-display-lg text-display-lg">94%</p>
+</div>
+</div>
+<div class="text-right">
+<span class="text-secondary font-data-tabular text-data-tabular">+2.4%</span>
+<p class="text-xs text-on-surface-variant">Optimal</p>
+</div>
+</div>
+</section>
+<!-- Expandable Alert List -->
+<section class="bg-surface-container-lowest border border-surface-container-high rounded-lg overflow-hidden">
+<div class="p-4 border-b border-surface-container-high flex justify-between items-center bg-surface-container-low">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-error" data-icon="warning">warning</span>
+<h2 class="font-headline-md text-headline-md">Active Alerts</h2>
+</div>
+<span class="px-2 py-0.5 bg-error/10 text-error font-label-caps text-label-caps rounded-full">3 NEW</span>
+</div>
+<div class="divide-y divide-surface-container-high">
+<div class="p-4 flex gap-4 items-start">
+<span class="material-symbols-outlined text-error mt-1" data-icon="fmd_bad">fmd_bad</span>
+<div class="flex-1">
+<div class="flex justify-between">
+<h3 class="font-data-tabular text-data-tabular">Delayed Transit: HUB-04</h3>
+<span class="text-xs text-on-surface-variant">12m ago</span>
+</div>
+<p class="text-sm text-on-surface-variant mt-1">High-value cargo delayed in Northern Corridor due to severe weather conditions.</p>
+</div>
+</div>
+<div class="p-4 flex gap-4 items-start">
+<span class="material-symbols-outlined text-tertiary-fixed-dim mt-1" data-icon="inventory">inventory</span>
+<div class="flex-1">
+<div class="flex justify-between">
+<h3 class="font-data-tabular text-data-tabular">Stock Shortage: North Reg.</h3>
+<span class="text-xs text-on-surface-variant">1h ago</span>
+</div>
+<p class="text-sm text-on-surface-variant mt-1">Critical inventory levels for SKU-882 detected across 4 retail locations.</p>
+</div>
+</div>
+</div>
+<button class="w-full py-3 text-secondary font-label-caps text-label-caps bg-surface-container-lowest border-t border-surface-container-high">VIEW ALL ALERTS</button>
+</section>
+<!-- Tabbed View Section -->
+<section class="space-y-4">
+<div class="flex border-b border-surface-container-high gap-6">
+<button class="pb-3 border-b-2 border-secondary text-on-surface font-headline-md text-sm">Top Products</button>
+<button class="pb-3 text-on-surface-variant font-headline-md text-sm">Top Suppliers</button>
+</div>
+<div class="space-y-3">
+<!-- Product Card -->
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-lg p-3 flex items-center gap-4">
+<img alt="Product Image" class="w-14 h-14 rounded object-cover" data-alt="A sleek and modern product photography shot of a high-end minimalist smartwatch placed on a clean white marble surface. The lighting is bright and airy, reflecting a professional studio setting with soft shadows. The color palette is composed of crisp whites, cool greys, and subtle metallic accents, emphasizing a premium corporate tech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUCJb6sdufQIyl8U_XaP5k4N75IidFXJVFMcDdOVT_yIZ-GueDCLFMnGUx21n8ss0RYolDw8W8v5S2VhCUtjv7XsTkh8bIPToNoWHTVzT1BXBKa9Zbxkw25DsdTbJ77TKsDG2io36pZIrJGXFA82LKqJBPJ59H5wM3gCG7sigV8sppmkSow7cDp3Oi6iDK5OMMVQydfBUvKAs-g7uoRRgsmGmo70yOSXe2s02qBoHi2y5ipOEMHR3VgEeKSerzD9e2TCOAZZCAJfhU"/>
+<div class="flex-1">
+<h4 class="font-data-tabular text-data-tabular">Quantum Pro Series</h4>
+<div class="flex items-center gap-2 mt-1">
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary h-full w-[85%]"></div>
+</div>
+<span class="text-xs font-data-tabular">85%</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="chevron_right">chevron_right</span>
+</div>
+<!-- Product Card 2 -->
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-lg p-3 flex items-center gap-4">
+<img alt="Product Image" class="w-14 h-14 rounded object-cover" data-alt="A professional close-up of high-fidelity noise-canceling headphones resting on a minimalist slate grey desk. The image captures the fine textures of the leather and metallic finishes under soft, diffused corporate lighting. The overall mood is sophisticated and focused, using a clean color scheme of deep blacks and neutral surfaces to convey reliability and technological precision." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0K4Tt-5RgzliU8ouirXVmGpTxgTF8Kma4Ox8klIAmwU-XU2MUAk3rNNwOUrLzvG8n2NmyrFhRIJJcHePObhcrcbouswooLxflqNTF9LHRutgkfgDKlnx2pmrQVwl-IRxToZxHkFb8riaEmCnB0ZH2yHUubNw1vXnhL5sgANuiWVdH3EC_Mqbfyn_Ug-yv3yv5dRbDrGABLyNvKOuMOj1jFxHnTQsZBu3fXK40Wx4InL6-LuZRfKTLQkfgYDF5evfK1CZFoAu91OlC"/>
+<div class="flex-1">
+<h4 class="font-data-tabular text-data-tabular">Apex Audio Hub</h4>
+<div class="flex items-center gap-2 mt-1">
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary h-full w-[62%]"></div>
+</div>
+<span class="text-xs font-data-tabular">62%</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</section>
+<!-- Map Quick Look (Asymmetric Component) -->
+<section class="bg-surface-container-lowest border border-surface-container-high rounded-lg overflow-hidden">
+<div class="relative h-40">
+<img alt="Map View" class="w-full h-full object-cover grayscale opacity-60" data-alt="A sophisticated data visualization map showing global logistics routes with glowing teal light trails connecting major metropolitan hubs across a dark, minimalist charcoal grey world map. The visual style is highly technical and modern, featuring thin architectural lines and tiny pulsing node indicators. The lighting is low-key, emphasizing the luminescent network paths against the matte background." data-location="Global Logistics Map" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJ6WBCSBuLbY6O07oECdsOTkQXWlwJDzkWBkGujfMLOqp8RMSgoI3shaVW5EN0bVV2eTfSnXU9-WMTr-edR9b2vsap8HIBO6B0o5PdrVkM4_U7H55yz5TfhasgKtG97bzv8onI9zTuRf4wFfGQMlp71qnsR9YJIyI-6LTZQJb6uhuhsrySZhXNeENQirS8i4uHA-gbU_LvAuFH9r0xjnlRUy8R6DC6bT9d-LX1aMduJcn_6Y0dMamo89TBr_O_9CpTgRTrYRHpsusT"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+<div class="absolute bottom-4 left-4 text-white">
+<p class="font-label-caps text-label-caps opacity-80">CURRENT NETWORK</p>
+<p class="font-headline-md text-headline-md">12 Nodes Active</p>
+</div>
+<button class="absolute bottom-4 right-4 bg-secondary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-surface-container-high flex items-center justify-around z-50">
+<!-- Dashboard (Active) -->
+<button class="flex flex-col items-center justify-center gap-1 text-secondary">
+<span class="material-symbols-outlined" data-icon="dashboard" data-weight="fill">dashboard</span>
+<span class="font-label-caps text-[10px]">Dashboard</span>
+</button>
+<!-- Map -->
+<button class="flex flex-col items-center justify-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="font-label-caps text-[10px]">Map</span>
+</button>
+<!-- Chat -->
+<button class="flex flex-col items-center justify-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+<span class="font-label-caps text-[10px]">Chat</span>
+</button>
+<!-- Settings -->
+<button class="flex flex-col items-center justify-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-caps text-[10px]">Settings</span>
+</button>
+</nav>
+</body></html>

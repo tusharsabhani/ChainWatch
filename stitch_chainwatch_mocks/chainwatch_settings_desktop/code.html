@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ChainWatch | System Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Work+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "surface-dim": "#dcd9db",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed": "#fcdeb5",
+                        "secondary-container": "#86f2e4",
+                        "on-surface": "#1b1b1d",
+                        "on-tertiary-fixed": "#271901",
+                        "secondary-fixed": "#89f5e7",
+                        "surface-bright": "#fcf8fa",
+                        "surface-variant": "#e4e2e4",
+                        "tertiary": "#000000",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed-dim": "#6bd8cb",
+                        "surface-tint": "#565e74",
+                        "primary-fixed-dim": "#bec6e0",
+                        "surface-container-low": "#f6f3f5",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#eae7e9",
+                        "tertiary-container": "#271901",
+                        "on-error-container": "#93000a",
+                        "background": "#fcf8fa",
+                        "on-tertiary-container": "#98805d",
+                        "secondary": "#006a61",
+                        "on-secondary-container": "#006f66",
+                        "outline": "#76777d",
+                        "primary-fixed": "#dae2fd",
+                        "on-secondary-fixed": "#00201d",
+                        "tertiary-fixed-dim": "#dec29a",
+                        "primary-container": "#131b2e",
+                        "inverse-on-surface": "#f3f0f2",
+                        "on-background": "#1b1b1d",
+                        "on-primary-container": "#7c839b",
+                        "on-primary-fixed": "#131b2e",
+                        "inverse-primary": "#bec6e0",
+                        "on-tertiary-fixed-variant": "#574425",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#005049",
+                        "outline-variant": "#c6c6cd",
+                        "inverse-surface": "#303032",
+                        "primary": "#000000",
+                        "surface-container-highest": "#e4e2e4",
+                        "surface": "#fcf8fa",
+                        "on-surface-variant": "#45464d",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-container": "#f0edef"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "header-height": "64px",
+                        "sidebar-width": "260px",
+                        "container-padding": "24px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "label-caps": ["Work Sans"],
+                        "data-tabular": ["Work Sans"],
+                        "display-lg": ["Inter"],
+                        "body-main": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "data-tabular": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "display-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-main": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body {
+            background-color: #F8FAFC;
+        }
+    </style>
+</head>
+<body class="font-body-main text-on-surface">
+<!-- SideNavBar Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 z-40 bg-slate-900 dark:bg-slate-950 border-r border-slate-800 flex flex-col h-full font-['Inter'] text-sm antialiased">
+<div class="p-6">
+<h1 class="text-xl font-black tracking-tight text-white">ChainWatch</h1>
+<p class="text-xs text-slate-500 font-medium">Risk Intelligence</p>
+</div>
+<nav class="flex-1 px-2 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span>Map</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span>Products</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="assessment">assessment</span>
+<span>Reports</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+<span>Chat</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-slate-800 text-white border-l-4 border-teal-500 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="p-4 border-t border-slate-800 mt-auto">
+<div class="flex items-center gap-3 px-2">
+<img alt="User Profile" class="w-8 h-8 rounded-full" data-alt="A professional headshot of a corporate analyst in a well-lit modern office environment. The lighting is crisp and cool-toned, reflecting a serious yet reliable professional persona. The overall image has a clean, high-contrast aesthetic that fits into a premium enterprise software interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmRzGLXnb9b9lxoQVwsGYKkB_ZmEpEWeVyn_kRCw0W8rt6ZZLSM6d0M8WxiwLE-XDYjnyuHZ66lUJFunAhIPmvFss0xls__66jIbQi8YG6eBfzbz2qIQk6jsavXDPkeqXJ-9Q193miYD_PNPzgauDIPdD6wDjjMfrHVRl8p8m-fhhcpyFnuyzKDS3FB6yowohtrBpSmgHec6b5HZTDaTOK1BG8UMd6Nm2bF067DbJlBQM7HLzYo9Bo4RkpXr7gjjVJHFyxm6Ho5I-I"/>
+<div class="overflow-hidden">
+<p class="text-white font-medium truncate">System Admin</p>
+<p class="text-xs text-slate-500 truncate">Lvl 4 Authorization</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopAppBar Shell -->
+<header class="fixed top-0 right-0 left-64 h-16 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 w-full">
+<div class="flex items-center gap-4">
+<h2 class="font-headline-md text-headline-md text-primary uppercase tracking-wider">System Settings</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="monitor_heart">monitor_heart</span>
+<span class="text-[10px] font-bold text-secondary uppercase tracking-widest">System Live</span>
+</div>
+<div class="flex items-center gap-4 border-l border-slate-200 pl-6">
+<span class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-teal-500 transition-colors" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-teal-500 transition-colors" data-icon="account_circle">account_circle</span>
+</div>
+</div>
+</header>
+<!-- Main Canvas Content -->
+<main class="ml-64 pt-24 pb-12 px-8">
+<div class="grid grid-cols-12 gap-6">
+<!-- Bento Row 1: Health & Import Status -->
+<div class="col-span-12 lg:col-span-8">
+<div class="bg-white border border-outline-variant p-6 h-full flex flex-col">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="font-headline-md text-headline-md text-primary">Runtime Health</h3>
+<p class="text-sm text-on-surface-variant">Real-time status of critical infrastructure nodes.</p>
+</div>
+<span class="material-symbols-outlined text-slate-400 cursor-pointer" data-icon="more_vert">more_vert</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- API Connection -->
+<div class="bg-surface-container-low p-5 border-l-4 border-secondary">
+<div class="flex items-center justify-between mb-4">
+<span class="material-symbols-outlined text-secondary" data-icon="api">api</span>
+<span class="text-[10px] font-bold px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded-full uppercase">Operational</span>
+</div>
+<div class="text-2xl font-black mb-1">99.98%</div>
+<div class="text-xs font-label-caps text-on-surface-variant uppercase">API Uptime (24h)</div>
+</div>
+<!-- Database Status -->
+<div class="bg-surface-container-low p-5 border-l-4 border-secondary">
+<div class="flex items-center justify-between mb-4">
+<span class="material-symbols-outlined text-secondary" data-icon="database">database</span>
+<span class="text-[10px] font-bold px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded-full uppercase">Synchronized</span>
+</div>
+<div class="text-2xl font-black mb-1">12ms</div>
+<div class="text-xs font-label-caps text-on-surface-variant uppercase">Query Latency</div>
+</div>
+<!-- Storage Load -->
+<div class="bg-surface-container-low p-5 border-l-4 border-secondary">
+<div class="flex items-center justify-between mb-4">
+<span class="material-symbols-outlined text-secondary" data-icon="cloud_done">cloud_done</span>
+<span class="text-[10px] font-bold px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded-full uppercase">Optimal</span>
+</div>
+<div class="text-2xl font-black mb-1">42%</div>
+<div class="text-xs font-label-caps text-on-surface-variant uppercase">Storage Capacity</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Import Action Card -->
+<div class="col-span-12 lg:col-span-4">
+<div class="bg-primary-container text-on-primary-container p-6 h-full flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-headline-md text-headline-md text-white">Import Data</h3>
+<span class="material-symbols-outlined text-white/50" data-icon="upload_file">upload_file</span>
+</div>
+<p class="text-sm mb-6 text-on-primary-container/80">Batch upload operational intelligence directly to the ChainWatch core engine. Supports CSV, JSON, and XML schemas.</p>
+<div class="space-y-3 mb-8">
+<div class="flex items-center justify-between text-xs font-label-caps uppercase text-on-primary-container/60">
+<span>Target Path</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="edit">edit</span>
+</div>
+<div class="bg-white/10 p-3 rounded font-mono text-xs text-white border border-white/5">
+                                /mnt/vault/core/ingest/prod_01
+                            </div>
+</div>
+</div>
+<button class="w-full py-4 bg-secondary text-on-secondary font-bold uppercase tracking-widest text-xs hover:bg-secondary-fixed transition-colors active:opacity-70">
+                        Select Source File
+                    </button>
+</div>
+</div>
+<!-- Provider Readiness -->
+<div class="col-span-12 lg:col-span-5">
+<div class="bg-white border border-outline-variant flex flex-col">
+<div class="p-6 border-b border-outline-variant">
+<h3 class="font-headline-md text-headline-md text-primary">Provider Readiness</h3>
+<p class="text-sm text-on-surface-variant">External intelligence feeds status</p>
+</div>
+<div class="p-0">
+<div class="divide-y divide-outline-variant">
+<!-- Provider Item -->
+<div class="flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-slate-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-500" data-icon="directions_boat">directions_boat</span>
+</div>
+<div>
+<p class="text-sm font-bold">MarineTraffic</p>
+<p class="text-[10px] uppercase font-label-caps text-on-surface-variant">Global AIS Tracking</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="text-xs font-bold text-secondary uppercase">Connected</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-slate-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-500" data-icon="news">news</span>
+</div>
+<div>
+<p class="text-sm font-bold">Reuters Intelligence</p>
+<p class="text-[10px] uppercase font-label-caps text-on-surface-variant">Geopolitical Risk Feed</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="text-xs font-bold text-secondary uppercase">Connected</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-slate-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-500" data-icon="thermostat">thermostat</span>
+</div>
+<div>
+<p class="text-sm font-bold">NOAA Weather</p>
+<p class="text-[10px] uppercase font-label-caps text-on-surface-variant">Maritime Climatic Conditions</p>
+</div>
+</div>
+<div class="flex items-center gap-2 text-error">
+<div class="w-2 h-2 rounded-full bg-error"></div>
+<span class="text-xs font-bold uppercase">Error (503)</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-slate-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-500" data-icon="security">security</span>
+</div>
+<div>
+<p class="text-sm font-bold">Interpol Red</p>
+<p class="text-[10px] uppercase font-label-caps text-on-surface-variant">Security Enforcement Alert</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="text-xs font-bold text-secondary uppercase">Connected</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent History -->
+<div class="col-span-12 lg:col-span-7">
+<div class="bg-white border border-outline-variant flex flex-col h-full">
+<div class="p-6 border-b border-outline-variant flex items-center justify-between">
+<div>
+<h3 class="font-headline-md text-headline-md text-primary">Import History</h3>
+<p class="text-sm text-on-surface-variant">Last 10 ingestion operations</p>
+</div>
+<button class="text-[10px] font-bold uppercase border border-outline px-4 py-2 hover:bg-surface-container transition-colors">Export Logs</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-container-low border-b border-outline-variant">
+<tr>
+<th class="px-6 py-3 text-[10px] font-label-caps text-on-surface-variant uppercase">Batch ID</th>
+<th class="px-6 py-3 text-[10px] font-label-caps text-on-surface-variant uppercase">Source</th>
+<th class="px-6 py-3 text-[10px] font-label-caps text-on-surface-variant uppercase">Time</th>
+<th class="px-6 py-3 text-[10px] font-label-caps text-on-surface-variant uppercase">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-low/50">
+<td class="px-6 py-3 font-data-tabular text-sm">#CW-0921-A</td>
+<td class="px-6 py-3 text-sm">inventory_q3.csv</td>
+<td class="px-6 py-3 text-sm text-on-surface-variant">02:14 PM</td>
+<td class="px-6 py-3">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase">Success</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50">
+<td class="px-6 py-3 font-data-tabular text-sm">#CW-0921-B</td>
+<td class="px-6 py-3 text-sm">manifest_v2.json</td>
+<td class="px-6 py-3 text-sm text-on-surface-variant">01:55 PM</td>
+<td class="px-6 py-3">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase">Success</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50">
+<td class="px-6 py-3 font-data-tabular text-sm">#CW-0920-X</td>
+<td class="px-6 py-3 text-sm">security_audit.xml</td>
+<td class="px-6 py-3 text-sm text-on-surface-variant">11:02 AM</td>
+<td class="px-6 py-3">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-error-container text-on-error-container text-[10px] font-bold uppercase">Failed</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50">
+<td class="px-6 py-3 font-data-tabular text-sm">#CW-0920-Y</td>
+<td class="px-6 py-3 text-sm">vessel_log_north.csv</td>
+<td class="px-6 py-3 text-sm text-on-surface-variant">10:45 AM</td>
+<td class="px-6 py-3">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase">Success</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50">
+<td class="px-6 py-3 font-data-tabular text-sm">#CW-0920-Z</td>
+<td class="px-6 py-3 text-sm">supplier_risk_score.csv</td>
+<td class="px-6 py-3 text-sm text-on-surface-variant">09:12 AM</td>
+<td class="px-6 py-3">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase">Success</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50">
+<td class="px-6 py-3 font-data-tabular text-sm">#CW-0919-R</td>
+<td class="px-6 py-3 text-sm">port_congestion_api.json</td>
+<td class="px-6 py-3 text-sm text-on-surface-variant">04:30 PM</td>
+<td class="px-6 py-3">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase">Success</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Footer-style Branding Component -->
+<div class="col-span-12">
+<div class="bg-surface-container-high p-8 flex flex-col md:flex-row items-center justify-between gap-6 border border-outline-variant">
+<div class="flex items-center gap-6">
+<div class="h-16 w-1 border-l-4 border-primary"></div>
+<div>
+<p class="text-xs font-label-caps uppercase text-on-surface-variant mb-1">Infrastructure Insight</p>
+<p class="text-sm font-medium">System running on localized encrypted kernel 4.9.22-v8. Last core backup: 14m ago.</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right">
+<p class="text-[10px] font-label-caps uppercase text-on-surface-variant">Support Key</p>
+<p class="text-xs font-mono font-bold">CW-884-29-XZ-9</p>
+</div>
+<div class="w-12 h-12 bg-white flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary" data-icon="qr_code_2">qr_code_2</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Background Decorative Element (Subtle) -->
+<div class="fixed bottom-0 right-0 p-12 opacity-5 pointer-events-none">
+<span class="material-symbols-outlined text-[300px]" data-icon="settings">settings</span>
+</div>
+</body></html>

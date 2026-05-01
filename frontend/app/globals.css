@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-background: 252 248 250;
+  --color-surface: 252 248 250;
+  --color-surface-dim: 220 217 219;
+  --color-surface-container-lowest: 255 255 255;
+  --color-surface-container-low: 246 243 245;
+  --color-surface-container: 240 237 239;
+  --color-surface-container-high: 234 231 233;
+  --color-surface-container-highest: 228 226 228;
+  --color-surface-variant: 228 226 228;
+  --color-on-background: 27 27 29;
+  --color-on-surface: 27 27 29;
+  --color-on-surface-variant: 69 70 77;
+  --color-outline: 118 119 125;
+  --color-outline-variant: 198 198 205;
+  --color-primary: 0 0 0;
+  --color-primary-container: 19 27 46;
+  --color-on-primary-container: 124 131 155;
+  --color-secondary: 0 106 97;
+  --color-secondary-container: 134 242 228;
+  --color-on-secondary-container: 0 111 102;
+  --color-error: 186 26 26;
+  --color-success: 0 106 97;
+  --color-caution: 213 142 34;
+  --color-danger: 186 26 26;
+  --severity-1: 16 185 129;
+  --severity-2: 100 116 139;
+  --severity-3: 217 119 6;
+  --severity-4: 234 88 12;
+  --severity-5: 220 38 38;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: rgb(var(--color-background));
+  color: rgb(var(--color-on-background));
+  font-family: Inter, "Segoe UI", sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.material-symbols-outlined {
+  font-family: "Material Symbols Outlined";
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+::selection {
+  background: rgba(0, 106, 97, 0.18);
+}
+
+.text-balance {
+  text-wrap: balance;
+}

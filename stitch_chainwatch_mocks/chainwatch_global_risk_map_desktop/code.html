@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Work+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "surface-dim": "#dcd9db",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed": "#fcdeb5",
+                        "secondary-container": "#86f2e4",
+                        "on-surface": "#1b1b1d",
+                        "on-tertiary-fixed": "#271901",
+                        "secondary-fixed": "#89f5e7",
+                        "surface-bright": "#fcf8fa",
+                        "surface-variant": "#e4e2e4",
+                        "tertiary": "#000000",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed-dim": "#6bd8cb",
+                        "surface-tint": "#565e74",
+                        "primary-fixed-dim": "#bec6e0",
+                        "surface-container-low": "#f6f3f5",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#eae7e9",
+                        "tertiary-container": "#271901",
+                        "on-error-container": "#93000a",
+                        "background": "#fcf8fa",
+                        "on-tertiary-container": "#98805d",
+                        "secondary": "#006a61",
+                        "on-secondary-container": "#006f66",
+                        "outline": "#76777d",
+                        "primary-fixed": "#dae2fd",
+                        "on-secondary-fixed": "#00201d",
+                        "tertiary-fixed-dim": "#dec29a",
+                        "primary-container": "#131b2e",
+                        "inverse-on-surface": "#f3f0f2",
+                        "on-background": "#1b1b1d",
+                        "on-primary-container": "#7c839b",
+                        "on-primary-fixed": "#131b2e",
+                        "inverse-primary": "#bec6e0",
+                        "on-tertiary-fixed-variant": "#574425",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#005049",
+                        "outline-variant": "#c6c6cd",
+                        "inverse-surface": "#303032",
+                        "primary": "#000000",
+                        "surface-container-highest": "#e4e2e4",
+                        "surface": "#fcf8fa",
+                        "on-surface-variant": "#45464d",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-container": "#f0edef"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "header-height": "64px",
+                        "sidebar-width": "260px",
+                        "container-padding": "24px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "label-caps": ["Work Sans"],
+                        "data-tabular": ["Work Sans"],
+                        "display-lg": ["Inter"],
+                        "body-main": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "data-tabular": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "display-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-main": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .map-container {
+            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-main antialiased overflow-hidden">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 z-40 bg-slate-900 border-r border-slate-800 flex flex-col shadow-none">
+<div class="px-6 py-8">
+<h1 class="text-xl font-black tracking-tight text-white">ChainWatch</h1>
+<p class="text-xs font-medium text-slate-500 uppercase tracking-widest mt-1">Risk Intelligence</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-['Inter'] text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-slate-800 text-white border-l-4 border-teal-500 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="font-['Inter'] text-sm">Map</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-['Inter'] text-sm">Products</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="assessment">assessment</span>
+<span class="font-['Inter'] text-sm">Reports</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+<span class="font-['Inter'] text-sm">Chat</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-['Inter'] text-sm">Settings</span>
+</a>
+</nav>
+<div class="p-4 mt-auto border-t border-slate-800">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-teal-500 flex items-center justify-center text-slate-900 font-bold text-xs">
+                    JD
+                </div>
+<div class="overflow-hidden">
+<p class="text-white text-sm font-medium truncate">User Profile</p>
+<p class="text-slate-500 text-xs truncate">Admin Access</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 left-64 h-16 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-8 w-auto">
+<div class="flex items-center gap-4">
+<h2 class="font-headline-md text-headline-md text-on-surface">Global Risk Map</h2>
+</div>
+<div class="flex-1 max-w-md ml-12">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm" data-icon="search">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-2 text-label-caps font-label-caps focus:ring-1 focus:ring-secondary transition-all" placeholder="SEARCH COUNTRIES OR SUPPLIERS..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary-fixed-dim animate-pulse"></span>
+<span class="font-label-caps text-label-caps text-secondary-fixed-dim">SYSTEM LIVE</span>
+</div>
+<div class="flex items-center gap-4 text-slate-500">
+<span class="material-symbols-outlined cursor-pointer hover:text-secondary transition-colors" data-icon="monitor_heart">monitor_heart</span>
+<div class="relative">
+<span class="material-symbols-outlined cursor-pointer hover:text-secondary transition-colors" data-icon="notifications">notifications</span>
+<span class="absolute -top-1 -right-1 w-2 h-2 bg-error rounded-full"></span>
+</div>
+<span class="material-symbols-outlined cursor-pointer hover:text-secondary transition-colors" data-icon="account_circle">account_circle</span>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="ml-64 pt-16 h-screen flex">
+<!-- Interactive Map Content -->
+<div class="flex-1 relative bg-surface-dim/20 map-container overflow-hidden">
+<!-- Map Visualization Mock -->
+<div class="absolute inset-0 flex items-center justify-center">
+<img class="w-full h-full object-cover opacity-80 mix-blend-multiply" data-alt="A sophisticated digital world map with detailed topography, rendered in a corporate minimalist style. The map features various countries highlighted in semi-transparent risk-coded overlays of emerald green, amber, and deep crimson. Data points and interconnecting supply chain lines are softly visible over the continents. The overall lighting is bright and clean, reflecting a high-end data visualization dashboard designed for strategic decision making." data-location="Global" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhs2MtAdTn7Gx5rcVV_BfGm8YSvrY4JToKXAkdqEjSb7GC6Up0O2qNo0UwwB0IQLVPOtfhcr6My4MIkAAMT6yXGpG5QnJPhQKqlMNs72-R8LwVEINnwGo5d39LInSNv6p0A1qyz-wNjBQ6lNkyHboc5VrhzG6FuJYo9OJkJO35uWEV7rfZuVH18TdBr-Kn4NySQadbeKBuFQ7CEoKFh2srC4fHrGzE3eCgXGhuD0PsDBCnl05BMnF6X7mnTN9fdDSueJFsnxpt-5hw"/>
+<!-- Markers for Selected Interest -->
+<div class="absolute top-[55%] left-[75%] group cursor-pointer">
+<div class="relative flex items-center justify-center">
+<div class="absolute w-8 h-8 bg-error/30 rounded-full animate-ping"></div>
+<div class="w-4 h-4 bg-error rounded-full border-2 border-white shadow-lg"></div>
+</div>
+<div class="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-white px-3 py-1 rounded shadow-md border border-slate-200 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="font-label-caps text-label-caps whitespace-nowrap">VIETNAM: LEVEL 4</span>
+</div>
+</div>
+</div>
+<!-- Map Controls (Bottom Left Overlay) -->
+<div class="absolute bottom-8 left-8 flex flex-col gap-4">
+<div class="bg-white border border-slate-200 rounded-xl p-1 flex flex-col gap-1 shadow-sm">
+<button class="w-10 h-10 flex items-center justify-center hover:bg-slate-50 transition-colors border-b border-slate-100">
+<span class="material-symbols-outlined text-slate-600" data-icon="add">add</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined text-slate-600" data-icon="remove">remove</span>
+</button>
+</div>
+<div class="bg-white border border-slate-200 rounded-xl p-1 shadow-sm">
+<button class="w-10 h-10 flex items-center justify-center hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined text-slate-600" data-icon="my_location">my_location</span>
+</button>
+</div>
+</div>
+<!-- Risk Layer Filters (Top Left Overlay) -->
+<div class="absolute top-8 left-8 flex gap-2">
+<div class="bg-white/90 backdrop-blur-sm border border-slate-200 p-2 rounded-xl flex gap-2 shadow-sm">
+<button class="flex items-center gap-2 px-4 py-2 bg-secondary text-white rounded-lg font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-[18px]" data-icon="public">public</span>
+                        OVERVIEW
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 hover:bg-slate-50 text-slate-600 rounded-lg font-label-caps text-label-caps transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="eco">eco</span>
+                        ENVIRONMENTAL
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 hover:bg-slate-50 text-slate-600 rounded-lg font-label-caps text-label-caps transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="account_balance">account_balance</span>
+                        GEOPOLITICAL
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 hover:bg-slate-50 text-slate-600 rounded-lg font-label-caps text-label-caps transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="local_shipping">local_shipping</span>
+                        LOGISTICAL
+                    </button>
+</div>
+</div>
+<!-- Legend (Bottom Center Overlay) -->
+<div class="absolute bottom-8 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-sm border border-slate-200 p-4 rounded-xl shadow-sm">
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-slate-500">RISK SEVERITY INDEX</span>
+<span class="font-label-caps text-label-caps text-slate-400">1-5 SCALE</span>
+</div>
+<div class="flex gap-2">
+<div class="flex flex-col items-center gap-1">
+<div class="w-12 h-2 bg-emerald-500 rounded-full"></div>
+<span class="text-[10px] font-bold text-slate-600">1</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<div class="w-12 h-2 bg-yellow-400 rounded-full"></div>
+<span class="text-[10px] font-bold text-slate-600">2</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<div class="w-12 h-2 bg-orange-400 rounded-full"></div>
+<span class="text-[10px] font-bold text-slate-600">3</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<div class="w-12 h-2 bg-error rounded-full"></div>
+<span class="text-[10px] font-bold text-slate-600">4</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<div class="w-12 h-2 bg-red-900 rounded-full"></div>
+<span class="text-[10px] font-bold text-slate-600">5</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Side Panel: Detail -->
+<aside class="w-[380px] bg-white border-l border-slate-200 flex flex-col h-full z-20">
+<div class="p-6 border-b border-slate-100 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-1 h-8 bg-error rounded-full"></div>
+<div>
+<h3 class="font-headline-md text-headline-md">Vietnam</h3>
+<p class="text-slate-500 font-label-caps text-label-caps">REGION: SOUTH EAST ASIA</p>
+</div>
+</div>
+<button class="text-slate-400 hover:text-slate-600 transition-colors">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto p-6 space-y-6">
+<!-- Risk Score Card -->
+<div class="bg-surface-container-low border border-slate-200 rounded-xl p-5 flex items-center justify-between">
+<div>
+<p class="text-slate-500 font-label-caps text-label-caps mb-1">AGGREGATED RISK</p>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-black text-on-surface">4</span>
+<span class="text-lg font-bold text-error">CRITICAL</span>
+</div>
+</div>
+<div class="w-16 h-16 rounded-full border-[6px] border-slate-200 flex items-center justify-center relative">
+<div class="absolute inset-0 rounded-full border-[6px] border-error border-t-transparent border-r-transparent -rotate-45"></div>
+<span class="material-symbols-outlined text-error" data-icon="warning" data-weight="fill">warning</span>
+</div>
+</div>
+<!-- Primary Threats Section -->
+<div class="space-y-3">
+<h4 class="font-label-caps text-label-caps text-slate-400 uppercase tracking-widest">Primary Threats</h4>
+<div class="grid grid-cols-1 gap-2">
+<div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-lg">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-teal-600" data-icon="local_shipping">local_shipping</span>
+<span class="font-data-tabular text-data-tabular">Logistics Congestion</span>
+</div>
+<span class="bg-error/10 text-error font-bold px-2 py-0.5 rounded text-[10px]">HIGH</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-lg">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-teal-600" data-icon="groups">groups</span>
+<span class="font-data-tabular text-data-tabular">Labor Availability</span>
+</div>
+<span class="bg-orange-400/10 text-orange-600 font-bold px-2 py-0.5 rounded text-[10px]">MED</span>
+</div>
+</div>
+</div>
+<!-- Affected SKUs Section -->
+<div class="space-y-3">
+<h4 class="font-label-caps text-label-caps text-slate-400 uppercase tracking-widest">Inventory Exposure</h4>
+<div class="bg-primary-container text-white p-5 rounded-xl flex items-center justify-between">
+<div>
+<span class="text-3xl font-black block">142</span>
+<span class="text-xs text-on-primary-container uppercase tracking-widest">Affected SKUs</span>
+</div>
+<button class="bg-white/10 hover:bg-white/20 px-4 py-2 rounded font-label-caps text-label-caps transition-colors">
+                            VIEW LIST
+                        </button>
+</div>
+</div>
+<!-- Trend Chart Placeholder -->
+<div class="space-y-3">
+<h4 class="font-label-caps text-label-caps text-slate-400 uppercase tracking-widest">Risk Trend (90D)</h4>
+<div class="h-32 w-full bg-slate-50 border border-slate-100 rounded-xl relative overflow-hidden flex items-end">
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<span class="font-label-caps text-[10px] text-slate-300">DATA VISUALIZATION INTERFACE</span>
+</div>
+<div class="flex-1 bg-teal-500/20 h-[40%] mx-1 rounded-t"></div>
+<div class="flex-1 bg-teal-500/20 h-[45%] mx-1 rounded-t"></div>
+<div class="flex-1 bg-teal-500/20 h-[55%] mx-1 rounded-t"></div>
+<div class="flex-1 bg-teal-500/20 h-[50%] mx-1 rounded-t"></div>
+<div class="flex-1 bg-teal-500/20 h-[65%] mx-1 rounded-t"></div>
+<div class="flex-1 bg-error/20 h-[80%] mx-1 rounded-t"></div>
+<div class="flex-1 bg-error/40 h-[95%] mx-1 rounded-t"></div>
+<div class="flex-1 bg-error/40 h-[90%] mx-1 rounded-t"></div>
+</div>
+</div>
+</div>
+<div class="p-6 border-t border-slate-100 bg-slate-50/50">
+<button class="w-full bg-secondary text-white py-3 rounded-lg font-bold flex items-center justify-center gap-2 hover:bg-secondary/90 transition-colors shadow-lg shadow-secondary/10">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+                    GENERATE FULL REPORT
+                </button>
+</div>
+</aside>
+</main>
+</body></html>

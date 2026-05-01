@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Work+Sans:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "error": "#ba1a1a",
+                    "surface-dim": "#dcd9db",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary-fixed": "#fcdeb5",
+                    "secondary-container": "#86f2e4",
+                    "on-surface": "#1b1b1d",
+                    "on-tertiary-fixed": "#271901",
+                    "secondary-fixed": "#89f5e7",
+                    "surface-bright": "#fcf8fa",
+                    "surface-variant": "#e4e2e4",
+                    "tertiary": "#000000",
+                    "on-primary-fixed-variant": "#3f465c",
+                    "on-secondary": "#ffffff",
+                    "secondary-fixed-dim": "#6bd8cb",
+                    "surface-tint": "#565e74",
+                    "primary-fixed-dim": "#bec6e0",
+                    "surface-container-low": "#f6f3f5",
+                    "on-primary": "#ffffff",
+                    "surface-container-high": "#eae7e9",
+                    "tertiary-container": "#271901",
+                    "on-error-container": "#93000a",
+                    "background": "#fcf8fa",
+                    "on-tertiary-container": "#98805d",
+                    "secondary": "#006a61",
+                    "on-secondary-container": "#006f66",
+                    "outline": "#76777d",
+                    "primary-fixed": "#dae2fd",
+                    "on-secondary-fixed": "#00201d",
+                    "tertiary-fixed-dim": "#dec29a",
+                    "primary-container": "#131b2e",
+                    "inverse-on-surface": "#f3f0f2",
+                    "on-background": "#1b1b1d",
+                    "on-primary-container": "#7c839b",
+                    "on-primary-fixed": "#131b2e",
+                    "inverse-primary": "#bec6e0",
+                    "on-tertiary-fixed-variant": "#574425",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed-variant": "#005049",
+                    "outline-variant": "#c6c6cd",
+                    "inverse-surface": "#303032",
+                    "primary": "#000000",
+                    "surface-container-highest": "#e4e2e4",
+                    "surface": "#fcf8fa",
+                    "on-surface-variant": "#45464d",
+                    "on-error": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "surface-container": "#f0edef"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "header-height": "64px",
+                    "sidebar-width": "260px",
+                    "container-padding": "24px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Inter"],
+                    "label-caps": ["Work Sans"],
+                    "data-tabular": ["Work Sans"],
+                    "display-lg": ["Inter"],
+                    "body-main": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "data-tabular": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                    "display-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-main": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .sidebar-active { border-left-width: 4px; border-color: #14b8a6; background-color: #1e293b; color: white; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-main antialiased">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 z-40 bg-slate-900 dark:bg-slate-950 border-r border-slate-800 flex flex-col h-full font-['Inter'] text-sm antialiased">
+<div class="px-6 py-8 flex flex-col gap-1">
+<span class="text-xl font-black tracking-tight text-white">ChainWatch</span>
+<span class="text-xs text-slate-500 font-medium tracking-widest uppercase">Risk Intelligence</span>
+</div>
+<nav class="flex-1 px-3 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span> Dashboard
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span> Map
+            </a>
+<!-- Active State: Products -->
+<a class="flex items-center gap-3 px-4 py-3 bg-slate-800 text-white border-l-4 border-teal-500 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2" style="font-variation-settings: 'FILL' 1;">inventory_2</span> Products
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="assessment">assessment</span> Reports
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="chat">chat</span> Chat
+            </a>
+</nav>
+<div class="mt-auto p-4 border-t border-slate-800">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span> Settings
+            </a>
+<div class="flex items-center gap-3 px-4 py-4 mt-2">
+<div class="w-8 h-8 rounded-full bg-teal-500 flex items-center justify-center text-white font-bold text-xs">JD</div>
+<div class="flex flex-col">
+<span class="text-white text-xs font-semibold">User Profile</span>
+<span class="text-[10px] text-slate-500">Security Analyst</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 left-64 h-16 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-8 w-full font-['Inter'] font-medium text-xs uppercase tracking-wider">
+<div class="flex items-center gap-4">
+<span class="text-slate-900 font-extrabold text-sm tracking-normal capitalize">Product Intelligence</span>
+<div class="h-4 w-px bg-slate-200"></div>
+<div class="flex items-center gap-2 text-slate-500 lowercase">
+<span>SKU:</span>
+<span class="font-mono bg-slate-100 px-2 py-0.5 rounded text-slate-700">PR-700-MB</span>
+</div>
+</div>
+<div class="flex-1 max-w-md px-12">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-slate-400 text-sm" data-icon="search">search</span>
+<input class="w-full bg-slate-50 border-none rounded-full py-2 pl-10 text-xs focus:ring-1 focus:ring-teal-500" placeholder="Search logistics nodes..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2 group cursor-pointer">
+<div class="w-2 h-2 rounded-full bg-teal-500 shadow-[0_0_8px_rgba(20,184,166,0.6)]"></div>
+<span class="text-slate-500 group-hover:text-teal-600 transition-colors">Heartbeat: Cached</span>
+</div>
+<div class="flex items-center gap-4 text-slate-400">
+<span class="material-symbols-outlined cursor-pointer hover:text-teal-600" data-icon="monitor_heart">monitor_heart</span>
+<div class="relative">
+<span class="material-symbols-outlined cursor-pointer hover:text-teal-600" data-icon="notifications">notifications</span>
+<div class="absolute -top-1 -right-1 w-2 h-2 bg-error rounded-full"></div>
+</div>
+<span class="material-symbols-outlined cursor-pointer hover:text-teal-600" data-icon="account_circle">account_circle</span>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-16 min-h-screen p-8 bg-[#F8FAFC]">
+<div class="grid grid-cols-12 gap-6">
+<!-- Top Hero Section: Product & Status -->
+<div class="col-span-12 bg-white border border-slate-200 rounded-lg p-6 flex flex-col md:flex-row gap-8 items-start relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-secondary-fixed-dim"></div>
+<div class="w-full md:w-1/3 aspect-video bg-slate-100 rounded-lg overflow-hidden border border-slate-100">
+<img class="w-full h-full object-cover" data-alt="A professional studio product photograph of a sleek midnight blue high-performance running shoe set against a minimal light gray background. The lighting is crisp and cool-toned, highlighting the aerodynamic textures and technical mesh of the footwear. The overall mood is athletic and premium, fitting a corporate modern UI with a clean and sophisticated aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzveaDrJleTL6Ok-hbdccXPLmMm6Kcxx7ESBh9ixCGxqqtUH7Ny61cWumjLSPKU7xv5kxWH-grB6KC2qclLDunyEUNJautUvZ350MF87cZlIb6gRNdoFwkeAjT9ox-m87Y4sfHC97LhMjOLZ0J7V5AJ1F1D2xUl5uMkVZ0vtFnnxwiTKa6upJ_flRTOEUKs9OVOeYu-aWEVFwc0yK-kfiq7X4njCWe0ac25nTW4yauaHFDT93UU2kLuQ1omiR6hyl3nR9-S2kN1P2f"/>
+</div>
+<div class="flex-1 flex flex-col justify-between h-full py-2">
+<div>
+<h1 class="font-display-lg text-display-lg text-slate-900 mb-2">Performance Running Shoe - Midnight Blue</h1>
+<p class="text-slate-500 max-w-2xl font-body-main">Primary SKU for the seasonal athletic expansion. This unit integrates advanced shock absorption tech for elite long-distance training environments.</p>
+</div>
+<div class="mt-8 flex flex-wrap gap-8">
+<div class="flex flex-col gap-1">
+<span class="text-label-caps font-label-caps text-slate-400">Inventory Health</span>
+<div class="flex items-center gap-3">
+<span class="text-3xl font-bold text-slate-900">62%</span>
+<div class="px-2 py-1 bg-secondary-container/10 text-secondary text-[10px] font-bold rounded uppercase tracking-wider">Cached</div>
+</div>
+<div class="w-48 h-1.5 bg-slate-100 rounded-full overflow-hidden mt-1">
+<div class="bg-secondary h-full" style="width: 62%;"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-label-caps font-label-caps text-slate-400">Stock Status</span>
+<span class="text-headline-md font-headline-md text-slate-900">1,402 Units</span>
+<span class="text-[10px] text-error font-bold">-12% vs last week</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-label-caps font-label-caps text-slate-400">Projected Runout</span>
+<span class="text-headline-md font-headline-md text-slate-900">14 Days</span>
+<span class="text-[10px] text-slate-500 italic">High velocity period</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Demand Trend: Bento Large -->
+<div class="col-span-12 lg:col-span-8 bg-white border border-slate-200 rounded-lg p-6">
+<div class="flex items-center justify-between mb-8">
+<div class="flex flex-col">
+<h3 class="font-headline-md text-headline-md text-slate-900">Demand Intelligence</h3>
+<p class="text-xs text-slate-500 font-body-main">Demand vs. Stock forecasting (6 months trailing)</p>
+</div>
+<div class="flex gap-2">
+<button class="px-3 py-1 text-xs border border-slate-200 rounded text-slate-600 hover:bg-slate-50">Export PDF</button>
+<button class="px-3 py-1 text-xs border border-slate-200 rounded text-slate-600 hover:bg-slate-50">CSV</button>
+</div>
+</div>
+<div class="h-64 flex items-end gap-1 relative">
+<!-- Faux Line Chart with Gradient -->
+<svg class="absolute inset-0 w-full h-full" preserveaspectratio="none">
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#14b8a6" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#14b8a6" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M0 200 Q 100 180, 200 150 T 400 100 T 600 120 T 800 50 T 1000 80 V 256 H 0 Z" fill="url(#chartGradient)"></path>
+<path d="M0 200 Q 100 180, 200 150 T 400 100 T 600 120 T 800 50 T 1000 80" fill="none" stroke="#14b8a6" stroke-width="2"></path>
+<path d="M0 220 Q 100 210, 200 200 T 400 180 T 600 190 T 800 160 T 1000 170" fill="none" stroke="#64748b" stroke-dasharray="4 2" stroke-width="2"></path>
+</svg>
+<div class="absolute bottom-0 w-full flex justify-between px-2 text-[10px] text-slate-400 font-mono">
+<span>OCT</span><span>NOV</span><span>DEC</span><span>JAN</span><span>FEB</span><span>MAR</span>
+</div>
+</div>
+<div class="mt-8 flex gap-6">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-teal-500"></div>
+<span class="text-xs text-slate-600 font-medium">Actual Demand</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full border-2 border-slate-400"></div>
+<span class="text-xs text-slate-600 font-medium">Target Stock Level</span>
+</div>
+</div>
+</div>
+<!-- Fulfillment Status: Bento Side -->
+<div class="col-span-12 lg:col-span-4 bg-white border border-slate-200 rounded-lg p-6">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-headline-md text-headline-md text-slate-900">Active Pipeline</h3>
+<span class="material-symbols-outlined text-slate-400 cursor-pointer" data-icon="more_vert">more_vert</span>
+</div>
+<div class="space-y-6 relative">
+<div class="absolute left-[11px] top-2 bottom-2 w-0.5 bg-slate-100"></div>
+<div class="flex gap-4 relative">
+<div class="w-6 h-6 rounded-full bg-teal-500 border-4 border-white shadow-sm flex-shrink-0 z-10"></div>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-slate-900">Supplier Dispatch</span>
+<span class="text-[11px] text-slate-500">March 02, 08:30 AM — Dongguan Port</span>
+</div>
+</div>
+<div class="flex gap-4 relative">
+<div class="w-6 h-6 rounded-full bg-teal-500 border-4 border-white shadow-sm flex-shrink-0 z-10"></div>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-slate-900">Ocean Transit</span>
+<span class="text-[11px] text-slate-500">In Transit — ETA March 15 (Port of LA)</span>
+</div>
+</div>
+<div class="flex gap-4 relative">
+<div class="w-6 h-6 rounded-full bg-slate-200 border-4 border-white shadow-sm flex-shrink-0 z-10"></div>
+<div class="flex flex-col opacity-60">
+<span class="text-xs font-bold text-slate-900">Customs Clearance</span>
+<span class="text-[11px] text-slate-500">Pending Arrival</span>
+</div>
+</div>
+<div class="flex gap-4 relative">
+<div class="w-6 h-6 rounded-full bg-slate-200 border-4 border-white shadow-sm flex-shrink-0 z-10"></div>
+<div class="flex flex-col opacity-60">
+<span class="text-xs font-bold text-slate-900">Local DC Arrival</span>
+<span class="text-[11px] text-slate-500">Estimated March 19</span>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-slate-50">
+<div class="bg-slate-50 rounded-lg p-4">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-semibold text-slate-700">Logistics Risk</span>
+<span class="text-[10px] text-error font-bold uppercase">Moderate</span>
+</div>
+<p class="text-[11px] text-slate-500 leading-relaxed">Labor negotiations at the Port of Long Beach may cause 2-4 day delays for incoming ocean containers.</p>
+</div>
+</div>
+</div>
+<!-- Supplier List: Grid Item -->
+<div class="col-span-12 lg:col-span-6 bg-white border border-slate-200 rounded-lg overflow-hidden">
+<div class="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+<h3 class="font-headline-md text-headline-md text-slate-900">Tiered Suppliers</h3>
+<button class="text-xs text-teal-600 font-bold hover:underline">View All Details</button>
+</div>
+<div class="divide-y divide-slate-100">
+<div class="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded bg-slate-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400" data-icon="factory">factory</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-bold text-slate-900">Apex Footwear Solutions</span>
+<span class="text-[11px] text-slate-500">Primary Partner — Guangzhou</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right flex flex-col">
+<span class="text-[10px] font-label-caps text-slate-400 uppercase">Risk Rating</span>
+<span class="text-sm font-bold text-slate-900">1.4 / 5.0</span>
+</div>
+<div class="w-1.5 h-10 bg-teal-500 rounded-full"></div>
+</div>
+</div>
+<div class="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded bg-slate-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400" data-icon="factory">factory</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-bold text-slate-900">Summit Textiles Ltd.</span>
+<span class="text-[11px] text-slate-500">Secondary — Ho Chi Minh City</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right flex flex-col">
+<span class="text-[10px] font-label-caps text-slate-400 uppercase">Risk Rating</span>
+<span class="text-sm font-bold text-slate-900">3.8 / 5.0</span>
+</div>
+<div class="w-1.5 h-10 bg-error rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Risk Events Timeline: Grid Item -->
+<div class="col-span-12 lg:col-span-6 bg-white border border-slate-200 rounded-lg overflow-hidden">
+<div class="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+<h3 class="font-headline-md text-headline-md text-slate-900">External Threat Timeline</h3>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
+<span class="text-[10px] font-bold text-error uppercase">3 Active Events</span>
+</div>
+</div>
+<div class="p-4 space-y-4">
+<div class="flex gap-4 p-3 bg-error-container/5 rounded border border-error/10">
+<div class="w-8 h-8 rounded-full bg-error/10 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-error text-lg" data-icon="thunderstorm">thunderstorm</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center justify-between mb-1">
+<span class="text-xs font-bold text-slate-900">Typhoon Warning - South China Sea</span>
+<span class="text-[10px] text-slate-500">2h ago</span>
+</div>
+<p class="text-[11px] text-slate-600 leading-snug">Expected route diversion for Cargo Vessel MV-802. Estimated delay: +48 hours.</p>
+</div>
+</div>
+<div class="flex gap-4 p-3 bg-slate-50 rounded border border-slate-100">
+<div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-slate-400 text-lg" data-icon="policy">policy</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center justify-between mb-1">
+<span class="text-xs font-bold text-slate-900">New Tariff Regulation Announcement</span>
+<span class="text-[10px] text-slate-500">Feb 24</span>
+</div>
+<p class="text-[11px] text-slate-600 leading-snug">Upcoming 2% duty increase on imported footwear materials from Vietnam region.</p>
+</div>
+</div>
+<div class="flex gap-4 p-3 bg-slate-50 rounded border border-slate-100">
+<div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-slate-400 text-lg" data-icon="eco">eco</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center justify-between mb-1">
+<span class="text-xs font-bold text-slate-900">Sustainability Compliance Audit</span>
+<span class="text-[10px] text-slate-500">Feb 18</span>
+</div>
+<p class="text-[11px] text-slate-600 leading-snug">Supplier "Apex Solutions" passed ESG benchmark with a 94% rating. Low risk.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

@@ -106,7 +106,7 @@ V1 should work entirely from the project directory with no required cloud infras
 
 ## Current Implementation Status
 
-Phase 1 backend foundation is now implemented under `backend/`.
+Backend phases are complete under `backend/`, and frontend phases 1-2 are now implemented under `frontend/`.
 
 Included in the current codebase:
 
@@ -118,8 +118,13 @@ Included in the current codebase:
 - local demo seed workflow for development data
 - core external-risk, demand, inventory, and fulfillment agent implementations
 - sqlite-backed agent run traces and local run logs
-- baseline `GET /api/health`
-- backend `pytest` coverage for foundation, imports, seed, and agent flows
+- complete backend API surface for health, dashboard, map, products, chat, reports, and imports
+- backend `pytest` coverage through reliability and scenario coverage
+- standalone Next.js frontend scaffold under `frontend/`
+- responsive frontend app shell aligned to the approved Stitch mock theme
+- live Dashboard, Map, and Product Detail pages backed by backend APIs
+- mock-shaped shells for Chat, Reports, and the remaining workflow surfaces
+- shared frontend API client, response typings, and loading/error/empty/freshness components
 
 ## Backend Quickstart
 
@@ -144,6 +149,18 @@ cd backend
 uv run python -m app.seed
 ```
 
+## Frontend Quickstart
+
+From the repository root:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The frontend expects the backend API at `http://127.0.0.1:8000/api` by default. Override that with `NEXT_PUBLIC_API_BASE_URL` in `frontend/.env.local` if needed.
+
 ## Planned Repository Shape
 
 ```text
@@ -162,8 +179,9 @@ ChainWatch/
 └── tasks/
 ```
 
-The `frontend/` directory remains a planned implementation target. The `backend/` project now exists, and the `data/` directory is created as a managed runtime location by the backend bootstrap flow.
-The backend API surface is now live for health, dashboard, map, products, chat, reports, and imports, and phase-6 reliability work adds freshness metadata, background report generation, and a regression checklist.
+The `frontend/` directory now exists as a standalone Next.js App Router project with a Stitch-aligned shell, live core read pages, and a typed API layer for the backend surface.
+The `backend/` project exists, and the `data/` directory is created as a managed runtime location by the backend bootstrap flow.
+The backend API surface is live for health, dashboard, map, products, chat, reports, and imports, and phase-6 reliability work adds freshness metadata, background report generation, and a regression checklist.
 
 ## Implementation Order
 

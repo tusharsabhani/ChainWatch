@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Work+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "surface-dim": "#dcd9db",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed": "#fcdeb5",
+                        "secondary-container": "#86f2e4",
+                        "on-surface": "#1b1b1d",
+                        "on-tertiary-fixed": "#271901",
+                        "secondary-fixed": "#89f5e7",
+                        "surface-bright": "#fcf8fa",
+                        "surface-variant": "#e4e2e4",
+                        "tertiary": "#000000",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed-dim": "#6bd8cb",
+                        "surface-tint": "#565e74",
+                        "primary-fixed-dim": "#bec6e0",
+                        "surface-container-low": "#f6f3f5",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#eae7e9",
+                        "tertiary-container": "#271901",
+                        "on-error-container": "#93000a",
+                        "background": "#fcf8fa",
+                        "on-tertiary-container": "#98805d",
+                        "secondary": "#006a61",
+                        "on-secondary-container": "#006f66",
+                        "outline": "#76777d",
+                        "primary-fixed": "#dae2fd",
+                        "on-secondary-fixed": "#00201d",
+                        "tertiary-fixed-dim": "#dec29a",
+                        "primary-container": "#131b2e",
+                        "inverse-on-surface": "#f3f0f2",
+                        "on-background": "#1b1b1d",
+                        "on-primary-container": "#7c839b",
+                        "on-primary-fixed": "#131b2e",
+                        "inverse-primary": "#bec6e0",
+                        "on-tertiary-fixed-variant": "#574425",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#005049",
+                        "outline-variant": "#c6c6cd",
+                        "inverse-surface": "#303032",
+                        "primary": "#000000",
+                        "surface-container-highest": "#e4e2e4",
+                        "surface": "#fcf8fa",
+                        "on-surface-variant": "#45464d",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-container": "#f0edef"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "header-height": "64px",
+                        "sidebar-width": "260px",
+                        "container-padding": "24px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "label-caps": ["Work Sans"],
+                        "data-tabular": ["Work Sans"],
+                        "display-lg": ["Inter"],
+                        "body-main": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "data-tabular": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "display-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-main": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #fcf8fa; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .active-nav-border { border-left-width: 4px; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- Sidebar Component (Shared) -->
+<aside class="h-screen w-64 fixed left-0 top-0 z-40 bg-slate-900 dark:bg-slate-950 border-r border-slate-800 flex flex-col h-full font-['Inter'] text-sm antialiased">
+<div class="px-6 py-8">
+<h1 class="text-xl font-black tracking-tight text-white">ChainWatch</h1>
+<p class="text-xs font-medium text-slate-500 uppercase tracking-widest mt-1">Risk Intelligence</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-6 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span>Map</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span>Products</span>
+</a>
+<!-- Active Tab: Reports -->
+<a class="flex items-center gap-3 px-6 py-3 bg-slate-800 text-white border-l-4 border-teal-500 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-teal-500" data-icon="assessment" style="font-variation-settings: 'FILL' 1;">assessment</span>
+<span>Reports</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+<span>Chat</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="p-6 mt-auto">
+<div class="flex items-center gap-3 p-3 rounded-lg bg-slate-800/40">
+<img alt="User Profile" class="w-10 h-10 rounded-full object-cover" data-alt="A professional headshot of a middle-aged security analyst with a focused expression, wearing a navy blue blazer. The background is a blurred high-tech operations center with subtle blue glowing monitors. The image is captured with sharp detail and soft, professional studio lighting, reflecting a corporate and reliable aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfr_0gxd3w683ZeQQ_cgmPBr3NwuLjwWr7c9RfdWrgkoqpDCRwI7eb7l2MyGf-YWFDZpb42zOpc9B1vVRyd4qiG8rmp3Rqtdt-k8RFh81RvnaOkUwryWz_rgRboLvwBfVLPwISRN-7Wzz7Q80Dd3tkj7EnE6MRonxm2x63p6G2PxhHRLq6weEjp6dmU3tZGZSIia9tYkDjd0gfs5cHsOkKjT93937oWOyOtvwHWnjVOq-B51cf3Zbmkv0FywaF2sN814Ra-X9XCRqk"/>
+<div>
+<p class="text-white font-semibold text-xs">Alex Chen</p>
+<p class="text-slate-500 text-[10px]">Senior Ops Lead</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Top AppBar Component (Shared) -->
+<header class="fixed top-0 right-0 left-64 h-16 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 w-full font-['Inter'] font-medium text-xs uppercase tracking-wider">
+<div class="flex items-center gap-6 flex-1">
+<div class="flex items-center gap-2 text-on-surface">
+<span class="font-headline-md text-headline-md lowercase first-letter:uppercase tracking-normal">Reports &amp; Analysis</span>
+</div>
+<div class="relative w-96 max-w-lg">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm" data-icon="search">search</span>
+<input class="w-full bg-surface-container-low border-none text-[13px] py-2 pl-10 pr-4 rounded-full focus:ring-1 focus:ring-secondary/20 placeholder:text-slate-400" placeholder="Search archived reports..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2 text-secondary px-3 py-1 bg-secondary-container/20 rounded-full border border-secondary/10">
+<span class="material-symbols-outlined text-[14px]" data-icon="monitor_heart">monitor_heart</span>
+<span class="text-[10px] font-bold tracking-widest">LIVE STATUS: CACHED</span>
+</div>
+<div class="flex items-center gap-4 text-slate-500">
+<span class="material-symbols-outlined cursor-pointer hover:text-teal-500 transition-colors" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-teal-500 transition-colors" data-icon="account_circle">account_circle</span>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-16 min-h-screen">
+<div class="p-gutter lg:p-container-padding flex gap-gutter max-w-[1600px] mx-auto h-[calc(100vh-64px)] overflow-hidden">
+<!-- Left Side: Reports List -->
+<div class="flex-1 flex flex-col gap-gutter">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-6 flex flex-col h-full overflow-hidden">
+<div class="flex items-center justify-between mb-6">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Intelligence Library</h2>
+<p class="text-on-surface-variant font-body-main text-body-main mt-1">Select a report to view detailed analysis and visualizations.</p>
+</div>
+<button class="bg-secondary text-on-secondary px-4 py-2 rounded-lg flex items-center gap-2 font-label-caps text-label-caps hover:brightness-110 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                            GENERATE NEW REPORT
+                        </button>
+</div>
+<!-- Data Table -->
+<div class="overflow-y-auto no-scrollbar flex-1">
+<table class="w-full text-left border-collapse">
+<thead class="sticky top-0 bg-white z-10">
+<tr class="border-b border-outline-variant font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">
+<th class="py-4 px-4 font-semibold">Report Name</th>
+<th class="py-4 px-4 font-semibold">Date Generated</th>
+<th class="py-4 px-4 font-semibold">Status</th>
+<th class="py-4 px-4 font-semibold">Created By</th>
+<th class="py-4 px-4 font-semibold"></th>
+</tr>
+</thead>
+<tbody class="font-data-tabular text-data-tabular">
+<tr class="group hover:bg-surface-container-low cursor-pointer transition-colors border-b border-outline-variant">
+<td class="py-4 px-4 font-bold text-on-surface">Weekly Supply Chain Outlook</td>
+<td class="py-4 px-4 text-on-surface-variant">Oct 24, 2023</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-secondary-container/30 text-secondary border border-secondary/20">
+                                            READY
+                                        </span>
+</td>
+<td class="py-4 px-4 flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-primary-container text-[10px] flex items-center justify-center text-on-primary-container font-bold">AC</div>
+<span class="text-on-surface-variant">Alex Chen</span>
+</td>
+<td class="py-4 px-4 text-right">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-secondary" data-icon="chevron_right">chevron_right</span>
+</td>
+</tr>
+<tr class="group hover:bg-surface-container-low cursor-pointer transition-colors border-b border-outline-variant bg-surface-container-low/30">
+<td class="py-4 px-4 font-bold text-on-surface">Q3 Supplier Exposure Audit</td>
+<td class="py-4 px-4 text-on-surface-variant">Oct 22, 2023</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-secondary-container/30 text-secondary border border-secondary/20">
+                                            READY
+                                        </span>
+</td>
+<td class="py-4 px-4 flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-slate-200 text-[10px] flex items-center justify-center text-slate-600 font-bold">SYS</div>
+<span class="text-on-surface-variant">System</span>
+</td>
+<td class="py-4 px-4 text-right">
+<span class="material-symbols-outlined text-secondary" data-icon="chevron_right">chevron_right</span>
+</td>
+</tr>
+<tr class="group hover:bg-surface-container-low cursor-pointer transition-colors border-b border-outline-variant">
+<td class="py-4 px-4 font-bold text-on-surface">Flash Report: Suez Canal Delay</td>
+<td class="py-4 px-4 text-on-surface-variant">Oct 20, 2023</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-200 text-slate-600 border border-slate-300 animate-pulse">
+                                            PROCESSING
+                                        </span>
+</td>
+<td class="py-4 px-4 flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-primary-container text-[10px] flex items-center justify-center text-on-primary-container font-bold">AC</div>
+<span class="text-on-surface-variant">Alex Chen</span>
+</td>
+<td class="py-4 px-4 text-right">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-secondary" data-icon="chevron_right">chevron_right</span>
+</td>
+</tr>
+<tr class="group hover:bg-surface-container-low cursor-pointer transition-colors border-b border-outline-variant">
+<td class="py-4 px-4 font-bold text-on-surface">Pacific Logistics Risk Matrix</td>
+<td class="py-4 px-4 text-on-surface-variant">Oct 18, 2023</td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-secondary-container/30 text-secondary border border-secondary/20">
+                                            READY
+                                        </span>
+</td>
+<td class="py-4 px-4 flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-slate-200 text-[10px] flex items-center justify-center text-slate-600 font-bold">MK</div>
+<span class="text-on-surface-variant">Marcus King</span>
+</td>
+<td class="py-4 px-4 text-right">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-secondary" data-icon="chevron_right">chevron_right</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Right Side: Detail Panel (Selected Report Preview) -->
+<div class="w-[480px] flex flex-col gap-gutter h-full overflow-y-auto no-scrollbar">
+<!-- Action Header -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-6">
+<div class="flex items-center justify-between gap-2 mb-6">
+<button class="flex-1 flex items-center justify-center gap-2 py-2 border border-outline text-on-surface-variant rounded font-label-caps text-label-caps hover:bg-surface-container hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+                            DOWNLOAD PDF
+                        </button>
+<button class="flex-1 flex items-center justify-center gap-2 py-2 border border-outline text-on-surface-variant rounded font-label-caps text-label-caps hover:bg-surface-container hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="share">share</span>
+                            SHARE
+                        </button>
+<button class="flex-1 flex items-center justify-center gap-2 py-2 border border-outline text-on-surface-variant rounded font-label-caps text-label-caps hover:bg-surface-container hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="refresh">refresh</span>
+                            REGENERATE
+                        </button>
+</div>
+<div class="flex items-start gap-4 p-4 border-l-4 border-secondary bg-secondary-container/5 rounded-r-lg">
+<div class="w-12 h-12 flex-shrink-0 bg-secondary-container/20 text-secondary rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl" data-icon="analytics" style="font-variation-settings: 'FILL' 1;">analytics</span>
+</div>
+<div>
+<h3 class="font-headline-md text-[16px] text-on-surface leading-tight">Q3 Supplier Exposure Audit</h3>
+<p class="text-[11px] font-bold text-secondary tracking-widest mt-1">CONFIDENTIAL • INTERNAL USE ONLY</p>
+</div>
+</div>
+</div>
+<!-- Preview Content -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-6 flex-1 flex flex-col gap-6">
+<div>
+<h4 class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-3">Executive Summary</h4>
+<div class="text-body-main font-body-main text-on-surface space-y-3">
+<p>Current audit reveals a **12.4% increase** in single-source dependency across tier-2 electronics components. Major volatility noted in South-East Asian shipping lanes.</p>
+<p>Critical threshold breached for "Provider-X" logistics reliability. Immediate diversification recommended for primary distribution hubs in the APAC region.</p>
+</div>
+</div>
+<div class="flex-1">
+<h4 class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-3">Risk Distribution</h4>
+<div class="relative w-full aspect-video rounded-lg overflow-hidden border border-outline-variant bg-slate-50">
+<img alt="Data Chart" class="w-full h-full object-cover mix-blend-multiply opacity-80" data-alt="A sophisticated data visualization dashboard showing a complex heat map and interconnecting nodes on a clean, light gray background. The charts use a refined color palette of teal, slate gray, and soft amber. The aesthetic is extremely clean and professional, using fine lines and minimalist labels to represent supply chain risk data for operational analysis." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDV5m38o4kJjKaqLfpPPFmJTEpa6f1T1lzWl_oIS9pbYWot19JKbMnToTAEwYKVitaI60LJcwCgRZalrrmrMhI_jmnp5nM1WwqwZ-f1e0BlGcohmGeg-4WCGwvJMKWpRSBaMRNjYBFcPcduWHkm6pC-3fNzm76GeSI8hai_hHTq5yppe4SWJ9w2oyJwnSC4a2seDKgGsrPbBQSUAlVNPNJVL0YBh4e5IPtK9b7jtSDpHQ-2AgOuAHHuRsRZnyj-0HihFkYUnJmg4m59"/>
+<div class="absolute inset-0 flex items-center justify-center bg-white/40 backdrop-blur-[2px]">
+<div class="bg-white px-3 py-1 rounded shadow-sm border border-outline-variant flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-error"></div>
+<span class="text-[11px] font-bold font-data-tabular">CRITICAL EXPOSURE DETECTED</span>
+</div>
+</div>
+</div>
+</div>
+<div>
+<h4 class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-3">Top Incident Factors</h4>
+<div class="space-y-3">
+<div class="flex items-center gap-4">
+<span class="text-data-tabular font-bold text-on-surface w-8">42%</span>
+<div class="flex-1 h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-error w-[42%]"></div>
+</div>
+<span class="text-[11px] text-on-surface-variant font-medium">Logistics Delays</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-data-tabular font-bold text-on-surface w-8">31%</span>
+<div class="flex-1 h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[31%]"></div>
+</div>
+<span class="text-[11px] text-on-surface-variant font-medium">Material Shortage</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-data-tabular font-bold text-on-surface w-8">18%</span>
+<div class="flex-1 h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-slate-400 w-[18%]"></div>
+</div>
+<span class="text-[11px] text-on-surface-variant font-medium">Labor Disputes</span>
+</div>
+</div>
+</div>
+<div class="pt-6 border-t border-outline-variant mt-auto">
+<div class="flex items-center justify-between">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-white bg-slate-200 flex items-center justify-center text-[10px] font-bold">JD</div>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-slate-300 flex items-center justify-center text-[10px] font-bold">KL</div>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-primary-container text-on-primary-container flex items-center justify-center text-[10px] font-bold">AC</div>
+</div>
+<span class="text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">3 Users viewing now</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

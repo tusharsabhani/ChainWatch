@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Work+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "surface-dim": "#dcd9db",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed": "#fcdeb5",
+                        "secondary-container": "#86f2e4",
+                        "on-surface": "#1b1b1d",
+                        "on-tertiary-fixed": "#271901",
+                        "secondary-fixed": "#89f5e7",
+                        "surface-bright": "#fcf8fa",
+                        "surface-variant": "#e4e2e4",
+                        "tertiary": "#000000",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed-dim": "#6bd8cb",
+                        "surface-tint": "#565e74",
+                        "primary-fixed-dim": "#bec6e0",
+                        "surface-container-low": "#f6f3f5",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#eae7e9",
+                        "tertiary-container": "#271901",
+                        "on-error-container": "#93000a",
+                        "background": "#fcf8fa",
+                        "on-tertiary-container": "#98805d",
+                        "secondary": "#006a61",
+                        "on-secondary-container": "#006f66",
+                        "outline": "#76777d",
+                        "primary-fixed": "#dae2fd",
+                        "on-secondary-fixed": "#00201d",
+                        "tertiary-fixed-dim": "#dec29a",
+                        "primary-container": "#131b2e",
+                        "inverse-on-surface": "#f3f0f2",
+                        "on-background": "#1b1b1d",
+                        "on-primary-container": "#7c839b",
+                        "on-primary-fixed": "#131b2e",
+                        "inverse-primary": "#bec6e0",
+                        "on-tertiary-fixed-variant": "#574425",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#005049",
+                        "outline-variant": "#c6c6cd",
+                        "inverse-surface": "#303032",
+                        "primary": "#000000",
+                        "surface-container-highest": "#e4e2e4",
+                        "surface": "#fcf8fa",
+                        "on-surface-variant": "#45464d",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-container": "#f0edef"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "header-height": "64px",
+                        "sidebar-width": "260px",
+                        "container-padding": "24px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "label-caps": ["Work Sans"],
+                        "data-tabular": ["Work Sans"],
+                        "display-lg": ["Inter"],
+                        "body-main": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "data-tabular": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "display-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-main": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+    </style>
+</head>
+<body class="bg-background font-body-main text-on-background antialiased overflow-hidden">
+<!-- SideNavBar Shell -->
+<nav class="bg-slate-900 dark:bg-slate-950 h-screen w-64 fixed left-0 top-0 z-40 border-r border-slate-800 shadow-none flex flex-col h-full font-['Inter'] text-sm antialiased">
+<div class="p-6">
+<span class="text-xl font-black tracking-tight text-white">ChainWatch</span>
+<p class="text-[10px] uppercase tracking-[0.2em] text-teal-500 mt-1 font-bold">Risk Intelligence</p>
+</div>
+<div class="flex-1 flex flex-col gap-1 px-2">
+<!-- Active Tab: Chat -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+                Map
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+                Products
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="assessment">assessment</span>
+                Reports
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 bg-slate-800 text-white border-l-4 border-teal-500 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="chat" style="font-variation-settings: 'FILL' 1;">chat</span>
+                Chat
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                Settings
+            </a>
+</div>
+<div class="mt-auto p-4 border-t border-slate-800">
+<div class="flex items-center gap-3 px-2">
+<div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiuJ7Cj5ZjnViGDBSo3f1SCvQsC4BMtEPVqKBo1Z6mr_a7T20Gb8mJ6tjZ8moa4kzDZ4IiBYY3kIJ75V89eIf5s0TlY-rPG2xgyk8FN0Yxq3tmOyVqViumwhFdrTqamNHa1onvb0LgWBQ1nCnUnYhhVcMf4G5SreKKkehns_Ww3kocrz6gz45C49WVOcWcMjcsHwHgorDMw3Ad_HJbDslv0UOgZxBHfYSy0jzP4NP_R-hRFaR2BfBKUKPxxfiGr7LdeDWoqwlu0D-y"/>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-semibold text-white">Ops Manager</span>
+<span class="text-[10px] text-slate-500">Premium Tier</span>
+</div>
+</div>
+</div>
+</nav>
+<!-- TopAppBar Shell -->
+<header class="bg-white/80 backdrop-blur-md fixed top-0 right-0 left-64 h-16 z-30 border-b border-slate-200 flex items-center justify-between px-8 w-full font-['Inter'] font-medium text-xs uppercase tracking-wider">
+<div class="flex items-center gap-4">
+<h1 class="text-slate-900 font-headline-md text-headline-md normal-case tracking-tight">Intelligence Assistant</h1>
+<div class="h-4 w-px bg-slate-200"></div>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="text-[10px] text-slate-500">System Live: Heartbeat Stable</span>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 text-slate-500">
+<span class="material-symbols-outlined hover:text-teal-600 cursor-pointer" data-icon="monitor_heart">monitor_heart</span>
+<div class="relative">
+<span class="material-symbols-outlined hover:text-teal-600 cursor-pointer" data-icon="notifications">notifications</span>
+<span class="absolute -top-1 -right-1 w-2 h-2 bg-error rounded-full"></span>
+</div>
+<span class="material-symbols-outlined hover:text-teal-600 cursor-pointer" data-icon="account_circle">account_circle</span>
+</div>
+</div>
+</header>
+<!-- Main Content Layout -->
+<main class="ml-64 mt-16 h-[calc(100vh-64px)] flex bg-background">
+<!-- Conversation Panel -->
+<section class="flex-1 flex flex-col min-w-0 border-r border-slate-200 overflow-hidden">
+<!-- Messages Container -->
+<div class="flex-1 overflow-y-auto p-gutter space-y-8 flex flex-col">
+<!-- Welcome/Initial State -->
+<div class="mx-auto max-w-2xl text-center py-12">
+<div class="w-16 h-16 bg-secondary-container rounded-full flex items-center justify-center mx-auto mb-6">
+<span class="material-symbols-outlined text-on-secondary-container text-3xl" data-icon="smart_toy">smart_toy</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-2">How can I assist your operations today?</h2>
+<p class="text-on-surface-variant text-body-main">Query real-time shipping feeds, ERP data, and global news monitors to mitigate supply chain risks.</p>
+</div>
+<!-- User Message -->
+<div class="flex justify-end gap-4 max-w-4xl ml-auto w-full px-8">
+<div class="flex flex-col items-end gap-1">
+<div class="bg-primary-container text-on-primary-container p-4 rounded-xl rounded-tr-none shadow-sm max-w-lg">
+<p class="text-body-main text-white">Which suppliers are most exposed to the current port strike on the US East Coast?</p>
+</div>
+<span class="text-[10px] text-slate-400 font-label-caps uppercase">10:42 AM</span>
+</div>
+<div class="w-8 h-8 bg-slate-200 rounded-full flex-shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-500 text-sm" data-icon="person">person</span>
+</div>
+</div>
+<!-- AI Response -->
+<div class="flex justify-start gap-4 max-w-4xl w-full px-8">
+<div class="w-8 h-8 bg-secondary-container rounded-full flex-shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container text-sm" data-icon="smart_toy">smart_toy</span>
+</div>
+<div class="flex flex-col items-start gap-3 w-full">
+<div class="bg-white border border-slate-200 p-6 rounded-xl rounded-tl-none shadow-sm w-full">
+<p class="text-body-main text-on-surface mb-4 leading-relaxed">
+                                Based on current shipping manifests and ERP purchase orders, three primary suppliers have significant exposure to the US East Coast port strikes.
+                            </p>
+<!-- Analysis Component -->
+<div class="space-y-3 mb-6">
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded border-l-4 border-error">
+<div>
+<h4 class="text-sm font-bold text-on-surface">Nexus Components Ltd.</h4>
+<p class="text-xs text-on-surface-variant">4 active shipments diverted</p>
+</div>
+<div class="text-right">
+<span class="text-error font-bold text-sm">$2.4M</span>
+<p class="text-[10px] uppercase text-slate-400 font-label-caps">Risk Value</p>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded border-l-4 border-orange-500">
+<div>
+<h4 class="text-sm font-bold text-on-surface">Vertex Logistics China</h4>
+<p class="text-xs text-on-surface-variant">12 containers at Port of Savannah</p>
+</div>
+<div class="text-right">
+<span class="text-orange-500 font-bold text-sm">$1.1M</span>
+<p class="text-[10px] uppercase text-slate-400 font-label-caps">Risk Value</p>
+</div>
+</div>
+</div>
+<!-- Citations -->
+<div class="pt-4 border-t border-slate-100 flex flex-wrap gap-2">
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mr-2 py-1">Sources:</span>
+<a class="flex items-center gap-1 bg-slate-50 px-2 py-1 rounded text-[11px] text-teal-600 border border-slate-200 hover:bg-white" href="#">
+<span class="material-symbols-outlined text-[12px]" data-icon="description">description</span> ERP_PO_DATA_Q4.csv
+                                </a>
+<a class="flex items-center gap-1 bg-slate-50 px-2 py-1 rounded text-[11px] text-teal-600 border border-slate-200 hover:bg-white" href="#">
+<span class="material-symbols-outlined text-[12px]" data-icon="link">link</span> Maritime Global Feed
+                                </a>
+</div>
+</div>
+<span class="text-[10px] text-slate-400 font-label-caps uppercase">10:43 AM • AI Analysis Complete</span>
+</div>
+</div>
+</div>
+<!-- Footer Area: Prompts and Input -->
+<div class="p-gutter pt-0 bg-white/50 backdrop-blur-sm">
+<!-- Suggested Prompts -->
+<div class="flex gap-2 mb-4 overflow-x-auto pb-2 scrollbar-hide">
+<button class="whitespace-nowrap px-4 py-2 bg-white border border-slate-200 rounded-full text-xs font-semibold text-slate-600 hover:border-teal-500 hover:text-teal-600 transition-colors">
+                        Draft mitigation plan for Nexus
+                    </button>
+<button class="whitespace-nowrap px-4 py-2 bg-white border border-slate-200 rounded-full text-xs font-semibold text-slate-600 hover:border-teal-500 hover:text-teal-600 transition-colors">
+                        View alternative shipping routes
+                    </button>
+<button class="whitespace-nowrap px-4 py-2 bg-white border border-slate-200 rounded-full text-xs font-semibold text-slate-600 hover:border-teal-500 hover:text-teal-600 transition-colors">
+                        Contact procurement team
+                    </button>
+</div>
+<!-- Input Box -->
+<div class="relative group">
+<div class="absolute inset-0 bg-teal-500/5 rounded-xl blur group-focus-within:opacity-100 opacity-0 transition-opacity"></div>
+<div class="relative bg-white border border-slate-300 focus-within:border-teal-500 rounded-xl flex flex-col p-2 transition-all shadow-sm">
+<textarea class="w-full bg-transparent border-none focus:ring-0 text-body-main p-3 min-h-[60px] resize-none" placeholder="Ask about risks, suppliers, or logistics..." rows="2"></textarea>
+<div class="flex justify-between items-center px-2 pb-1">
+<div class="flex gap-1">
+<button class="p-2 text-slate-400 hover:text-teal-600 rounded-lg hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined" data-icon="attach_file">attach_file</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-teal-600 rounded-lg hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined" data-icon="image">image</span>
+</button>
+</div>
+<button class="bg-secondary text-white px-4 py-2 rounded-lg flex items-center gap-2 font-bold text-xs hover:bg-secondary-fixed-dim transition-all">
+                                SEND <span class="material-symbols-outlined text-sm" data-icon="send">send</span>
+</button>
+</div>
+</div>
+</div>
+<div class="text-[10px] text-center text-slate-400 mt-3 font-medium tracking-wide">
+                    ChainWatch AI can make mistakes. Verify critical shipping data before making decisions.
+                </div>
+</div>
+</section>
+<!-- Used-Agent Summary Sidebar -->
+<aside class="w-80 flex flex-col bg-slate-50 overflow-y-auto">
+<div class="p-6 border-b border-slate-200">
+<div class="flex items-center justify-between mb-1">
+<h3 class="font-headline-md text-sm text-on-surface">Intelligence Stack</h3>
+<span class="px-2 py-0.5 bg-secondary/10 text-secondary text-[10px] font-bold rounded">LIVE</span>
+</div>
+<p class="text-[11px] text-slate-500">Active data nodes used for this query</p>
+</div>
+<div class="p-6 space-y-6">
+<!-- Source Module -->
+<div class="space-y-4">
+<div class="flex items-start gap-3">
+<div class="mt-1 w-8 h-8 rounded bg-white shadow-sm border border-slate-200 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-slate-600 text-sm" data-icon="database">database</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h4 class="text-xs font-bold text-on-surface">ERP Data</h4>
+<span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+</div>
+<p class="text-[11px] text-slate-500 mt-1">Queried purchase orders, delivery dates, and SKU inventory levels.</p>
+</div>
+</div>
+<div class="flex items-start gap-3">
+<div class="mt-1 w-8 h-8 rounded bg-white shadow-sm border border-slate-200 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-slate-600 text-sm" data-icon="sailing">sailing</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h4 class="text-xs font-bold text-on-surface">Real-time Shipping Feeds</h4>
+<span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+</div>
+<p class="text-[11px] text-slate-500 mt-1">Satellite vessel tracking and port congestion metrics (Live).</p>
+</div>
+</div>
+<div class="flex items-start gap-3">
+<div class="mt-1 w-8 h-8 rounded bg-white shadow-sm border border-slate-200 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-slate-600 text-sm" data-icon="public">public</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h4 class="text-xs font-bold text-on-surface">News Monitor</h4>
+<span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+</div>
+<p class="text-[11px] text-slate-500 mt-1">Scanned 124 local and global news sources for port strike updates.</p>
+</div>
+</div>
+</div>
+<!-- Real-time map snippet context -->
+<div class="pt-6 border-t border-slate-200">
+<h4 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.1em] mb-3">Impact Zone Visualization</h4>
+<div class="rounded-lg overflow-hidden border border-slate-200 bg-white h-40 relative">
+<img class="w-full h-full object-cover grayscale opacity-80" data-alt="A detailed satellite view map showing the Savannah Georgia coastline and harbor. The map features thermal hotspots indicating high congestion levels at the shipping terminals, rendered in a professional dark-themed mapping interface with teal and red data overlays highlighting blocked vessel lanes. The lighting is crisp and analytical, emphasizing data density and operational clarity." data-location="Savannah Port, USA" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDj0lJe1sugG5rR35XFxCoklnGVT-om7M83NxKP0hF4iKi1ML_B2iLaPOgKR-YoDUXj96J3BO1H76wGPBavorzq4SiPB3Y86CXauBwE2_tl5B1xGjyPEUo58a0CsKrRaV8kMduoM2KxoY3jAeDc0-GWJ_D09Gpa83re__cKS2HlDQnbGT_2P0TZBqWsMWxCPnEnYjwV6SWGdgoXUcQKlc-bUzJF39CBxX18y_B3eA4D86ydI2iuUJFOhStjVOnFH0rTuNVB7PnvRhk4"/>
+<div class="absolute inset-0 bg-teal-500/5 flex items-center justify-center">
+<span class="bg-white/90 px-3 py-1 text-[10px] font-bold rounded shadow-sm border border-slate-200">32 VESSELS IDLE</span>
+</div>
+</div>
+</div>
+<!-- Export Options -->
+<div class="pt-6 border-t border-slate-200">
+<button class="w-full py-3 bg-white border border-slate-200 rounded text-[11px] font-bold text-slate-700 flex items-center justify-center gap-2 hover:bg-slate-50 active:bg-slate-100 transition-colors uppercase tracking-wider">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span> Export Risk Brief
+                    </button>
+</div>
+</div>
+</aside>
+</main>
+</body></html>
