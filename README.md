@@ -116,8 +116,10 @@ Included in the current codebase:
 - Managed local storage bootstrap under `data/`
 - CSV import pipeline for suppliers, products, sales, inventory, and fulfillment
 - local demo seed workflow for development data
+- core external-risk, demand, inventory, and fulfillment agent implementations
+- sqlite-backed agent run traces and local run logs
 - baseline `GET /api/health`
-- backend `pytest` coverage for foundation, imports, and seed flows
+- backend `pytest` coverage for foundation, imports, seed, and agent flows
 
 ## Backend Quickstart
 

@@ -28,9 +28,9 @@ Use this file to:
 | Database schema | Implemented | sqlite bootstrap and repositories are live in phase 1 |
 | File storage layout | Implemented | Managed runtime paths are created under `data/` at startup |
 | Import pipeline | Implemented | CSV import services, import-run tracking, and seed tooling are now in place |
-| Agents | Not started | Agent behavior is documented in `AGENTS.md` only |
+| Agents | Implemented for phase 3 | External risk, demand, inventory, and fulfillment agents now run with trace metadata |
 | REST API | Started | `GET /api/health` is implemented; feature APIs remain pending |
-| Tests | Implemented for phases 1-2 | `pytest` covers bootstrap, storage, schema, health, imports, and seed flows |
+| Tests | Implemented for phases 1-3 | `pytest` covers bootstrap, storage, schema, health, imports, seed, and agent flows |
 
 ## Working Rules
 
@@ -229,120 +229,127 @@ Evidence:
 
 | Field | Value |
 | --- | --- |
-| Status | Not started |
+| Status | Done |
 | Priority | High |
 | Depends on | `BE-01`, `BE-02`, `BE-03` |
 | Goal | Implement search-backed external disruption analysis with citations and caching |
 
 Implementation checkpoints:
 
-- [ ] Define structured input and output models
-- [ ] Implement `SearchAdapter` integration boundary
-- [ ] Implement citation normalization
-- [ ] Persist `risk_events`
-- [ ] Aggregate `country_risk_scores`
-- [ ] Implement cached result handling
-- [ ] Support stale-data fallback
-- [ ] Record `agent_runs` trace metadata
+- [x] Define structured input and output models
+- [x] Implement `SearchAdapter` integration boundary
+- [x] Implement citation normalization
+- [x] Persist `risk_events`
+- [x] Aggregate `country_risk_scores`
+- [x] Implement cached result handling
+- [x] Support stale-data fallback
+- [x] Record `agent_runs` trace metadata
 
 Definition of done:
 
-- [ ] Country-level scores and issue lists are produced
-- [ ] Citation metadata is preserved
-- [ ] Cache is used when live search is unavailable
-- [ ] Outputs align with `AGENTS.md`
+- [x] Country-level scores and issue lists are produced
+- [x] Citation metadata is preserved
+- [x] Cache is used when live search is unavailable
+- [x] Outputs align with `AGENTS.md`
 
 Evidence:
 
-- None yet
+- `backend/app/agents/external_risk.py` implements live-search normalization, sqlite persistence, and cache fallback behavior
+- `backend/app/db/repositories/risk_repository.py` persists `risk_events` and `country_risk_scores`
+- `backend/app/services/citations.py` normalizes and deduplicates citations
+- `backend/tests/test_agents.py` verifies fresh-search output, sqlite persistence, and cached fallback behavior
 
 ### BE-06 Demand Agent
 
 | Field | Value |
 | --- | --- |
-| Status | Not started |
+| Status | Done |
 | Priority | High |
 | Depends on | `BE-02`, `BE-04` |
 | Goal | Implement seasonality, spike detection, and demand risk scoring using `3-5 years` of sales history |
 
 Implementation checkpoints:
 
-- [ ] Define structured input and output models
-- [ ] Implement sales aggregation logic
-- [ ] Implement seasonality detection
-- [ ] Implement recent spike detection
-- [ ] Implement forecast window output
-- [ ] Implement low-confidence behavior for sparse history
-- [ ] Record `agent_runs` trace metadata
+- [x] Define structured input and output models
+- [x] Implement sales aggregation logic
+- [x] Implement seasonality detection
+- [x] Implement recent spike detection
+- [x] Implement forecast window output
+- [x] Implement low-confidence behavior for sparse history
+- [x] Record `agent_runs` trace metadata
 
 Definition of done:
 
-- [ ] Product or product-set demand scoring is deterministic
-- [ ] Sparse-history cases return limited or low-confidence output
-- [ ] Output aligns with `AGENTS.md` and `API_SPEC.md`
+- [x] Product or product-set demand scoring is deterministic
+- [x] Sparse-history cases return limited or low-confidence output
+- [x] Output aligns with `AGENTS.md` and `API_SPEC.md`
 
 Evidence:
 
-- None yet
+- `backend/app/agents/demand.py` aggregates multi-year sales history into trend, seasonality, spike, forecast, and risk outputs
+- `backend/app/db/repositories/analytics_repository.py` provides the sales query layer used by the demand workflow
+- `backend/tests/test_agents.py` verifies both the seeded happy path and sparse-history low-confidence behavior
 
 ### BE-07 Inventory Agent
 
 | Field | Value |
 | --- | --- |
-| Status | Not started |
+| Status | Done |
 | Priority | High |
 | Depends on | `BE-02`, `BE-04`, `BE-06` |
 | Goal | Implement stock health, reorder urgency, and stockout risk scoring |
 
 Implementation checkpoints:
 
-- [ ] Define structured input and output models
-- [ ] Query latest inventory snapshots
-- [ ] Implement days-of-cover logic
-- [ ] Implement reorder urgency logic
-- [ ] Implement recommended-action generation
-- [ ] Support partial outputs when inbound data is missing
-- [ ] Support static-threshold fallback when demand data is unavailable
-- [ ] Record `agent_runs` trace metadata
+- [x] Define structured input and output models
+- [x] Query latest inventory snapshots
+- [x] Implement days-of-cover logic
+- [x] Implement reorder urgency logic
+- [x] Implement recommended-action generation
+- [x] Support partial outputs when inbound data is missing
+- [x] Support static-threshold fallback when demand data is unavailable
+- [x] Record `agent_runs` trace metadata
 
 Definition of done:
 
-- [ ] Product or product-set inventory health can be computed deterministically
-- [ ] Inventory outputs combine cleanly with demand outputs
-- [ ] Missing inbound data does not block usable output
+- [x] Product or product-set inventory health can be computed deterministically
+- [x] Inventory outputs combine cleanly with demand outputs
+- [x] Missing inbound data does not block usable output
 
 Evidence:
 
-- None yet
+- `backend/app/agents/inventory.py` computes stock health, cover, threshold-based risk, and recommended actions
+- `backend/tests/test_agents.py` verifies inventory scoring with demand signals and latest snapshot data
 
 ### BE-08 Fulfillment Agent
 
 | Field | Value |
 | --- | --- |
-| Status | Not started |
+| Status | Done |
 | Priority | Medium |
 | Depends on | `BE-02`, `BE-04`, `BE-05` |
 | Goal | Implement fulfillment risk analysis using backlog, delays, on-time rate, and optional external-risk enrichment |
 
 Implementation checkpoints:
 
-- [ ] Define structured input and output models
-- [ ] Query fulfillment snapshots
-- [ ] Compute regional fulfillment status
-- [ ] Compute fulfillment risk score
-- [ ] Support optional enrichment from external-risk outputs
-- [ ] Support partial result behavior for missing fulfillment data
-- [ ] Record `agent_runs` trace metadata
+- [x] Define structured input and output models
+- [x] Query fulfillment snapshots
+- [x] Compute regional fulfillment status
+- [x] Compute fulfillment risk score
+- [x] Support optional enrichment from external-risk outputs
+- [x] Support partial result behavior for missing fulfillment data
+- [x] Record `agent_runs` trace metadata
 
 Definition of done:
 
-- [ ] Regional fulfillment summaries are returned
-- [ ] A fulfillment risk score is produced
-- [ ] Missing local or external context yields partial but usable output
+- [x] Regional fulfillment summaries are returned
+- [x] A fulfillment risk score is produced
+- [x] Missing local or external context yields partial but usable output
 
 Evidence:
 
-- None yet
+- `backend/app/agents/fulfillment.py` aggregates latest fulfillment snapshots into regional and overall SLA risk outputs
+- `backend/tests/test_agents.py` verifies regional aggregation and fulfillment risk scoring on the demo dataset
 
 ## Phase 4: Output And Orchestration
 
@@ -529,7 +536,5 @@ Evidence:
 
 ## Suggested First Execution Sequence
 
-1. Build `BE-06` and `BE-07` first for the earliest useful product slice
-2. Add `BE-05` and `BE-08`
-3. Add `BE-11` product and dashboard APIs
-4. Finish reporting, chat, and reliability work
+1. Add `BE-11` product and dashboard APIs
+2. Finish reporting, chat, and reliability work

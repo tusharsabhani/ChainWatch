@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sqlite3
+from collections.abc import Sequence
 from datetime import datetime, timezone
 
 from app.db.repositories.base import SQLiteRepository
@@ -15,6 +16,10 @@ from app.schemas.catalog import (
 
 def _utc_now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
+
+
+def _placeholders(items: Sequence[object]) -> str:
+    return ", ".join("?" for _ in items)
 
 
 class CatalogRepository(SQLiteRepository):
@@ -262,3 +267,79 @@ class CatalogRepository(SQLiteRepository):
             connection=connection,
         )
         return [int(row["supplier_id"]) for row in rows]
+
+    def list_products_by_ids(self, product_ids: list[int]) -> list[ProductRecord]:
+        if not product_ids:
+            return []
+        rows = self.fetch_all(
+            f"""
+            SELECT
+                id,
+                sku,
+                name,
+                category,
+                brand,
+                status,
+                default_supplier_id,
+                origin_country_code,
+                created_at,
+                updated_at
+            FROM products
+            WHERE id IN ({_placeholders(product_ids)})
+            ORDER BY id ASC
+            """,
+            product_ids,
+        )
+        return [ProductRecord.model_validate(dict(row)) for row in rows]
+
+    def list_suppliers_by_country_codes(self, country_codes: list[str]) -> list[SupplierRecord]:
+        if not country_codes:
+            return []
+        rows = self.fetch_all(
+            f"""
+            SELECT
+                id,
+                supplier_code,
+                name,
+                country_code,
+                region,
+                lead_time_days,
+                reliability_score,
+                active,
+                created_at,
+                updated_at
+            FROM suppliers
+            WHERE country_code IN ({_placeholders(country_codes)})
+            ORDER BY name ASC
+            """,
+            country_codes,
+        )
+        return [SupplierRecord.model_validate(dict(row)) for row in rows]
+
+    def list_products_by_supplier_countries(self, country_codes: list[str]) -> list[ProductRecord]:
+        if not country_codes:
+            return []
+        rows = self.fetch_all(
+            f"""
+            SELECT DISTINCT
+                p.id,
+                p.sku,
+                p.name,
+                p.category,
+                p.brand,
+                p.status,
+                p.default_supplier_id,
+                p.origin_country_code,
+                p.created_at,
+                p.updated_at
+            FROM products AS p
+            INNER JOIN product_suppliers AS ps
+                ON ps.product_id = p.id
+            INNER JOIN suppliers AS s
+                ON s.id = ps.supplier_id
+            WHERE s.country_code IN ({_placeholders(country_codes)})
+            ORDER BY p.name ASC
+            """,
+            country_codes,
+        )
+        return [ProductRecord.model_validate(dict(row)) for row in rows]

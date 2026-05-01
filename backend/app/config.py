@@ -46,6 +46,7 @@ class Settings(BaseSettings):
 
     reports_enabled: bool = True
     external_risk_refresh_enabled: bool = True
+    external_risk_cache_ttl_hours: int = 6
 
     sqlite_timeout_seconds: float = 5.0
 
@@ -89,4 +90,3 @@ class Settings(BaseSettings):
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:
     return Settings()
-

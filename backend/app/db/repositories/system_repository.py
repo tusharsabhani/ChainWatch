@@ -28,6 +28,9 @@ class SystemRepository(SQLiteRepository):
         connection: sqlite3.Connection | None = None,
     ) -> int:
         allowed_tables = {
+            "agent_runs",
+            "country_risk_scores",
+            "risk_events",
             "products",
             "suppliers",
             "product_suppliers",

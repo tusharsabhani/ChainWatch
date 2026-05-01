@@ -70,6 +70,17 @@ uv run python -m app.seed
 
 This generates a local demo dataset and imports it through the same CSV pipeline used for manual imports.
 
+## Core Agents
+
+Phase 3 backend agents are implemented for:
+
+- external risk
+- demand
+- inventory
+- fulfillment
+
+These agents currently run as Python services and create `agent_runs` trace rows plus local run logs. Their page and chat APIs will be added in later backend phases.
+
 ## Test
 
 From the `backend/` directory:

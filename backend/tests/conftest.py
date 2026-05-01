@@ -6,6 +6,7 @@ import pytest
 
 from app.config import Settings
 from app.main import create_app
+from app.services.imports.seed import DemoSeedService
 from app.services.runtime import bootstrap_runtime
 
 
@@ -22,3 +23,14 @@ def app(settings: Settings):
 @pytest.fixture()
 def runtime(settings: Settings):
     return bootstrap_runtime(settings)
+
+
+@pytest.fixture()
+def seeded_runtime(runtime):
+    seed_service = DemoSeedService(
+        settings=runtime.settings,
+        storage=runtime.storage,
+        database=runtime.database,
+    )
+    seed_service.seed_demo_data()
+    return runtime
