@@ -292,6 +292,12 @@ export type ReportsListResponse = {
   }>;
 };
 
+export type ReportsListQuery = {
+  scopeType?: string;
+  status?: string;
+  limit?: number;
+};
+
 export type ReportDetailResponse = {
   id: string;
   title: string;

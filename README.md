@@ -106,7 +106,7 @@ V1 should work entirely from the project directory with no required cloud infras
 
 ## Current Implementation Status
 
-Backend phases are complete under `backend/`, and frontend phases 1-2 are now implemented under `frontend/`.
+Backend phases are complete under `backend/`, and frontend phases 1-3 are now implemented under `frontend/`.
 
 Included in the current codebase:
 
@@ -123,7 +123,7 @@ Included in the current codebase:
 - standalone Next.js frontend scaffold under `frontend/`
 - responsive frontend app shell aligned to the approved Stitch mock theme
 - live Dashboard, Map, and Product Detail pages backed by backend APIs
-- mock-shaped shells for Chat, Reports, and the remaining workflow surfaces
+- live Chat, Reports, and Settings/Import workflows backed by the frontend proxy layer plus backend APIs
 - shared frontend API client, response typings, and loading/error/empty/freshness components
 
 ## Backend Quickstart
@@ -179,7 +179,7 @@ ChainWatch/
 └── tasks/
 ```
 
-The `frontend/` directory now exists as a standalone Next.js App Router project with a Stitch-aligned shell, live core read pages, and a typed API layer for the backend surface.
+The `frontend/` directory now exists as a standalone Next.js App Router project with a Stitch-aligned shell, live read and workflow pages, and a typed API layer for the backend surface.
 The `backend/` project exists, and the `data/` directory is created as a managed runtime location by the backend bootstrap flow.
 The backend API surface is live for health, dashboard, map, products, chat, reports, and imports, and phase-6 reliability work adds freshness metadata, background report generation, and a regression checklist.
 

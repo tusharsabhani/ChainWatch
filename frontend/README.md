@@ -4,6 +4,7 @@ The frontend is a standalone `Next.js` App Router project for the ChainWatch UI.
 
 Phase 1 now follows the approved `stitch_chainwatch_mocks` visual system: a dark operational desktop rail, a compact light workspace, and route-shaped page shells that mirror the mock exports.
 Phase 2 now adds live Dashboard, Map, and Product Detail pages on top of that shell, while Chat, Reports, and Import workflows remain for later phases.
+Phase 3 now completes those workflow surfaces with live chat, report generation, report browsing, and local-path import actions through same-origin frontend route handlers.
 
 ## Requirements
 
@@ -41,4 +42,4 @@ Phase 1 implements:
 - the shared API client
 - common loading, error, empty, retry, and freshness UI
 
-The Settings page already uses live backend health and import-history data, and the Dashboard, Map, and Product Detail pages now render live backend responses inside the approved visual system.
+The Settings page now includes live import actions, and the Chat and Reports pages now run real workflow interactions while still using the approved visual system.

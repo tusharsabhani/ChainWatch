@@ -3,11 +3,12 @@ import type {
   ReportDetailResponse,
   ReportGenerateRequest,
   ReportGenerateResponse,
+  ReportsListQuery,
   ReportsListResponse
 } from "@/lib/api/types";
 
-export function getReports() {
-  return apiRequest<ReportsListResponse>("reports");
+export function getReports(query: ReportsListQuery = {}) {
+  return apiRequest<ReportsListResponse>("reports", { query });
 }
 
 export function getReportDetail(reportId: string) {

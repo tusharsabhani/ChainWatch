@@ -4,9 +4,7 @@ This file is the lightweight Jira-style board for ChainWatch. Each task ID must 
 
 ## Todo
 
-- `FE-03` Chat page
-- `FE-05` Reports list and detail page
-- `FE-07` Data import and settings page
+None.
 
 ## In Progress
 
@@ -34,6 +32,9 @@ None.
 - `BE-14` Tests and eval scenarios
 - `FE-01` App shell, routing, navigation, and theme
 - `FE-02` Dashboard page
+- `FE-03` Chat page
 - `FE-04` Map page
+- `FE-05` Reports list and detail page
 - `FE-06` Product detail page
+- `FE-07` Data import and settings page
 - `FE-08` Shared API client, loading states, and error states

@@ -24,12 +24,12 @@ Use this file to:
 
 | Area | Status | Notes |
 | --- | --- | --- |
-| Frontend codebase | Phase 2 implemented | `frontend/` now includes live core read pages on top of the standalone Next.js App Router project |
+| Frontend codebase | Phase 3 implemented | `frontend/` now includes both live core read pages and workflow surfaces on top of the standalone Next.js App Router project |
 | Backend APIs | Implemented | Backend phases are complete through reliability and scenario coverage |
 | Shared API client | Implemented | Typed fetch helpers now cover health, dashboard, map, products, chat, reports, and imports |
 | Shell and routing | Implemented | The app shell now follows the Stitch mock system with a dark desktop rail, compact top bar, and route-aware mobile shells |
-| Pages | Phase 2 core reads implemented | Dashboard, Map, and Product Detail now render live backend data, while Chat, Reports, and Import workflows remain for phase 3 |
-| Frontend validation | Implemented | `npm install` completed, phase-2 map dependencies were added, and `npm run build` passed |
+| Pages | Phase 3 implemented | Dashboard, Map, Product Detail, Chat, Reports, and Settings/Imports now all have live frontend workflows |
+| Frontend validation | Implemented | `npm install` completed, workflow route handlers were added, and `npm run build` passed |
 
 ## Working Rules
 
@@ -205,84 +205,87 @@ This phase adds the interactive workflows that sit on top of the completed backe
 
 | Field | Value |
 | --- | --- |
-| Status | Not started |
+| Status | Done |
 | Priority | Medium |
 | Depends on | `FE-01`, `FE-08`, `BE-12` |
 | Goal | Build report browsing, report detail, and report generation UI |
 
 Implementation checkpoints:
 
-- [ ] Create reports list table
-- [ ] Add status and scope filtering
-- [ ] Create report detail panel with metadata and Markdown preview
-- [ ] Add generate report action
-- [ ] Add queued, running, completed, failed, and empty states
+- [x] Create reports list table
+- [x] Add status and scope filtering
+- [x] Create report detail panel with metadata and Markdown preview
+- [x] Add generate report action
+- [x] Add queued, running, completed, failed, and empty states
 
 Definition of done:
 
-- [ ] A user can browse reports and open one report at a time
-- [ ] The page distinguishes report status values clearly
-- [ ] Markdown preview or summary content is visible for completed reports
+- [x] A user can browse reports and open one report at a time
+- [x] The page distinguishes report status values clearly
+- [x] Markdown preview or summary content is visible for completed reports
 
 Evidence:
 
-- None yet
+- `frontend/app/reports/page.tsx` now renders the live report archive, selected detail, and generator defaults from route query context
+- `frontend/components/reports/reports-workspace.tsx` now supports status/scope filters, report generation, queued/running polling, artifact metadata, and Markdown preview rendering from the backend
 
 ### FE-03 Chat Page
 
 | Field | Value |
 | --- | --- |
-| Status | Not started |
+| Status | Done |
 | Priority | Medium |
 | Depends on | `FE-01`, `FE-08`, `BE-12` |
 | Goal | Build the chat experience with sessions, transcript, citations, and agent usage |
 
 Implementation checkpoints:
 
-- [ ] Create session list panel
-- [ ] Create new chat flow
-- [ ] Create message list and composer
-- [ ] Render citations and used-agent metadata
-- [ ] Add context chip support for product or country scope
-- [ ] Add loading, pending, empty, and error states
+- [x] Create session list panel
+- [x] Create new chat flow
+- [x] Create message list and composer
+- [x] Render citations and used-agent metadata
+- [x] Add context chip support for product or country scope
+- [x] Add loading, pending, empty, and error states
 
 Definition of done:
 
-- [ ] A user can create a session and send a message
-- [ ] Responses render citations and used-agent metadata when available
-- [ ] Existing sessions reload and render history correctly
+- [x] A user can create a session and send a message
+- [x] Responses render citations and used-agent metadata when available
+- [x] Existing sessions reload and render history correctly
 
 Evidence:
 
-- None yet
+- `frontend/app/chat/page.tsx` now hydrates the chat workspace from live backend sessions and conversation history, with query-seeded scope support for product and country handoffs
+- `frontend/components/chat/chat-workspace.tsx` now handles session creation, transcript rendering, composer posting, citations, used-agent metadata, and same-origin interactive loading states
 
 ### FE-07 Data Import And Settings Page
 
 | Field | Value |
 | --- | --- |
-| Status | Not started |
+| Status | Done |
 | Priority | Medium |
 | Depends on | `FE-01`, `FE-08`, `BE-12` |
 | Goal | Build the operational page for runtime health, provider readiness, and import activity |
 
 Implementation checkpoints:
 
-- [ ] Create runtime health cards
-- [ ] Create provider status section
-- [ ] Create local storage paths section
-- [ ] Create import forms for products, sales, inventory, and suppliers
-- [ ] Create recent imports list with status summary
-- [ ] Add warnings and failure states for provider and import issues
+- [x] Create runtime health cards
+- [x] Create provider status section
+- [x] Create local storage paths section
+- [x] Create import forms for products, sales, inventory, and suppliers
+- [x] Create recent imports list with status summary
+- [x] Add warnings and failure states for provider and import issues
 
 Definition of done:
 
-- [ ] A user can inspect runtime readiness and recent imports from one screen
-- [ ] Each import type has a dedicated UI action
-- [ ] Import success and failure responses are clearly visible
+- [x] A user can inspect runtime readiness and recent imports from one screen
+- [x] Each import type has a dedicated UI action
+- [x] Import success and failure responses are clearly visible
 
 Evidence:
 
-- None yet
+- `frontend/app/settings/page.tsx` now surfaces operational warning banners, provider readiness, storage paths, and recent import history from live backend data
+- `frontend/components/settings/import-control-panel.tsx` now provides dedicated local-path import actions for products, sales, inventory, and suppliers, with success/error banners and refresh behavior
 
 ## Suggested First Execution Sequence
 

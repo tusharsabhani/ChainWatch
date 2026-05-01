@@ -3,6 +3,7 @@ import { EmptyState } from "@/components/states/empty-state";
 import { FreshnessBadge } from "@/components/freshness-badge";
 import { MaterialIcon } from "@/components/material-icon";
 import { SectionCard } from "@/components/section-card";
+import { ImportControlPanel } from "@/components/settings/import-control-panel";
 import { StatusPill } from "@/components/status-pill";
 import { getHealth, getImports } from "@/lib/api";
 import { safeApiCall } from "@/lib/api/client";
@@ -107,6 +108,22 @@ export default async function SettingsPage() {
         }
       ]
     : [];
+  const warningItems = health
+    ? [
+        !health.providers.searchConfigured
+          ? "Search adapter is offline, so external-risk and cited map/dashboard evidence may remain empty."
+          : null,
+        !health.providers.llmConfigured
+          ? "LLM adapter is offline, so chat and summaries fall back to deterministic composition."
+          : null,
+        !health.backgroundTasks.reportsEnabled
+          ? "Background report generation is disabled, so queued reports will not complete automatically."
+          : null,
+        !health.backgroundTasks.externalRiskRefreshEnabled
+          ? "External-risk cache refresh is disabled, so stale country data will not self-refresh in the background."
+          : null
+      ].filter(Boolean)
+    : [];
 
   return (
     <div className="bg-background p-4 lg:p-8 lg:pt-6">
@@ -119,6 +136,18 @@ export default async function SettingsPage() {
             Runtime health, provider readiness, and recent import activity.
           </p>
         </div>
+
+        {warningItems.length > 0 ? (
+          <SectionCard title="Operational Warnings" eyebrow="Live provider status">
+            <div className="space-y-3">
+              {warningItems.map((warning) => (
+                <div key={warning} className="rounded-lg border border-caution/20 bg-caution/10 px-4 py-3 text-sm text-caution">
+                  {warning}
+                </div>
+              ))}
+            </div>
+          </SectionCard>
+        ) : null}
 
         {health ? (
           <SectionCard title="Runtime Health" eyebrow="Live backend preview">
@@ -159,20 +188,8 @@ export default async function SettingsPage() {
           />
         )}
 
-        <SectionCard title="Import Data" eyebrow="Phase 1 shell">
-          <p className="text-sm leading-6 text-slate-600">
-            Upload actions stay visual-only in this reset, but the import history and runtime
-            readiness remain live from the backend.
-          </p>
-          <div className="mt-4 rounded-lg border border-white/10 bg-primary-container p-4 text-white">
-            <p className="font-label text-[10px] font-semibold uppercase tracking-[0.16em] text-white/60">
-              Target path
-            </p>
-            <p className="mt-3 font-mono text-xs">/data/imports/raw</p>
-            <button className="mt-4 w-full rounded bg-secondary px-4 py-3 font-label text-[10px] font-semibold uppercase tracking-[0.16em] text-white">
-              Select Source File
-            </button>
-          </div>
+        <SectionCard title="Import Data" eyebrow="Live local ingestion">
+          <ImportControlPanel importsPath={health?.storage.importsPath ?? "/data/imports/raw"} />
         </SectionCard>
 
         {health ? (
@@ -234,6 +251,18 @@ export default async function SettingsPage() {
       </section>
 
       <section className="hidden space-y-6 lg:block">
+        {warningItems.length > 0 ? (
+          <SectionCard title="Operational Warnings" eyebrow="Live provider status">
+            <div className="grid gap-3 xl:grid-cols-2">
+              {warningItems.map((warning) => (
+                <div key={warning} className="rounded-lg border border-caution/20 bg-caution/10 px-4 py-3 text-sm text-caution">
+                  {warning}
+                </div>
+              ))}
+            </div>
+          </SectionCard>
+        ) : null}
+
         <div className="grid grid-cols-12 gap-6">
           <SectionCard title="Runtime Health" eyebrow="Real-time infrastructure readiness" className="col-span-8">
             {health ? (
@@ -288,22 +317,10 @@ export default async function SettingsPage() {
               <h3 className="font-display text-[20px] font-semibold tracking-[-0.01em]">Import Data</h3>
               <MaterialIcon icon="upload_file" className="text-[20px] text-white/50" />
             </div>
-            <p className="text-sm leading-7 text-white/70">
-              Batch upload operational intelligence directly to the ChainWatch core engine.
-              Phase 1 keeps this as a visual action shell while the import history remains live.
-            </p>
-            <div className="mt-8 space-y-3">
-              <div className="flex items-center justify-between font-label text-[10px] font-semibold uppercase tracking-[0.16em] text-white/60">
-                <span>Target path</span>
-                <MaterialIcon icon="edit" className="text-[14px]" />
-              </div>
-              <div className="rounded bg-white/10 p-3 font-mono text-xs text-white">
-                {health?.storage.importsPath ?? "/data/imports/raw"}
-              </div>
-            </div>
-            <button className="mt-8 w-full rounded bg-secondary px-4 py-4 font-label text-[10px] font-semibold uppercase tracking-[0.16em] text-white">
-              Select Source File
-            </button>
+            <ImportControlPanel
+              importsPath={health?.storage.importsPath ?? "/data/imports/raw"}
+              variant="inverted"
+            />
           </div>
         </div>
 
