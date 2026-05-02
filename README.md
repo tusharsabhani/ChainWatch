@@ -1,135 +1,51 @@
 # ChainWatch
 
-ChainWatch is a local-first retail risk intelligence platform for monitoring inventory pressure, fulfillment risk, and external disruptions that can affect product availability. It is designed for teams that need a practical operational view of what is happening to SKUs, suppliers, regions, and customer delivery commitments without depending on a cloud-heavy stack for the first version.
+> Local-first retail risk intelligence — monitor inventory pressure, fulfillment risk, and supply chain disruptions without a cloud-heavy stack.
 
-The v1 product is intentionally documentation-first. This repository begins with a complete project spec so implementation can proceed in a controlled way across frontend, backend, storage, data model, agent orchestration, and tasks tracking.
+![Python](https://img.shields.io/badge/Python-3.11+-blue) ![Next.js](https://img.shields.io/badge/Next.js-App_Router-black) ![FastAPI](https://img.shields.io/badge/FastAPI-backend-green) ![SQLite](https://img.shields.io/badge/Storage-SQLite-lightgrey)
 
-## Problem Statement
+---
 
-Retail teams often track demand, stock, supplier reliability, and shipping risk in separate tools. That makes it hard to answer simple operational questions:
+## What is ChainWatch?
 
-- Which products are most likely to stock out in the next few days?
-- Which supplier or country issue is putting the biggest revenue at risk?
-- Which delays are caused by demand spikes versus external disruptions?
-- Which products and regions should be escalated right now?
+Retail teams track demand, stock, supplier reliability, and shipping risk in separate tools — making it hard to answer simple operational questions fast.
 
-ChainWatch solves this by combining historical internal data with live external risk monitoring in one local-first system.
+ChainWatch brings it all together in one local-first system:
 
-## Product Scope
+- **Which products are most likely to stock out in the next few days?**
+- **Which supplier or regional issue is putting the biggest revenue at risk?**
+- **Which delays are caused by demand spikes vs. external disruptions?**
+- **Which products and regions need escalation right now?**
 
-ChainWatch is a retail inventory, fulfillment, and external-risk intelligence product. It is not a procurement workflow system and it is not a general analytics warehouse.
+---
 
-### Core capabilities
+## Features
 
-- Surface operational KPIs and active risk alerts on a dashboard.
-- Answer grounded natural-language questions in a chat interface with citations.
-- Highlight countries with active risk signals on a map.
-- Generate structured local reports in JSON and Markdown.
-- Show product-level demand, stock, supplier exposure, and fulfillment risk.
-- Import local CSV data for sales, inventory, products, and suppliers.
+- 📊 **Dashboard** — Operational KPIs and active risk alerts at a glance
+- 💬 **Chat** — Grounded natural-language Q&A with citations
+- 🗺️ **Map** — Country-level risk signals visualized
+- 📄 **Reports** — Structured JSON and Markdown report generation
+- 📦 **Product Detail** — Demand, stock, supplier exposure, and fulfillment risk per SKU
+- 📥 **Data Import** — CSV import for sales, inventory, products, and suppliers
 
-## V1 Pages
+---
 
-- `Dashboard`
-- `Chat`
-- `Map`
-- `Reports`
-- `Product Detail`
-- `Data Import/Settings`
+## Stack
 
-Detailed page definitions live in [PAGES.md](PAGES.md).
+| Layer | Tech |
+|---|---|
+| Frontend | Next.js (App Router), TypeScript, Tailwind CSS, React Simple Maps |
+| Backend | Python, FastAPI, Pydantic |
+| Storage | SQLite (`data/app.db`), local filesystem |
+| Reports | JSON + Markdown |
+| LLM | Configurable (OpenAI adapter included) |
+| Web Search | Configurable (Exa adapter included) |
 
-## Backend Agent System
+---
 
-The backend centers on six coordinated components:
-
-- `External Risk Agent`
-- `Demand Agent`
-- `Inventory Agent`
-- `Fulfillment Agent`
-- `Reporting Agent`
-- `Chat Orchestrator`
-
-Detailed responsibilities live in [AGENTS.md](AGENTS.md).
-
-## Chosen Stack
-
-### Frontend
-
-- `Next.js` with App Router
-- `TypeScript`
-- `Tailwind CSS`
-- `React Simple Maps` for the country risk map
-- custom local React components for the application UI
+## Quickstart
 
 ### Backend
-
-- `Python`
-- `FastAPI`
-- `Pydantic`
-- `sqlite3`
-- Local filesystem storage for artifacts, logs, cache, and report output
-
-### Report output
-
-- `JSON + Markdown`
-
-### Provider strategy
-
-The LLM provider remains configurable, with an `OpenAI` adapter currently available behind the shared interface. The external web-search path supports `Exa` behind the existing adapter boundary. Other providers can still be added later without changing product behavior or page requirements.
-
-## Local-First Philosophy
-
-V1 should work entirely from the project directory with no required cloud infrastructure. The local runtime is expected to manage:
-
-- Structured application data in `data/app.db`
-- Imported source files in `data/imports/`
-- Generated reports in `data/reports/json/` and `data/reports/markdown/`
-- Cached external-risk responses in `data/cache/external_risk/`
-- Logs and agent traces in `data/logs/`
-
-External-risk lookups are cached locally and reused for the same UTC day by default so dashboard, map, chat, and product pages do not repeatedly call the search provider.
-
-## Documentation Map
-
-- [CLAUDE.md](CLAUDE.md): AI collaborator rules and repo conventions
-- [PRD.md](PRD.md): product intent and scope
-- [PAGES.md](PAGES.md): page-by-page requirements
-- [ARCHITECTURE.md](ARCHITECTURE.md): system design and data flow
-- [AGENTS.md](AGENTS.md): agent roles and orchestration
-- [DATA_MODEL.md](DATA_MODEL.md): sqlite schema and relationships
-- [API_SPEC.md](API_SPEC.md): backend contract for frontend integration
-- [tasks/STATUS.md](tasks/STATUS.md): lightweight Jira-style status board
-- [tasks/FRONTEND_TASKS.md](tasks/FRONTEND_TASKS.md): frontend build steps
-- [tasks/BACKEND_TASKS.md](tasks/BACKEND_TASKS.md): backend build steps
-- [tasks/DECISIONS.md](tasks/DECISIONS.md): decision log
-- [tasks/ISSUES.md](tasks/ISSUES.md): issue tracker
-
-## Current Implementation Status
-
-Backend phases are complete under `backend/`, and frontend phases 1-3 are now implemented under `frontend/`.
-
-Included in the current codebase:
-
-- FastAPI backend scaffold
-- Typed runtime settings
-- sqlite bootstrap and repository helpers
-- Managed local storage bootstrap under `data/`
-- CSV import pipeline for suppliers, products, sales, inventory, and fulfillment
-- local demo seed workflow for development data
-- core external-risk, demand, inventory, and fulfillment agent implementations
-- sqlite-backed agent run traces and local run logs
-- complete backend API surface for health, dashboard, map, products, chat, reports, and imports
-- backend `pytest` coverage through reliability and scenario coverage
-- standalone Next.js frontend scaffold under `frontend/`
-- responsive frontend app shell aligned to the approved Stitch mock theme
-- live Dashboard, Map, and Product Detail pages backed by backend APIs
-- live Chat, Reports generation, and Settings/Import workflows backed by the frontend proxy layer plus backend APIs
-- shared frontend API client, response typings, and loading/error/empty/freshness components
-
-## Backend Quickstart
-
-From the repository root:
 
 ```bash
 cd backend
@@ -137,28 +53,16 @@ uv sync --extra dev
 uv run uvicorn app.main:app --reload
 ```
 
-Health check:
+Health check: `GET /api/health`
 
-```text
-GET /api/health
-```
-
-Import demo data:
-
+Seed demo data:
 ```bash
-cd backend
 uv run python -m app.seed
 ```
 
-Demo note:
+> **Note:** External risk events require live search configured or cached data. Report browsing in-app is not yet supported — generation only.
 
-- `app.seed` loads the local catalog, sales, inventory, and fulfillment demo data.
-- External-risk events are only available when live search is configured or cached external-risk data already exists locally.
-- The Reports page currently supports report generation only; in-app report browsing is not part of the current frontend.
-
-## Frontend Quickstart
-
-From the repository root:
+### Frontend
 
 ```bash
 cd frontend
@@ -166,38 +70,84 @@ npm install
 npm run dev
 ```
 
-The frontend expects the backend API at `http://127.0.0.1:8000/api` by default. Override that with `NEXT_PUBLIC_API_BASE_URL` in `frontend/.env.local` if needed.
+Frontend expects the backend at `http://127.0.0.1:8000/api` by default. Override with `NEXT_PUBLIC_API_BASE_URL` in `frontend/.env.local`.
 
-## Planned Repository Shape
+---
 
-```text
+## Project Structure
+
+```
 ChainWatch/
 ├── README.md
-├── CLAUDE.md
-├── PRD.md
-├── PAGES.md
-├── ARCHITECTURE.md
-├── AGENTS.md
-├── DATA_MODEL.md
-├── API_SPEC.md
-├── frontend/
-├── backend/
-├── data/
+├── CLAUDE.md           # AI collaborator rules and repo conventions
+├── PRD.md              # Product intent and scope
+├── PAGES.md            # Page-by-page requirements
+├── ARCHITECTURE.md     # System design and data flow
+├── AGENTS.md           # Agent roles and orchestration
+├── DATA_MODEL.md       # SQLite schema and relationships
+├── API_SPEC.md         # Backend contract for frontend integration
+├── frontend/           # Next.js App Router project
+├── backend/            # FastAPI backend
+├── data/               # Runtime data (db, imports, reports, cache, logs)
 └── tasks/
+    ├── STATUS.md        # Lightweight status board
+    ├── FRONTEND_TASKS.md
+    ├── BACKEND_TASKS.md
+    ├── DECISIONS.md     # Decision log
+    └── ISSUES.md        # Issue tracker
 ```
 
-The `frontend/` directory now exists as a standalone Next.js App Router project with a Stitch-aligned shell, live read and workflow pages, and a typed API layer for the backend surface.
-The `backend/` project exists, and the `data/` directory is created as a managed runtime location by the backend bootstrap flow.
-The backend API surface is live for health, dashboard, map, products, chat, reports, and imports, and phase-6 reliability work adds freshness metadata, background report generation, and a regression checklist.
+---
 
-## Implementation Order
+## Agent System
 
-1. Lock repository conventions and task workflow.
-2. Build backend structure, sqlite schema, and local storage layout.
-3. Add import pipeline and seed data.
-4. Implement risk-analysis agents, report generation, and chat orchestration.
-5. Expose the remaining REST APIs for dashboard, chat, map, products, reports, and imports.
-6. Build the frontend pages and shared UI/data layers.
-7. Add verification, eval scenarios, and documentation updates.
+The backend coordinates six agents:
 
-The detailed step plan is tracked in `tasks/FRONTEND_TASKS.md` and `tasks/BACKEND_TASKS.md`.
+| Agent | Responsibility |
+|---|---|
+| External Risk Agent | Monitors live supply chain disruptions |
+| Demand Agent | Tracks and forecasts product demand |
+| Inventory Agent | Monitors stock levels and pressure |
+| Fulfillment Agent | Tracks delivery commitments and risk |
+| Reporting Agent | Generates structured reports |
+| Chat Orchestrator | Routes and grounds natural-language queries |
+
+External risk lookups are cached locally per UTC day — dashboard, map, chat, and product pages reuse cached data instead of repeated API calls.
+
+---
+
+## Local-First Philosophy
+
+V1 runs entirely from the project directory — no cloud infrastructure required.
+
+| Path | Purpose |
+|---|---|
+| `data/app.db` | Application database |
+| `data/imports/` | Uploaded source files |
+| `data/reports/` | Generated JSON and Markdown reports |
+| `data/cache/external_risk/` | Cached external risk responses |
+| `data/logs/` | Agent traces and run logs |
+
+---
+
+## Current Status
+
+**Backend** — All phases complete:
+- FastAPI scaffold, SQLite schema, local storage bootstrap
+- CSV import pipeline (suppliers, products, sales, inventory, fulfillment)
+- Demo seed workflow
+- All agents implemented (risk, demand, inventory, fulfillment, reporting, chat)
+- Full REST API surface (health, dashboard, map, products, chat, reports, imports)
+- pytest coverage across reliability and scenario tests
+
+**Frontend** — All phases complete:
+- Next.js App Router scaffold with Stitch-aligned shell
+- Live Dashboard, Map, and Product Detail pages
+- Live Chat, Reports, and Settings/Import workflows
+- Shared API client, response typings, and UI state components
+
+---
+
+## License
+
+MIT
