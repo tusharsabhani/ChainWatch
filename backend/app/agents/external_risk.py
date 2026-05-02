@@ -23,6 +23,7 @@ from app.schemas.agents import (
     ExternalRiskEvent,
 )
 from app.services.citations import dedupe_citations, normalize_citation
+from app.services.countries import country_name, country_search_focus
 from app.services.scoring import average, clamp
 from app.services.storage import StorageManager
 
@@ -231,7 +232,10 @@ class ExternalRiskAgent(BaseAgent):
     def _is_cache_fresh(self, cache_path: Path, freshness_policy_hours: int) -> bool:
         if not cache_path.exists():
             return False
-        age = _utc_now() - datetime.fromtimestamp(cache_path.stat().st_mtime, tz=timezone.utc)
+        cache_updated_at = datetime.fromtimestamp(cache_path.stat().st_mtime, tz=timezone.utc)
+        if self.settings.external_risk_cache_same_day_only:
+            return cache_updated_at.date() == _utc_now().date()
+        age = _utc_now() - cache_updated_at
         return age <= timedelta(hours=freshness_policy_hours)
 
     def _read_cached_output(self, cache_key: str) -> ExternalRiskAgentOutput | None:
@@ -279,11 +283,26 @@ class ExternalRiskAgent(BaseAgent):
         route_hints: list[str],
         product_category: str | None,
     ) -> str:
-        route_text = f" routes {', '.join(route_hints)}" if route_hints else ""
-        category_text = f" for {product_category}" if product_category else ""
+        resolved_country_name = country_name(country_code)
+        route_terms = [hint.strip() for hint in route_hints if hint.strip()]
+        focus_terms = [
+            "shipping delays",
+            "port closures",
+            "factory slowdowns",
+            "labor strikes",
+            "weather disruption",
+            "trade restrictions",
+            *country_search_focus(country_code),
+            *route_terms,
+        ]
+        deduped_focus_terms = list(dict.fromkeys(focus_terms))
+        category_text = f" for {product_category} supply chains" if product_category else ""
+        focus_text = ", ".join(deduped_focus_terms)
         return (
-            f"Recent supply chain, tariff, logistics, labor, or weather disruptions in {country_code}"
-            f"{route_text}{category_text}"
+            f"Recent cited news about logistics, labor, weather, tariff, or geopolitical disruptions affecting "
+            f"{resolved_country_name} ({country_code}){category_text}. "
+            f"Prioritize shipment delays, port congestion, factory shutdowns, export constraints, and supplier risk. "
+            f"Focus on {focus_text}."
         )
 
     def _normalize_search_results(
@@ -358,7 +377,21 @@ class ExternalRiskAgent(BaseAgent):
         )
         if any(keyword in haystack for keyword in ("tariff", "duty", "trade barrier")):
             return "tariff"
-        if any(keyword in haystack for keyword in ("storm", "flood", "weather", "typhoon", "earthquake")):
+        if any(
+            keyword in haystack
+            for keyword in (
+                "storm",
+                "flood",
+                "weather",
+                "typhoon",
+                "earthquake",
+                "heatwave",
+                "heat wave",
+                "extreme heat",
+                "drought",
+                "wildfire",
+            )
+        ):
             return "weather"
         if any(keyword in haystack for keyword in ("strike", "labor", "union", "work stoppage")):
             return "labor"
@@ -383,7 +416,21 @@ class ExternalRiskAgent(BaseAgent):
             )
             if value
         )
-        if any(keyword in haystack for keyword in ("shutdown", "closed", "critical", "severe", "conflict")):
+        if any(
+            keyword in haystack
+            for keyword in (
+                "shutdown",
+                "closed",
+                "critical",
+                "severe",
+                "conflict",
+                "blockade",
+                "halted",
+                "standstill",
+                "missile",
+                "attack",
+            )
+        ):
             return 5
         if any(keyword in haystack for keyword in ("major", "strike", "disruption", "backlog", "tariff")):
             return 4

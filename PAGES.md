@@ -242,7 +242,7 @@ Show country-level external-risk hotspots and let the user understand which supp
 
 ### Goal
 
-Let the user browse generated reports, inspect their contents, and trigger new report generation for key scopes.
+Let the user trigger new report generation for key scopes from a simple workflow page.
 
 ### Primary user
 
@@ -254,57 +254,40 @@ Let the user browse generated reports, inspect their contents, and trigger new r
 
 ### Layout
 
-- Report list on the left or center
-- Detail panel on the right or below
-- Action bar for generation and filtering
+- Generate report form in the main workspace
+- Small status/help panel below or beside the form
 
 ### Widgets and components
 
-- Report list table
-- Status badges
-- Scope filters
-- Generated-at timestamp
-- Markdown preview area
-- Metadata panel
 - Generate report action
+- Scope selector
+- Optional title input
+- Success and error messaging
 
 ### User actions
 
-- Filter reports by scope type
-- Filter by status
-- Open a report
 - Generate a new report
-- Download or open the local Markdown path
-
-### Filters
-
-- `scopeType`: `dashboard`, `product`, `country`, `supplier`, `chat`
-- `status`: `queued`, `running`, `completed`, `failed`
 
 ### Loading, empty, error states
 
-- Empty state prompts the user to generate the first report.
-- Reports with `failed` status show the failure reason if available.
-- A running report should show progress messaging without blocking the rest of the page.
+- Empty state explains what report generation does and how to start.
+- A successful request shows the queued report ID and status.
+- A failed request shows a clear error message without leaving the page.
 
 ### Required backend data
 
-- Report list
-- Report metadata
-- Report content locations
-- Report generation status
+- Report generation request response
+- Optional route context defaults for scope and scope ID
 
 ### APIs consumed
 
-- `GET /api/reports`
-- `GET /api/reports/{report_id}`
 - `POST /api/reports/generate`
 
 ### Acceptance criteria
 
-- The page can list existing reports and open details for one report at a time.
-- A generated report stores both JSON and Markdown output paths.
-- The detail view can render Markdown content or a preview summary from backend response data.
+- The page can generate a report for supported scopes.
+- A successful request shows that the report was queued.
+- The page does not claim in-product report browsing until that UI exists.
 
 ## Product Detail
 

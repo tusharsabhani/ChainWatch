@@ -12,7 +12,7 @@ from app.services.runtime import bootstrap_runtime
 
 @pytest.fixture()
 def settings(tmp_path: Path) -> Settings:
-    return Settings(repo_root=tmp_path)
+    return Settings(repo_root=tmp_path, _env_file=None)
 
 
 @pytest.fixture()

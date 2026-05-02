@@ -4,10 +4,11 @@ import { ApiError } from "@/lib/api/client";
 import type { ErrorResponse } from "@/lib/api/types";
 
 type QueryValue = string | number | boolean | null | undefined;
+type LocalBody = FormData | BodyInit | Record<string, unknown> | unknown[];
 
 type LocalApiOptions = Omit<RequestInit, "body"> & {
   query?: Record<string, QueryValue>;
-  body?: unknown;
+  body?: LocalBody;
 };
 
 function buildUrl(path: string, query?: Record<string, QueryValue>) {
@@ -28,14 +29,26 @@ function buildUrl(path: string, query?: Record<string, QueryValue>) {
 
 export async function localApiRequest<T>(path: string, options: LocalApiOptions = {}) {
   const { query, body, headers, ...init } = options;
+  const isFormData = typeof FormData !== "undefined" && body instanceof FormData;
+  const hasRawBody =
+    typeof body === "string" ||
+    body instanceof Blob ||
+    body instanceof ArrayBuffer ||
+    ArrayBuffer.isView(body) ||
+    body instanceof URLSearchParams;
   const response = await fetch(buildUrl(path, query), {
     ...init,
     cache: init.cache ?? "no-store",
     headers: {
-      ...(body ? { "Content-Type": "application/json" } : {}),
+      ...(body && !isFormData && !hasRawBody ? { "Content-Type": "application/json" } : {}),
       ...headers
     },
-    body: body ? JSON.stringify(body) : undefined
+    body:
+      body == null
+        ? undefined
+        : isFormData || hasRawBody
+          ? body
+          : JSON.stringify(body)
   });
 
   if (!response.ok) {

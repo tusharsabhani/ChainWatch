@@ -4,21 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { MaterialIcon } from "@/components/material-icon";
-import type { HealthResponse } from "@/lib/api/types";
 import { getRouteMeta, NAV_ITEMS } from "@/lib/navigation";
-import { cx, formatClockTime, toDisplayLabel } from "@/lib/utils";
-
-function getHeartbeatState(health: HealthResponse | null) {
-  if (!health) {
-    return { label: "Unavailable", dotClass: "bg-error" };
-  }
-
-  if (health.status === "ok" && health.database.status === "connected") {
-    return { label: "Fresh", dotClass: "bg-secondary" };
-  }
-
-  return { label: "Degraded", dotClass: "bg-caution" };
-}
+import { cx, toDisplayLabel } from "@/lib/utils";
 
 function DesktopSidebar({ pathname }: { pathname: string }) {
   return (
@@ -51,41 +38,20 @@ function DesktopSidebar({ pathname }: { pathname: string }) {
           );
         })}
       </nav>
-
-      <div className="mt-auto border-t border-slate-800 p-4">
-        <div className="rounded-lg bg-slate-800/40 p-3">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-500 text-xs font-bold text-slate-950">
-              CW
-            </div>
-            <div>
-              <p className="text-xs font-semibold text-white">Local Workspace</p>
-              <p className="text-[10px] uppercase tracking-[0.14em] text-slate-500">
-                Phase 1 preview
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
     </aside>
   );
 }
 
 function DesktopTopbar({
-  pathname,
-  health,
-  checkedAt
+  pathname
 }: {
   pathname: string;
-  health: HealthResponse | null;
-  checkedAt: string;
 }) {
   const routeMeta = getRouteMeta(pathname);
-  const heartbeat = getHeartbeatState(health);
   const productLabel = routeMeta.productContext ? toDisplayLabel(routeMeta.productContext) : null;
 
   return (
-    <header className="fixed left-64 right-0 top-0 z-30 hidden h-16 items-center justify-between border-b border-slate-200 bg-white/80 px-8 backdrop-blur-md lg:flex">
+    <header className="fixed left-64 right-0 top-0 z-30 hidden h-16 items-center border-b border-slate-200 bg-white/80 px-8 backdrop-blur-md lg:flex">
       <div className="flex flex-1 items-center gap-6">
         <div className="flex items-center gap-4">
           <h2 className="font-display text-[20px] font-semibold tracking-[-0.01em] text-slate-900">
@@ -103,51 +69,14 @@ function DesktopTopbar({
             </>
           ) : null}
         </div>
-
-        {routeMeta.desktopSearchPlaceholder ? (
-          <div className="hidden max-w-lg flex-1 xl:block">
-            <div className="relative">
-              <MaterialIcon
-                icon="search"
-                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-slate-400"
-              />
-              <input
-                type="text"
-                readOnly
-                value=""
-                placeholder={routeMeta.desktopSearchPlaceholder}
-                className="w-full rounded-full border-none bg-slate-100 py-2 pl-10 pr-4 text-xs text-slate-600 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-teal-500/40"
-              />
-            </div>
-          </div>
-        ) : null}
-      </div>
-
-      <div className="flex items-center gap-6">
-        <div className="flex items-center gap-2 text-xs uppercase tracking-[0.16em] text-slate-500">
-          <span className={cx("h-2 w-2 rounded-full", heartbeat.dotClass)} />
-          <span>
-            {routeMeta.desktopStatusLabel}: {heartbeat.label} | {formatClockTime(checkedAt)}
-          </span>
-        </div>
-        <div className="flex items-center gap-4 text-slate-500">
-          <MaterialIcon icon="monitor_heart" className="cursor-pointer text-[22px] hover:text-teal-600" />
-          <div className="relative">
-            <MaterialIcon icon="notifications" className="cursor-pointer text-[22px] hover:text-teal-600" />
-            <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-error" />
-          </div>
-          <MaterialIcon icon="account_circle" className="cursor-pointer text-[22px] hover:text-teal-600" />
-        </div>
       </div>
     </header>
   );
 }
 
-function MobileTopbar({ health }: { health: HealthResponse | null }) {
-  const heartbeat = getHeartbeatState(health);
-
+function MobileTopbar() {
   return (
-    <header className="fixed left-0 right-0 top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200 bg-white/85 px-4 backdrop-blur-md lg:hidden">
+    <header className="fixed left-0 right-0 top-0 z-30 flex h-16 items-center border-b border-slate-200 bg-white/85 px-4 backdrop-blur-md lg:hidden">
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded bg-primary-container">
           <MaterialIcon icon="shield" className="text-[22px] text-secondary-container" />
@@ -155,25 +84,6 @@ function MobileTopbar({ health }: { health: HealthResponse | null }) {
         <span className="font-display text-[18px] font-semibold tracking-[-0.02em] text-slate-900">
           ChainWatch
         </span>
-      </div>
-
-      <div className="flex items-center gap-3">
-        <div
-          className={cx(
-            "inline-flex items-center gap-2 rounded-full border px-3 py-1.5",
-            heartbeat.label === "Fresh"
-              ? "border-secondary/20 bg-secondary/10 text-secondary"
-              : heartbeat.label === "Degraded"
-                ? "border-caution/20 bg-caution/10 text-caution"
-                : "border-error/20 bg-error/10 text-error"
-          )}
-        >
-          <span className={cx("h-2 w-2 rounded-full", heartbeat.dotClass)} />
-          <span className="font-label text-[10px] font-semibold uppercase tracking-[0.14em]">
-            {heartbeat.label}
-          </span>
-        </div>
-        <MaterialIcon icon="notifications" className="text-[22px] text-slate-600" />
       </div>
     </header>
   );
@@ -204,13 +114,9 @@ function MobileBottomNav({ pathname }: { pathname: string }) {
 }
 
 export function AppShell({
-  children,
-  initialHealth,
-  healthCheckedAt
+  children
 }: {
   children: React.ReactNode;
-  initialHealth: HealthResponse | null;
-  healthCheckedAt: string;
 }) {
   const pathname = usePathname();
   const routeMeta = getRouteMeta(pathname);
@@ -219,8 +125,8 @@ export function AppShell({
   return (
     <div className="min-h-screen bg-background text-on-background">
       <DesktopSidebar pathname={pathname} />
-      <DesktopTopbar pathname={pathname} health={initialHealth} checkedAt={healthCheckedAt} />
-      {!chatFocusMobile ? <MobileTopbar health={initialHealth} /> : null}
+      <DesktopTopbar pathname={pathname} />
+      {!chatFocusMobile ? <MobileTopbar /> : null}
       {!chatFocusMobile ? <MobileBottomNav pathname={pathname} /> : null}
 
       <main

@@ -15,9 +15,8 @@ Do not change the core stack for v1 unless `tasks/DECISIONS.md` is updated first
 - `Next.js` App Router
 - `TypeScript`
 - `Tailwind CSS`
-- `shadcn/ui`
-- `Recharts`
 - `React Simple Maps`
+- local React components in the repository
 
 ### Backend
 

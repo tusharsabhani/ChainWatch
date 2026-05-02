@@ -2,7 +2,6 @@ import Link from "next/link";
 
 import { EmptyState } from "@/components/states/empty-state";
 import { ErrorState } from "@/components/states/error-state";
-import { FreshnessBadge } from "@/components/freshness-badge";
 import { MaterialIcon } from "@/components/material-icon";
 import { SectionCard } from "@/components/section-card";
 import { StatusPill } from "@/components/status-pill";
@@ -130,13 +129,15 @@ function TrendBars({
     <SectionCard title={title} eyebrow={subtitle}>
       {points.length > 0 ? (
         <>
-          <div className="flex h-44 items-end gap-2 rounded-lg border border-surface-container-high bg-surface-container-low p-4">
+          <div className="flex h-44 items-stretch gap-2 rounded-lg border border-surface-container-high bg-surface-container-low p-4">
             {points.map((point) => (
-              <div key={`${point.label}-${point.value}`} className="flex flex-1 flex-col items-center justify-end gap-2">
-                <div
-                  className={cx("w-full rounded-t-sm", barTone)}
-                  style={{ height: `${Math.max((point.value / maxValue) * 100, 8)}%` }}
-                />
+              <div key={`${point.label}-${point.value}`} className="flex h-full flex-1 flex-col items-center gap-2">
+                <div className="flex w-full flex-1 items-end">
+                  <div
+                    className={cx("w-full rounded-t-sm", barTone)}
+                    style={{ height: `${Math.max((point.value / maxValue) * 100, 8)}%` }}
+                  />
+                </div>
                 <span className="font-mono text-[10px] text-slate-500">
                   {point.label.slice(5, 7) === "01" ? point.label.slice(0, 7) : point.label}
                 </span>
@@ -164,11 +165,7 @@ function AlertsSection({
   alerts: DashboardAlertsResponse;
 }) {
   return (
-    <SectionCard
-      title="Active Alerts"
-      eyebrow="Live external events"
-      trailing={<FreshnessBadge freshness={alerts.freshness} lastUpdatedAt={alerts.lastUpdatedAt} />}
-    >
+    <SectionCard title="Active Alerts" eyebrow="Live external events">
       {alerts.items.length > 0 ? (
         <div className="space-y-4">
           <div className="hidden grid-cols-[1.6fr,0.9fr,0.7fr,0.9fr,0.9fr] gap-4 border-b border-surface-container-high pb-3 font-label text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500 lg:grid">
@@ -266,12 +263,6 @@ export default async function DashboardPage({
               Live operational overview across demand pressure, fulfillment stress, and external disruption readiness.
             </p>
           </div>
-          {activeSummary ? (
-            <FreshnessBadge
-              freshness={activeSummary.freshness}
-              lastUpdatedAt={activeSummary.lastUpdatedAt}
-            />
-          ) : null}
         </div>
 
         <SectionCard title="Filters" eyebrow="Dashboard query state">

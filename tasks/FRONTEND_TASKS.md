@@ -107,19 +107,17 @@ Implement the world map experience for country-level risk monitoring.
 - Clicking a country loads a detail panel with issues, suppliers, and products.
 - Filters update the rendered country set without breaking selection.
 
-## FE-05 Reports List And Detail Page
+## FE-05 Reports Generation Page
 
 ### Goal
 
-Implement report browsing and report detail rendering.
+Implement the Reports page as a report-generation workflow.
 
 ### Deliverables
 
-- Reports list table
-- Status filtering and scope filtering
-- Report detail panel with metadata and Markdown preview
 - Generate report action
-- Loading, empty, running, failed, and completed states
+- Scope selector and optional title input
+- Success, loading, and error states for report generation
 
 ### Dependencies
 
@@ -129,9 +127,9 @@ Implement report browsing and report detail rendering.
 
 ### Acceptance criteria
 
-- A user can browse report rows and open one report at a time.
-- The page distinguishes `queued`, `running`, `completed`, and `failed` states.
-- Markdown preview or summary content is visible for completed reports.
+- A user can submit a report-generation request for supported scopes.
+- The page shows the queued report ID and returned status after a successful request.
+- The docs do not claim report list/detail browsing until that UI exists.
 
 ## FE-06 Product Detail Page
 

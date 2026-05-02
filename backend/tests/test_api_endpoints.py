@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import os
+from datetime import datetime as real_datetime
 from pathlib import Path
 
 import pytest
@@ -9,8 +10,11 @@ from fastapi.testclient import TestClient
 
 from app.adapters.search import SearchAdapter
 from app.agents.external_risk import ExternalRiskAgent
+from app.db.repositories.catalog_repository import CatalogRepository
 from app.main import create_app
 from app.schemas.agents import AgentTriggerType, ExternalRiskAgentInput
+from app.services import products as products_service
+from app.services.countries import map_watchlist_country_codes
 from app.services.imports.seed import DemoSeedService
 from app.services.runtime import bootstrap_runtime
 
@@ -32,12 +36,23 @@ def _fake_search_adapter() -> FakeSearchAdapter:
         {
             "IN": [
                 {
-                    "title": "India port congestion slows inbound shipments",
+                    "title": "India heatwave and port congestion slow inbound shipments",
                     "url": "https://example.com/in-port",
                     "source_name": "Trade Desk",
-                    "snippet": "Port congestion is slowing unloading and inland transfers.",
+                    "snippet": "Heatwave-driven power demand and port congestion are slowing unloading and inland transfers.",
                     "risk_type": "logistics",
                     "severity": 4,
+                    "event_date": "2026-05-01",
+                }
+            ],
+            "IR": [
+                {
+                    "title": "Hormuz shipping traffic remains muted as Iran tensions persist",
+                    "url": "https://example.com/ir-hormuz",
+                    "source_name": "Maritime Wire",
+                    "snippet": "Restricted vessel traffic near the Strait of Hormuz is disrupting regional shipping and export planning.",
+                    "risk_type": "logistics",
+                    "severity": 5,
                     "event_date": "2026-05-01",
                 }
             ],
@@ -101,17 +116,24 @@ def test_map_endpoints_return_country_summary_and_detail(seeded_api_app) -> None
     with TestClient(seeded_api_app) as client:
         countries_response = client.get("/api/map/countries", params={"severityMin": 3})
         detail_response = client.get("/api/map/countries/IN")
+        hotspot_detail_response = client.get("/api/map/countries/IR")
         missing_response = client.get("/api/map/countries/ZZ")
 
     assert countries_response.status_code == 200
     countries_payload = countries_response.json()
     assert any(item["countryCode"] == "IN" for item in countries_payload["items"])
+    assert any(item["countryCode"] == "IR" for item in countries_payload["items"])
 
     assert detail_response.status_code == 200
     detail_payload = detail_response.json()
     assert detail_payload["country"]["countryCode"] == "IN"
     assert detail_payload["issues"]
     assert detail_payload["freshness"]["dataSource"] in {"fresh", "cached"}
+
+    assert hotspot_detail_response.status_code == 200
+    hotspot_detail_payload = hotspot_detail_response.json()
+    assert hotspot_detail_payload["country"]["countryCode"] == "IR"
+    assert hotspot_detail_payload["issues"]
 
     assert missing_response.status_code == 404
     assert missing_response.json()["error"]["code"] == "country_not_found"
@@ -137,6 +159,23 @@ def test_product_endpoints_return_search_and_detail_payloads(seeded_api_app) -> 
 
     assert missing_response.status_code == 404
     assert missing_response.json()["error"]["code"] == "product_not_found"
+
+
+def test_product_detail_30d_range_anchors_to_latest_available_demand_data(seeded_api_app, monkeypatch) -> None:
+    class FixedDateTime:
+        @staticmethod
+        def now(tz=None):
+            return real_datetime(2026, 8, 15, tzinfo=tz)
+
+    monkeypatch.setattr(products_service, "datetime", FixedDateTime)
+
+    with TestClient(seeded_api_app) as client:
+        detail_response = client.get("/api/products/1", params={"date_range": "30d"})
+
+    assert detail_response.status_code == 200
+    detail_payload = detail_response.json()
+    assert detail_payload["demand"]["historicalTrend"]
+    assert detail_payload["demand"]["historicalTrend"][-1]["period_start"] == "2026-04-01"
 
 
 def test_chat_endpoints_create_session_persist_messages_and_return_answer(seeded_api_app) -> None:
@@ -263,14 +302,20 @@ def test_stale_external_risk_cache_surfaces_freshness_and_schedules_refresh(sett
             database=runtime.database,
             search_adapter=_fake_search_adapter(),
         )
+        country_codes = sorted(
+            {
+                *CatalogRepository(runtime.database).list_all_supplier_country_codes(),
+                *map_watchlist_country_codes(),
+            }
+        )
         cache_key = agent._build_cache_key(
             ExternalRiskAgentInput(
-                country_codes=["IN", "MX", "US", "VN"],
+                country_codes=country_codes,
                 trigger_type=AgentTriggerType.MAP,
                 trigger_ref="map-countries",
                 freshness_policy_hours=runtime.settings.external_risk_cache_ttl_hours,
             ),
-            ["IN", "MX", "US", "VN"],
+            country_codes,
         )
         cache_path = runtime.storage.external_risk_cache_path(cache_key)
         stale_timestamp = cache_path.stat().st_mtime - (runtime.settings.external_risk_cache_ttl_hours * 7200)

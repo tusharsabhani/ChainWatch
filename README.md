@@ -59,9 +59,8 @@ Detailed responsibilities live in [AGENTS.md](AGENTS.md).
 - `Next.js` with App Router
 - `TypeScript`
 - `Tailwind CSS`
-- `shadcn/ui` for reusable UI primitives
-- `Recharts` for charts
 - `React Simple Maps` for the country risk map
+- custom local React components for the application UI
 
 ### Backend
 
@@ -77,7 +76,7 @@ Detailed responsibilities live in [AGENTS.md](AGENTS.md).
 
 ### Provider strategy
 
-The LLM provider and external web-search provider are intentionally `TBD`. The architecture defines adapter boundaries so the final model and search services can be selected later without changing product behavior or page requirements.
+The LLM provider remains configurable, with an `OpenAI` adapter currently available behind the shared interface. The external web-search path supports `Exa` behind the existing adapter boundary. Other providers can still be added later without changing product behavior or page requirements.
 
 ## Local-First Philosophy
 
@@ -88,6 +87,8 @@ V1 should work entirely from the project directory with no required cloud infras
 - Generated reports in `data/reports/json/` and `data/reports/markdown/`
 - Cached external-risk responses in `data/cache/external_risk/`
 - Logs and agent traces in `data/logs/`
+
+External-risk lookups are cached locally and reused for the same UTC day by default so dashboard, map, chat, and product pages do not repeatedly call the search provider.
 
 ## Documentation Map
 
@@ -123,7 +124,7 @@ Included in the current codebase:
 - standalone Next.js frontend scaffold under `frontend/`
 - responsive frontend app shell aligned to the approved Stitch mock theme
 - live Dashboard, Map, and Product Detail pages backed by backend APIs
-- live Chat, Reports, and Settings/Import workflows backed by the frontend proxy layer plus backend APIs
+- live Chat, Reports generation, and Settings/Import workflows backed by the frontend proxy layer plus backend APIs
 - shared frontend API client, response typings, and loading/error/empty/freshness components
 
 ## Backend Quickstart
@@ -148,6 +149,12 @@ Import demo data:
 cd backend
 uv run python -m app.seed
 ```
+
+Demo note:
+
+- `app.seed` loads the local catalog, sales, inventory, and fulfillment demo data.
+- External-risk events are only available when live search is configured or cached external-risk data already exists locally.
+- The Reports page currently supports report generation only; in-app report browsing is not part of the current frontend.
 
 ## Frontend Quickstart
 

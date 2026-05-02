@@ -1,6 +1,5 @@
 import { ErrorState } from "@/components/states/error-state";
 import { EmptyState } from "@/components/states/empty-state";
-import { FreshnessBadge } from "@/components/freshness-badge";
 import { MaterialIcon } from "@/components/material-icon";
 import { SectionCard } from "@/components/section-card";
 import { ImportControlPanel } from "@/components/settings/import-control-panel";
@@ -189,7 +188,7 @@ export default async function SettingsPage() {
         )}
 
         <SectionCard title="Import Data" eyebrow="Live local ingestion">
-          <ImportControlPanel importsPath={health?.storage.importsPath ?? "/data/imports/raw"} />
+          <ImportControlPanel />
         </SectionCard>
 
         {health ? (
@@ -205,14 +204,6 @@ export default async function SettingsPage() {
         <SectionCard
           title="Import History"
           eyebrow="Recent runs"
-          trailing={
-            imports ? (
-              <FreshnessBadge
-                label={`${imports.items.length} runs`}
-                lastUpdatedAt={imports.items[0]?.completedAt ?? null}
-              />
-            ) : null
-          }
         >
           {imports ? (
             imports.items.length > 0 ? (
@@ -264,64 +255,9 @@ export default async function SettingsPage() {
         ) : null}
 
         <div className="grid grid-cols-12 gap-6">
-          <SectionCard title="Runtime Health" eyebrow="Real-time infrastructure readiness" className="col-span-8">
-            {health ? (
-              <div className="grid grid-cols-3 gap-6">
-                <div className="border-l-4 border-secondary bg-surface-container-low p-5">
-                  <div className="mb-4 flex items-center justify-between">
-                    <MaterialIcon icon="monitor_heart" className="text-[20px] text-secondary" />
-                    <StatusPill tone="success">Operational</StatusPill>
-                  </div>
-                  <div className="font-display text-[30px] font-bold tracking-[-0.02em] text-slate-950">
-                    {health.status.toUpperCase()}
-                  </div>
-                  <div className="mt-2 font-label text-[10px] uppercase tracking-[0.16em] text-slate-500">
-                    App Status ({health.appVersion})
-                  </div>
-                </div>
-                <div className="border-l-4 border-secondary bg-surface-container-low p-5">
-                  <div className="mb-4 flex items-center justify-between">
-                    <MaterialIcon icon="database" className="text-[20px] text-secondary" />
-                    <StatusPill tone="success">Synchronized</StatusPill>
-                  </div>
-                  <div className="font-display text-[30px] font-bold tracking-[-0.02em] text-slate-950">
-                    {health.database.status}
-                  </div>
-                  <div className="mt-2 font-label text-[10px] uppercase tracking-[0.16em] text-slate-500">
-                    {health.database.path}
-                  </div>
-                </div>
-                <div className="border-l-4 border-secondary bg-surface-container-low p-5">
-                  <div className="mb-4 flex items-center justify-between">
-                    <MaterialIcon icon="folder_open" className="text-[20px] text-secondary" />
-                    <StatusPill tone="success">Managed</StatusPill>
-                  </div>
-                  <div className="font-display text-[30px] font-bold tracking-[-0.02em] text-slate-950">
-                    4 Paths
-                  </div>
-                  <div className="mt-2 font-label text-[10px] uppercase tracking-[0.16em] text-slate-500">
-                    Reports, Imports, Cache
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <ErrorState
-                title="Runtime status unavailable"
-                message="The frontend could not reach the backend health endpoint."
-              />
-            )}
+          <SectionCard title="Import Data" eyebrow="Live local ingestion" className="col-span-12">
+            <ImportControlPanel />
           </SectionCard>
-
-          <div className="col-span-4 bg-primary-container p-6 text-white">
-            <div className="mb-6 flex items-center justify-between">
-              <h3 className="font-display text-[20px] font-semibold tracking-[-0.01em]">Import Data</h3>
-              <MaterialIcon icon="upload_file" className="text-[20px] text-white/50" />
-            </div>
-            <ImportControlPanel
-              importsPath={health?.storage.importsPath ?? "/data/imports/raw"}
-              variant="inverted"
-            />
-          </div>
         </div>
 
         <div className="grid grid-cols-12 gap-6">
@@ -345,11 +281,6 @@ export default async function SettingsPage() {
           <SectionCard
             title="Import History"
             eyebrow="Last ingestion operations"
-            trailing={
-              <button className="rounded border border-outline-variant bg-white px-4 py-3 font-label text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-700">
-                Export Logs
-              </button>
-            }
             className="col-span-7"
           >
             {imports ? (
@@ -391,34 +322,6 @@ export default async function SettingsPage() {
           </SectionCard>
         </div>
 
-        <div className="rounded-lg border border-outline-variant bg-surface-container-low p-6">
-          <div className="grid grid-cols-[1fr,auto] gap-6">
-            <div className="flex gap-4">
-              <div className="w-1 bg-primary" />
-              <div>
-                <p className="font-label text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
-                  Managed Storage Insight
-                </p>
-                {health ? (
-                  <div className="mt-3 space-y-2 text-sm leading-6 text-slate-700">
-                    <p>Reports JSON: {health.storage.reportsJsonPath}</p>
-                    <p>Reports Markdown: {health.storage.reportsMarkdownPath}</p>
-                    <p>Imports: {health.storage.importsPath}</p>
-                    <p>Cache: {health.storage.cachePath}</p>
-                  </div>
-                ) : (
-                  <p className="mt-3 text-sm text-slate-600">Storage paths appear here when backend health is available.</p>
-                )}
-              </div>
-            </div>
-
-            <div className="flex items-end">
-              <div className="rounded border border-outline-variant bg-white px-4 py-3 font-mono text-xs text-slate-700">
-                CW-FE-01-RESET
-              </div>
-            </div>
-          </div>
-        </div>
       </section>
     </div>
   );

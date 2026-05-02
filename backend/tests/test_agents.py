@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import csv
+from datetime import datetime, timezone
+import os
 from pathlib import Path
 
+import app.agents.external_risk as external_risk_module
 from app.adapters.search import NullSearchAdapter, SearchAdapter
 from app.agents.demand import DemandAgent
 from app.agents.external_risk import ExternalRiskAgent
@@ -35,12 +38,14 @@ def _write_csv(destination: Path, rows: list[dict[str, object]]) -> Path:
 class FakeSearchAdapter(SearchAdapter):
     def __init__(self, results_by_country: dict[str, list[dict[str, object]]]) -> None:
         self.results_by_country = results_by_country
+        self.queries_by_country: dict[str, str] = {}
 
     def is_configured(self) -> bool:
         return True
 
     def search(self, query: str, **kwargs):
         country_code = str(kwargs.get("country_code", "")).upper()
+        self.queries_by_country[country_code] = query
         return list(self.results_by_country.get(country_code, []))
 
 
@@ -299,3 +304,90 @@ def test_external_risk_agent_persists_events_scores_and_cache(seeded_runtime) ->
     assert len(runs) == 2
     assert runs[0]["status"] == "completed"
     assert runs[1]["status"] == "partial"
+
+
+def test_external_risk_search_query_uses_country_name_and_hotspot_terms(seeded_runtime) -> None:
+    fake_adapter = FakeSearchAdapter(
+        {
+            "IN": [
+                {
+                    "title": "India heatwave strains logistics",
+                    "url": "https://example.com/in-heatwave",
+                    "source_name": "Weather Desk",
+                    "snippet": "Extreme heat is stressing freight operations and power usage.",
+                    "event_date": "2026-05-01",
+                }
+            ],
+            "IR": [
+                {
+                    "title": "Hormuz shipping remains constrained",
+                    "url": "https://example.com/ir-hormuz",
+                    "source_name": "Maritime Desk",
+                    "snippet": "Traffic through the Strait of Hormuz remains far below normal levels.",
+                    "event_date": "2026-05-01",
+                }
+            ],
+        }
+    )
+    agent = ExternalRiskAgent(
+        settings=seeded_runtime.settings,
+        storage=seeded_runtime.storage,
+        database=seeded_runtime.database,
+        search_adapter=fake_adapter,
+    )
+    output = agent.run(
+        ExternalRiskAgentInput(
+            country_codes=["IN", "IR"],
+            trigger_type=AgentTriggerType.MAP,
+            trigger_ref="query-shape-test",
+        )
+    )
+
+    assert output.data_source == "fresh"
+    assert "India (IN)" in fake_adapter.queries_by_country["IN"]
+    assert "heatwave" in fake_adapter.queries_by_country["IN"].lower()
+    assert "Iran (IR)" in fake_adapter.queries_by_country["IR"]
+    assert "strait of hormuz" in fake_adapter.queries_by_country["IR"].lower()
+
+
+def test_external_risk_cache_stays_fresh_for_the_same_day(seeded_runtime, monkeypatch) -> None:
+    fake_adapter = FakeSearchAdapter(
+        {
+            "IN": [
+                {
+                    "title": "Port delays disrupt inbound shipments in India",
+                    "url": "https://example.com/in-port-delay",
+                    "source_name": "Global Trade Watch",
+                    "snippet": "Major shipping delays are affecting port throughput and container pickup windows.",
+                    "risk_type": "logistics",
+                    "severity": 4,
+                    "event_date": "2026-05-01",
+                }
+            ]
+        }
+    )
+    agent = ExternalRiskAgent(
+        settings=seeded_runtime.settings,
+        storage=seeded_runtime.storage,
+        database=seeded_runtime.database,
+        search_adapter=fake_adapter,
+    )
+    input_model = ExternalRiskAgentInput(
+        country_codes=["IN"],
+        trigger_type=AgentTriggerType.MAP,
+        trigger_ref="same-day-cache",
+    )
+    agent.run(input_model)
+
+    cache_key = agent._build_cache_key(input_model, ["IN"])
+    cache_path = seeded_runtime.storage.external_risk_cache_path(cache_key)
+    cache_timestamp = datetime(2026, 5, 1, 1, 0, tzinfo=timezone.utc).timestamp()
+    os.utime(cache_path, (cache_timestamp, cache_timestamp))
+
+    monkeypatch.setattr(
+        external_risk_module,
+        "_utc_now",
+        lambda: datetime(2026, 5, 1, 18, 0, tzinfo=timezone.utc),
+    )
+
+    assert agent._is_cache_fresh(cache_path, freshness_policy_hours=1) is True

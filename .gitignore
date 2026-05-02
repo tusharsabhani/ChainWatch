@@ -13,3 +13,4 @@ frontend/.turbo/
 frontend/out/
 data/
 .coverage
+.env

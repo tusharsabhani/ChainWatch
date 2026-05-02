@@ -2,7 +2,6 @@ import Link from "next/link";
 
 import { EmptyState } from "@/components/states/empty-state";
 import { ErrorState } from "@/components/states/error-state";
-import { FreshnessBadge } from "@/components/freshness-badge";
 import { MaterialIcon } from "@/components/material-icon";
 import { PlaceholderMedia } from "@/components/placeholder-media";
 import { SectionCard } from "@/components/section-card";
@@ -65,6 +64,54 @@ function asNumber(value: unknown) {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
+function formatTrendLabel(value: string) {
+  return value.slice(0, 7);
+}
+
+function formatTrendAxisLabel(value: string) {
+  const [year, month] = formatTrendLabel(value).split("-");
+  const monthIndex = Number(month) - 1;
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  if (!year || monthIndex < 0 || monthIndex >= monthNames.length) {
+    return formatTrendLabel(value);
+  }
+
+  return `${monthNames[monthIndex]} ${year.slice(2)}`;
+}
+
+function formatMonthRangeLabel(startMonth: number, endMonth: number) {
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const startLabel = monthNames[startMonth - 1];
+  const endLabel = monthNames[endMonth - 1];
+
+  if (!startLabel || !endLabel) {
+    return `M${startMonth}-M${endMonth}`;
+  }
+
+  return startMonth === endMonth ? startLabel : `${startLabel}-${endLabel}`;
+}
+
+function niceChartMax(value: number) {
+  if (value <= 0) {
+    return 1;
+  }
+
+  const magnitude = 10 ** Math.floor(Math.log10(value));
+  const normalized = value / magnitude;
+
+  if (normalized <= 1) {
+    return magnitude;
+  }
+  if (normalized <= 2) {
+    return 2 * magnitude;
+  }
+  if (normalized <= 5) {
+    return 5 * magnitude;
+  }
+  return 10 * magnitude;
+}
+
 function severityTileTone(
   score: number
 ):
@@ -92,21 +139,218 @@ function DemandChart({
     unitsSold: asNumber(point.units_sold ?? point.unitsSold)
   }));
   const maxValue = Math.max(...normalized.map((point) => point.unitsSold), 1);
+  const chartMax = niceChartMax(maxValue);
+  const averageUnits =
+    normalized.length > 0
+      ? normalized.reduce((total, point) => total + point.unitsSold, 0) / normalized.length
+      : 0;
+  const latestPoint = normalized.at(-1) ?? null;
+
+  const chartWidth = 640;
+  const chartHeight = 320;
+  const leftPadding = 44;
+  const rightPadding = 10;
+  const topPadding = 28;
+  const bottomPadding = 36;
+  const plotWidth = chartWidth - leftPadding - rightPadding;
+  const plotHeight = chartHeight - topPadding - bottomPadding;
+  const maxXAxisLabels = normalized.length <= 6 ? normalized.length : 6;
+  const xLabelStep =
+    normalized.length <= maxXAxisLabels
+      ? 1
+      : Math.ceil((normalized.length - 1) / Math.max(maxXAxisLabels - 1, 1));
+
+  const chartPoints = normalized.map((point, index) => {
+    const x =
+      normalized.length === 1
+        ? leftPadding + plotWidth / 2
+        : leftPadding + (index / (normalized.length - 1)) * plotWidth;
+    const y = topPadding + plotHeight - (point.unitsSold / chartMax) * plotHeight;
+
+    return {
+      ...point,
+      x,
+      y
+    };
+  });
+
+  const linePath = chartPoints
+    .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`)
+    .join(" ");
+  const areaPath =
+    chartPoints.length > 0
+      ? `${linePath} L ${chartPoints[chartPoints.length - 1].x} ${topPadding + plotHeight} L ${chartPoints[0].x} ${topPadding + plotHeight} Z`
+      : "";
+  const yTicks = Array.from({ length: 4 }, (_, index) => {
+    const ratio = index / 3;
+    return {
+      value: Math.round(chartMax * (1 - ratio)),
+      y: topPadding + plotHeight * ratio
+    };
+  });
 
   return normalized.length > 0 ? (
-    <div className="relative h-64 overflow-hidden rounded-lg border border-surface-container-high bg-surface-container-low p-4">
-      <div className="flex h-full items-end gap-3">
-        {normalized.map((point) => (
-          <div key={point.label} className="flex flex-1 flex-col items-center justify-end gap-2">
-            <div
-              className="w-full rounded-t-sm bg-secondary"
-              style={{ height: `${Math.max((point.unitsSold / maxValue) * 100, 8)}%` }}
+    <div className="rounded-lg border border-surface-container-high bg-surface-container-low p-4">
+      <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p className="text-sm text-slate-600">
+            Each point plots actual monthly units sold for the selected demand window.
+          </p>
+        </div>
+        <div className="text-right">
+          <p className="font-data text-base text-slate-600">
+            {latestPoint ? `Latest: ${formatCompactNumber(latestPoint.unitsSold)} units` : "--"}
+          </p>
+        </div>
+      </div>
+
+      <div className="relative h-80 overflow-hidden rounded-lg border border-surface-container-highest bg-white/70 px-4 py-4">
+        <svg
+          viewBox={`0 0 ${chartWidth} ${chartHeight}`}
+          className="h-full w-full"
+          preserveAspectRatio="none"
+          role="img"
+          aria-label="Demand trend chart showing monthly units sold."
+        >
+          <defs>
+            <linearGradient id="demandTrendFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="rgb(var(--color-secondary) / 0.24)" />
+              <stop offset="100%" stopColor="rgb(var(--color-secondary) / 0)" />
+            </linearGradient>
+          </defs>
+
+          {yTicks.map((tick) => (
+            <g key={tick.value}>
+              <line
+                x1={leftPadding}
+                y1={tick.y}
+                x2={chartWidth - rightPadding}
+                y2={tick.y}
+                stroke="rgb(var(--color-surface-container-high))"
+                strokeWidth="1"
+                strokeDasharray={tick.value === 0 ? undefined : "4 4"}
+              />
+              <text
+                x={leftPadding - 10}
+                y={tick.y + 4}
+                textAnchor="end"
+                fontSize="11"
+                fontWeight="600"
+                fill="rgb(var(--color-on-surface-variant))"
+              >
+                {formatCompactNumber(tick.value)}
+              </text>
+            </g>
+          ))}
+
+          {areaPath ? <path d={areaPath} fill="url(#demandTrendFill)" /> : null}
+          {linePath ? (
+            <path
+              d={linePath}
+              fill="none"
+              stroke="rgb(var(--color-secondary))"
+              strokeWidth="3.5"
+              strokeLinejoin="round"
+              strokeLinecap="round"
             />
-            <span className="font-mono text-[10px] text-slate-500">
-              {point.label.slice(0, 7)}
-            </span>
-          </div>
-        ))}
+          ) : null}
+
+          {chartPoints.map((point, index) => {
+            const labelWidth = Math.max(String(point.unitsSold).length * 7.5 + 18, 42);
+            const labelHeight = 22;
+            const labelYOffset = index % 2 === 0 ? 34 : 20;
+            const labelY = Math.max(point.y - labelYOffset, 8);
+
+            return (
+              <g key={point.label}>
+                <rect
+                  x={point.x - labelWidth / 2}
+                  y={labelY}
+                  width={labelWidth}
+                  height={labelHeight}
+                  rx="11"
+                  fill="rgb(var(--color-surface-container-lowest))"
+                  stroke="rgb(var(--color-surface-container-high))"
+                  strokeWidth="1"
+                />
+                <text
+                  x={point.x}
+                  y={labelY + 14}
+                  textAnchor="middle"
+                  fontSize="11"
+                  fontWeight="600"
+                  fill="rgb(var(--color-on-surface))"
+                >
+                  {point.unitsSold}
+                </text>
+
+                <circle
+                  cx={point.x}
+                  cy={point.y}
+                  r="5"
+                  fill="rgb(var(--color-surface-container-lowest))"
+                  stroke="rgb(var(--color-secondary))"
+                  strokeWidth="3"
+                />
+                <title>{`${formatTrendLabel(point.label)}: ${point.unitsSold} units sold`}</title>
+              </g>
+            );
+          })}
+
+          {chartPoints.map((point, index) => {
+            const isFirst = index === 0;
+            const isLast = index === chartPoints.length - 1;
+            const showLabel =
+              isFirst ||
+              isLast ||
+              index % xLabelStep === 0;
+
+            if (!showLabel) {
+              return null;
+            }
+
+            return (
+              <text
+                key={`${point.label}-axis`}
+                x={point.x}
+                y={chartHeight - 8}
+                textAnchor={isFirst ? "start" : isLast ? "end" : "middle"}
+                fontSize="11"
+                fontWeight="600"
+                fill="rgb(var(--color-on-surface-variant))"
+              >
+                {formatTrendAxisLabel(point.label)}
+              </text>
+            );
+          })}
+        </svg>
+      </div>
+
+      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+        <div className="rounded-lg border border-surface-container-high bg-white/70 px-4 py-3">
+          <p className="font-label text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+            Peak
+          </p>
+          <p className="mt-2 font-data text-base text-slate-950">
+            {formatCompactNumber(maxValue)} units
+          </p>
+        </div>
+        <div className="rounded-lg border border-surface-container-high bg-white/70 px-4 py-3">
+          <p className="font-label text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+            Average
+          </p>
+          <p className="mt-2 font-data text-base text-slate-950">
+            {formatCompactNumber(Math.round(averageUnits))} units
+          </p>
+        </div>
+        <div className="rounded-lg border border-surface-container-high bg-white/70 px-4 py-3">
+          <p className="font-label text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+            Latest month
+          </p>
+          <p className="mt-2 font-data text-base text-slate-950">
+            {latestPoint ? `${formatTrendLabel(latestPoint.label)} · ${formatCompactNumber(latestPoint.unitsSold)} units` : "--"}
+          </p>
+        </div>
       </div>
     </div>
   ) : (
@@ -199,10 +443,6 @@ export default async function ProductDetailPage({
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <FreshnessBadge
-              freshness={product.freshness}
-              lastUpdatedAt={product.lastUpdatedAt}
-            />
             <Link
               href={`/chat?contextScope=product&contextId=${product.product.id}`}
               className="rounded-lg bg-secondary px-4 py-2 font-label text-[10px] font-semibold uppercase tracking-[0.16em] text-white"
@@ -218,7 +458,7 @@ export default async function ProductDetailPage({
           </div>
         </div>
 
-        <SectionCard title="Demand window" eyebrow="Date range">
+        <SectionCard title="Demand window">
           <div className="flex flex-wrap gap-2">
             {DATE_RANGE_OPTIONS.map((option) => (
               <Link
@@ -288,13 +528,13 @@ export default async function ProductDetailPage({
           </div>
         </SectionCard>
 
-        <SectionCard title="Demand Trend" eyebrow={`${dateRange} sales history`}>
+        <SectionCard title="Demand Trend">
           <DemandChart points={product.demand.historicalTrend} />
         </SectionCard>
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[1.2fr,0.8fr]">
-        <SectionCard title="Inventory Position" eyebrow="Current stock health">
+        <SectionCard title="Inventory Position">
           <div className="grid gap-4 sm:grid-cols-3">
             <StatusTile
               label="On Hand"
@@ -317,7 +557,7 @@ export default async function ProductDetailPage({
           </div>
         </SectionCard>
 
-        <SectionCard title="Fulfillment Pulse" eyebrow="Operational delivery health">
+        <SectionCard title="Fulfillment Pulse">
           <div className="grid gap-4 sm:grid-cols-3 xl:grid-cols-1">
             <div className="flex items-center justify-between rounded-lg border border-surface-container-high bg-surface-container-low px-4 py-3">
               <span className="text-sm text-slate-600">Backlog orders</span>
@@ -338,7 +578,7 @@ export default async function ProductDetailPage({
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[1.15fr,0.85fr]">
-        <SectionCard title="Seasonality & Spikes" eyebrow="Demand interpretation">
+        <SectionCard title="Seasonality & Spikes">
           <div className="grid gap-4 lg:grid-cols-2">
             <div>
               <p className="font-label text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
@@ -351,7 +591,7 @@ export default async function ProductDetailPage({
                       <div className="flex items-center justify-between gap-3">
                         <p className="font-data text-base text-slate-950">{window.label}</p>
                         <StatusPill tone={window.label === "peak" ? "danger" : "neutral"}>
-                          M{window.startMonth}-M{window.endMonth}
+                          {formatMonthRangeLabel(window.startMonth, window.endMonth)}
                         </StatusPill>
                       </div>
                       <p className="mt-2 text-sm text-slate-600">
@@ -399,7 +639,7 @@ export default async function ProductDetailPage({
           </div>
         </SectionCard>
 
-        <SectionCard title="Linked Risk Events" eyebrow="External context">
+        <SectionCard title="Linked Risk Events">
           {product.linkedRiskEvents.length > 0 ? (
             <div className="space-y-3">
               {product.linkedRiskEvents.map((event) => (
@@ -436,7 +676,7 @@ export default async function ProductDetailPage({
         </SectionCard>
       </div>
 
-      <SectionCard title="Supplier Exposure" eyebrow="Sourcing relationships">
+      <SectionCard title="Supplier Exposure">
         {product.suppliers.length > 0 ? (
           <div className="grid gap-4 xl:grid-cols-2">
             {product.suppliers.map((supplier) => (

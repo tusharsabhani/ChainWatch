@@ -3,7 +3,6 @@ import Link from "next/link";
 import { WorldRiskMap } from "@/components/world-risk-map";
 import { EmptyState } from "@/components/states/empty-state";
 import { ErrorState } from "@/components/states/error-state";
-import { FreshnessBadge } from "@/components/freshness-badge";
 import { MaterialIcon } from "@/components/material-icon";
 import { SectionCard } from "@/components/section-card";
 import { StatusPill } from "@/components/status-pill";
@@ -282,10 +281,6 @@ export default async function MapPage({
               Filter country-level disruption pressure, inspect detail panels, and jump from country context into product-level analysis.
             </p>
           </div>
-          <FreshnessBadge
-            freshness={countryDetailResult.data?.freshness ?? countriesResult.data?.freshness ?? null}
-            lastUpdatedAt={countryDetailResult.data?.lastUpdatedAt ?? countriesResult.data?.lastUpdatedAt ?? null}
-          />
         </div>
 
         <SectionCard title="Filters" eyebrow="Map query state">
@@ -414,14 +409,6 @@ export default async function MapPage({
             <SectionCard
               title={countryDetailResult.data?.country.countryName ?? countryNameFromCode(selectedCountryCode ?? "—")}
               eyebrow="Selected country"
-              trailing={
-                countryDetailResult.data ? (
-                  <FreshnessBadge
-                    freshness={countryDetailResult.data.freshness}
-                    lastUpdatedAt={countryDetailResult.data.lastUpdatedAt}
-                  />
-                ) : null
-              }
               className="h-fit"
             >
               {countryDetailResult.data ? (
@@ -442,16 +429,6 @@ export default async function MapPage({
             </SectionCard>
           </section>
 
-          {!countriesResult.data?.items.length && fallbackCountries.length > 0 ? (
-            <SectionCard title="Fallback note" eyebrow="Local-first behavior">
-              <p className="text-sm leading-7 text-slate-600">
-                The map API currently has no cached or live external-risk scores, so this surface is showing supplier-country coverage derived from the seeded product catalog. Country detail links still use the live backend endpoints.
-              </p>
-              <p className="mt-2 text-xs text-slate-500">
-                Updated {formatDateTime(countriesResult.data?.lastUpdatedAt ?? null)}
-              </p>
-            </SectionCard>
-          ) : null}
         </>
       ) : (
         <EmptyState

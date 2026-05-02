@@ -16,6 +16,20 @@ cd backend
 uv sync --extra dev
 ```
 
+Optional provider configuration:
+
+```bash
+cp .env.example .env
+```
+
+Then configure any providers you want in `backend/.env`.
+
+- Set `CHAINWATCH_LLM_PROVIDER=openai` to enable semantic chat routing and LLM-based answer composition.
+- If `OPENAI_API_KEY` is present, ChainWatch uses the live OpenAI Responses API.
+- If `CHAINWATCH_LLM_PROVIDER=openai` is set but no API key is present, ChainWatch falls back to a local mock OpenAI mode that still exercises tool routing and answer composition from the demo/mock data and structured agent outputs.
+- Set `EXA_API_KEY` to enable live external-risk search. External-risk responses are reused from local cache for the same UTC day before another live search is attempted.
+- If no search provider is configured, the app still runs, but external-risk sections may return cached results or an empty result with limitations.
+
 ## Run
 
 From the `backend/` directory:
@@ -61,6 +75,7 @@ Reliability additions from phase 6:
 - dashboard, map, product detail, and report detail responses include freshness metadata
 - stale cached external-risk data can be served while a background refresh is scheduled
 - report generation is queued first and then completed in a background task
+- chat orchestration supports semantic routing through the shared LLM adapter with deterministic fallback when live LLM access is unavailable
 
 ## Import CSV Data
 
@@ -108,6 +123,24 @@ uv run python -m app.seed
 
 This generates a local demo dataset and imports it through the same CSV pipeline used for manual imports.
 
+What this includes:
+
+- products
+- suppliers
+- sales history
+- inventory snapshots
+- fulfillment snapshots
+
+What this does not include by itself:
+
+- live external-risk events
+
+For a fuller external-risk demo, configure `EXA_API_KEY` and then use the dashboard, map, chat, or product pages to trigger live searches. Without a search provider, those surfaces can still render but may show cached or empty external-risk results.
+
+## External Risk Search
+
+If `EXA_API_KEY` is configured, the backend uses Exa for external-risk searches through the shared `SearchAdapter` interface. Results are cached in `data/cache/external_risk/` and reused for the same UTC day before another live search is attempted.
+
 ## Core Agents
 
 Phase 3 backend agents are implemented for:
@@ -117,7 +150,7 @@ Phase 3 backend agents are implemented for:
 - inventory
 - fulfillment
 
-These agents currently run as Python services and create `agent_runs` trace rows plus local run logs. Their page and chat APIs will be added in later backend phases.
+These agents run as Python services, create `agent_runs` trace rows plus local run logs, and currently power the page, chat, and reporting APIs.
 
 ## Reporting And Chat Services
 
@@ -130,9 +163,20 @@ Current capabilities:
 
 - `ReportService` creates `reports` rows, writes JSON and Markdown artifacts, and preserves partial or failed generation states
 - `ChatService` creates chat sessions, persists user and assistant messages, and routes questions through the domain agents with citation preservation
-- `Chat Orchestrator` falls back to deterministic response assembly when the LLM is unavailable
+- `Chat Orchestrator` uses the shared LLM adapter for semantic tool selection and final answer composition, with deterministic fallback when the live LLM path is unavailable
+- `OpenAILLMAdapter` supports both live mode and a no-key mock mode for local-first development and evaluation
 
-These flows are available as Python services today. Their HTTP routes are still planned for the API phases.
+These flows are available through both Python services and the current HTTP API.
+
+## Chat Routing Evals
+
+The semantic routing eval cases live in `app/evals/chat_routing.py` and are covered by the backend test suite.
+
+From the `backend/` directory:
+
+```bash
+uv run pytest tests/test_chat_routing_evals.py tests/test_llm_adapters.py
+```
 
 ## Test
 

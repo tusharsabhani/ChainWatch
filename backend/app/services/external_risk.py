@@ -76,16 +76,22 @@ class ExternalRiskService:
                 cached_output = ExternalRiskAgentOutput.model_validate(cached_payload["output"])
             else:
                 cached_output = ExternalRiskAgentOutput.model_validate(cached_payload)
+        refresh_disabled = bool(cached_payload.get("refreshDisabled")) if isinstance(cached_payload, dict) else False
 
         cache_is_fresh = self.agent._is_cache_fresh(cache_path, input_model.freshness_policy_hours)
         if prefer_cached and cached_output is not None:
             refresh_scheduled = False
             limitations = list(cached_output.limitations)
             if not cache_is_fresh:
-                limitations.append("Serving stale cached external risk data while a refresh runs in the background.")
+                limitations.append(
+                    "Serving stale cached external risk data while a refresh runs in the background."
+                    if not refresh_disabled
+                    else "Serving stale cached external risk data from a pinned local snapshot."
+                )
                 if (
                     background_tasks is not None
                     and self.settings.external_risk_refresh_enabled
+                    and not refresh_disabled
                     and self.search_adapter.is_configured()
                 ):
                     background_tasks.add_task(self.refresh, input_model)

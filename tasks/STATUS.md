@@ -34,7 +34,7 @@ None.
 - `FE-02` Dashboard page
 - `FE-03` Chat page
 - `FE-04` Map page
-- `FE-05` Reports list and detail page
+- `FE-05` Reports generation page
 - `FE-06` Product detail page
 - `FE-07` Data import and settings page
 - `FE-08` Shared API client, loading states, and error states

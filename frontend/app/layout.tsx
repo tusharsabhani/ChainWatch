@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 
 import { AppShell } from "@/components/app-shell";
-import { getHealth } from "@/lib/api";
-import { safeApiCall } from "@/lib/api/client";
 
 import "./globals.css";
 
@@ -20,9 +18,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const healthResult = await safeApiCall(() => getHealth());
-  const healthCheckedAt = new Date().toISOString();
-
   return (
     <html lang="en">
       <head>
@@ -34,9 +29,7 @@ export default async function RootLayout({
         />
       </head>
       <body>
-        <AppShell initialHealth={healthResult.data} healthCheckedAt={healthCheckedAt}>
-          {children}
-        </AppShell>
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );

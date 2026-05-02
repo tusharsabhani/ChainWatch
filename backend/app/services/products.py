@@ -36,7 +36,13 @@ from app.services.external_risk import ExternalRiskService
 from app.services.storage import StorageManager
 
 
-def _cutoff_for_date_range(date_range: str) -> date | None:
+def _month_bucket_end(period_start: str) -> date:
+    month_start = date.fromisoformat(period_start)
+    next_month_start = (month_start.replace(day=28) + timedelta(days=4)).replace(day=1)
+    return next_month_start - timedelta(days=1)
+
+
+def _cutoff_for_date_range(date_range: str, *, reference_date: date | None = None) -> date | None:
     mapping = {
         "30d": 30,
         "90d": 90,
@@ -44,7 +50,23 @@ def _cutoff_for_date_range(date_range: str) -> date | None:
     }
     if date_range not in mapping:
         return None
-    return datetime.now(timezone.utc).date() - timedelta(days=mapping[date_range])
+    effective_reference_date = reference_date or datetime.now(timezone.utc).date()
+    return effective_reference_date - timedelta(days=mapping[date_range])
+
+
+def _month_bucket_overlaps_cutoff(period_start: str, cutoff: date) -> bool:
+    month_start = date.fromisoformat(period_start)
+    if month_start >= cutoff:
+        return True
+
+    month_end = _month_bucket_end(period_start)
+    return month_end >= cutoff
+
+
+def _latest_available_demand_date(historical_trend: list[object]) -> date | None:
+    if not historical_trend:
+        return None
+    return max(_month_bucket_end(point.period_start) for point in historical_trend)
 
 
 @dataclass(slots=True)
@@ -194,13 +216,18 @@ class ProductService:
                 trigger_ref=str(product_id),
             )
         )
-        cutoff = _cutoff_for_date_range(date_range)
         historical_trend = demand_output.historical_trend
+        latest_available_date = _latest_available_demand_date(historical_trend)
+        reference_date = None
+        if latest_available_date is not None:
+            reference_date = min(datetime.now(timezone.utc).date(), latest_available_date)
+
+        cutoff = _cutoff_for_date_range(date_range, reference_date=reference_date)
         if cutoff is not None:
             historical_trend = [
                 point
                 for point in historical_trend
-                if date.fromisoformat(point.period_start) >= cutoff
+                if _month_bucket_overlaps_cutoff(point.period_start, cutoff)
             ]
 
         demand_signal = [

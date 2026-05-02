@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+import json
 import uuid
 
 from app.adapters.llm import LLMAdapter, NullLLMAdapter
@@ -25,6 +26,7 @@ from app.schemas.chat import (
     ChatOrchestratorOutput,
     ChatScope,
 )
+from app.schemas.llm import ChatToolDefinition, default_chat_tools
 from app.services.citations import dedupe_citations
 from app.services.storage import StorageManager
 
@@ -128,7 +130,8 @@ class ChatOrchestrator(BaseAgent):
         agent_outputs: dict[str, object] = {}
 
         try:
-            selection = self._select_agents(input_model)
+            selection, routing_limitations = self._select_agents(input_model)
+            limitations.extend(routing_limitations)
             scope_inputs = self._resolve_scope_inputs(input_model)
 
             if "external_risk" in selection:
@@ -274,6 +277,7 @@ class ChatOrchestrator(BaseAgent):
             assistant_message = self._compose_message(
                 input_model=input_model,
                 agent_outputs=agent_outputs,
+                citations=citations,
                 limitations=limitations,
             )
             output = ChatOrchestratorOutput(
@@ -317,7 +321,29 @@ class ChatOrchestrator(BaseAgent):
             )
             return output
 
-    def _select_agents(self, input_model: ChatOrchestratorInput) -> list[str]:
+    def _select_agents(self, input_model: ChatOrchestratorInput) -> tuple[list[str], list[str]]:
+        routing_limitations: list[str] = []
+        available_tools = self._available_tools()
+
+        if self.llm_adapter.supports_routing():
+            try:
+                plan = self.llm_adapter.route_chat(
+                    user_message=input_model.user_message,
+                    context_scope=input_model.context_scope.value,
+                    context_id=input_model.context_id,
+                    recent_history=[item.model_dump(mode="json") for item in input_model.recent_history[-6:]],
+                    available_tools=available_tools,
+                )
+                selected = [item.tool_name.value for item in plan.selected_tools]
+                if selected:
+                    return list(dict.fromkeys(selected)), routing_limitations
+                routing_limitations.append("LLM routing returned no tool plan, so heuristic routing was used.")
+            except Exception as exc:
+                routing_limitations.append(f"LLM routing failed: {exc}")
+
+        return self._heuristic_agent_selection(input_model), routing_limitations
+
+    def _heuristic_agent_selection(self, input_model: ChatOrchestratorInput) -> list[str]:
         message = input_model.user_message.lower()
         selected: list[str] = []
 
@@ -338,6 +364,9 @@ class ChatOrchestrator(BaseAgent):
         if input_model.context_scope == ChatContextScope.PRODUCT:
             return ["demand", "inventory", "fulfillment", "external_risk"]
         return ["demand", "inventory", "fulfillment", "external_risk"]
+
+    def _available_tools(self) -> list[ChatToolDefinition]:
+        return default_chat_tools()
 
     def _resolve_scope_inputs(self, input_model: ChatOrchestratorInput) -> dict[str, list[str] | list[int]]:
         if input_model.context_scope == ChatContextScope.GLOBAL:
@@ -437,12 +466,20 @@ class ChatOrchestrator(BaseAgent):
         *,
         input_model: ChatOrchestratorInput,
         agent_outputs: dict[str, object],
+        citations: list[object],
         limitations: list[str],
     ) -> str:
-        if self.llm_adapter.is_configured():
+        if self.llm_adapter.supports_composition():
             try:
-                prompt = self._build_llm_prompt(input_model=input_model, agent_outputs=agent_outputs, limitations=limitations)
-                return self.llm_adapter.generate_completion(prompt)
+                return self.llm_adapter.compose_chat_answer(
+                    user_message=input_model.user_message,
+                    context_scope=input_model.context_scope.value,
+                    context_id=input_model.context_id,
+                    recent_history=[item.model_dump(mode="json") for item in input_model.recent_history[-6:]],
+                    agent_outputs=self._serialize_agent_outputs(agent_outputs),
+                    limitations=list(dict.fromkeys(limitations)),
+                    citations=[item.model_dump(mode="json") for item in citations],
+                )
             except Exception as exc:
                 limitations.append(f"LLM composition failed: {exc}")
 
@@ -455,8 +492,6 @@ class ChatOrchestrator(BaseAgent):
         agent_outputs: dict[str, object],
         limitations: list[str],
     ) -> str:
-        import json
-
         payload = {
             "sessionId": input_model.session_id,
             "contextScope": input_model.context_scope.value,
@@ -474,6 +509,12 @@ class ChatOrchestrator(BaseAgent):
             "Do not invent facts or citations.\n\n"
             f"{json.dumps(payload, indent=2, sort_keys=True)}"
         )
+
+    def _serialize_agent_outputs(self, agent_outputs: dict[str, object]) -> dict[str, dict[str, object]]:
+        return {
+            key: value.model_dump(mode="json")
+            for key, value in agent_outputs.items()
+        }
 
     def _build_deterministic_message(self, *, agent_outputs: dict[str, object], limitations: list[str]) -> str:
         parts: list[str] = []

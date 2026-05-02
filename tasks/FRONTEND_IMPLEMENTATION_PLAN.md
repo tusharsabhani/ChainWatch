@@ -201,33 +201,31 @@ Evidence:
 
 This phase adds the interactive workflows that sit on top of the completed backend orchestration and API layers.
 
-### FE-05 Reports List And Detail Page
+### FE-05 Reports Generation Page
 
 | Field | Value |
 | --- | --- |
 | Status | Done |
 | Priority | Medium |
 | Depends on | `FE-01`, `FE-08`, `BE-12` |
-| Goal | Build report browsing, report detail, and report generation UI |
+| Goal | Build a report-generation workflow UI |
 
 Implementation checkpoints:
 
-- [x] Create reports list table
-- [x] Add status and scope filtering
-- [x] Create report detail panel with metadata and Markdown preview
 - [x] Add generate report action
-- [x] Add queued, running, completed, failed, and empty states
+- [x] Add scope and optional title inputs
+- [x] Add submission, success, and error states
 
 Definition of done:
 
-- [x] A user can browse reports and open one report at a time
-- [x] The page distinguishes report status values clearly
-- [x] Markdown preview or summary content is visible for completed reports
+- [x] A user can submit a report-generation request from the Reports page
+- [x] The page returns the queued report identifier and status clearly
+- [x] The current docs describe the page as generation-only until report browsing is built
 
 Evidence:
 
-- `frontend/app/reports/page.tsx` now renders the live report archive, selected detail, and generator defaults from route query context
-- `frontend/components/reports/reports-workspace.tsx` now supports status/scope filters, report generation, queued/running polling, artifact metadata, and Markdown preview rendering from the backend
+- `frontend/app/reports/page.tsx` now renders the live report-generation page with route-aware defaults
+- `frontend/components/reports/reports-workspace.tsx` now supports report generation, scope selection, and submission feedback from the backend
 
 ### FE-03 Chat Page
 

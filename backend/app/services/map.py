@@ -18,7 +18,7 @@ from app.schemas.map import (
     MapCountriesResponse,
     MapCountrySummaryItem,
 )
-from app.services.countries import country_name
+from app.services.countries import country_name, map_watchlist_country_codes
 from app.services.external_risk import ExternalRiskService
 from app.services.storage import StorageManager
 
@@ -47,6 +47,14 @@ class MapService:
             search_adapter=search_adapter or NullSearchAdapter(),
         )
 
+    def _country_scope(self) -> list[str]:
+        return sorted(
+            {
+                *self.catalog_repository.list_all_supplier_country_codes(),
+                *map_watchlist_country_codes(),
+            }
+        )
+
     def list_countries(
         self,
         *,
@@ -54,7 +62,7 @@ class MapService:
         severity_min: int = 1,
         background_tasks: BackgroundTasks | None = None,
     ) -> MapCountriesResponse:
-        country_codes = self.catalog_repository.list_all_supplier_country_codes()
+        country_codes = self._country_scope()
         envelope = self.external_risk_service.load(
             ExternalRiskAgentInput(
                 country_codes=country_codes,
@@ -123,7 +131,7 @@ class MapService:
             prefer_cached=True,
         )
         output = envelope.output
-        known_countries = set(self.catalog_repository.list_all_supplier_country_codes())
+        known_countries = set(self._country_scope())
         if normalized_code not in known_countries and not output.country_scores and not output.risk_events:
             raise LookupError(f"Country {normalized_code} was not found.")
 
